@@ -24,9 +24,17 @@ def speak_content(text_content):
     engine.runAndWait()
 
 
-# Step 1: Fetch the content from the URL
-url = "https://libread.org/libread/immortality-my-cultivation-has-no-bottleneck-64015/chapter-1"
-text_content = fetch_content(url)
+# Base URL for the chapters
+base_url = "https://libread.org/libread/immortality-my-cultivation-has-no-bottleneck-64015/chapter-"
 
-# Step 2: Read out the content
-speak_content(text_content)
+# Number of chapters to fetch and speak
+num_chapters = 3 # Adjust this number based on how many chapters you want to read
+
+# Loop through each chapter number
+for chapter_number in range(2, num_chapters + 1):
+    # Construct the URL for the current chapter
+    url = base_url + str(chapter_number)
+    # Fetch the content from the URL
+    text_content = fetch_content(url)
+    # Read out the content
+    speak_content(text_content)
