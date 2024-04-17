@@ -27,7 +27,7 @@ def speak_content(text_content):
 # Base URL for the chapters
 # base_url = "https://libread.org/libread/cultivation-nerd-259375/chapter-"
 # base_url = "https://libread.org/libread/my-simulated-road-to-immortality-53995/chapter-"
-base_url = "https://libread.org/libread/way-of-the-devil-169423/chapter-"
+base_url = "https://libread.org/libread/the-martial-unity-242653/chapter-"
 
 
 # Number of chapters to fetch and speak

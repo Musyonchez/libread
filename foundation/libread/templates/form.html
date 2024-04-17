@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Chapter Input Form</h2>
+
+<form action="/libread/" method="POST">
+    {% csrf_token %}
+    <label for="base_url">Base URL:</label><br>
+    <input type="text" id="base_url" name="base_url"><br>
+    <label for="num_chapters">Number of Chapters:</label><br>
+    <input type="number" id="num_chapters" name="num_chapters"><br>
+    <label for="current_chapter">Current Chapter:</label><br>
+    <input type="number" id="current_chapter" name="current_chapter"><br>
+    <input type="submit" value="Submit">
+</form>
+
+</body>
+</html>
