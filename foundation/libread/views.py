@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from email.mime import base
 import requests
 from bs4 import BeautifulSoup
