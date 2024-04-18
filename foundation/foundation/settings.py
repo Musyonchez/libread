@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-div(1ead+pbg4!pgv_vrga4on3eg&_)d@ld3m52p45be0@e_nc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['libread.onrender.com']
 
 
 # Application definition
