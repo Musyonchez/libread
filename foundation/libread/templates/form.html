@@ -1,19 +1,46 @@
 <!DOCTYPE html>
 <html>
-<body>
+  <body>
+    <h2>Chapter Input Form</h2>
 
-<h2>Chapter Input Form</h2>
+    <form action="/libread/" method="POST">
+      {% csrf_token %}
+      <label for="base_url">Base URL:</label><br />
+      <input type="text" id="base_url" name="base_url" /><br />
+      <label for="num_chapters">Number of Chapters:</label><br />
+      <input type="number" id="num_chapters" name="num_chapters" /><br />
+      <label for="current_chapter">Current Chapter:</label><br />
+      <input type="number" id="current_chapter" name="current_chapter" /><br />
+      <input type="submit" value="Submit" />
+    </form>
 
-<form action="/libread/" method="POST">
-    {% csrf_token %}
-    <label for="base_url">Base URL:</label><br>
-    <input type="text" id="base_url" name="base_url"><br>
-    <label for="num_chapters">Number of Chapters:</label><br>
-    <input type="number" id="num_chapters" name="num_chapters"><br>
-    <label for="current_chapter">Current Chapter:</label><br>
-    <input type="number" id="current_chapter" name="current_chapter"><br>
-    <input type="submit" value="Submit">
-</form>
+    <h2>Chapter Output</h2>
+    <audio controls>
+        <source src="{{ audio_url }}" type="audio/mpeg" />
+        Your browser does not support the audio element.
+    </audio>
 
-</body>
+    <!-- <p id="content">{{ content }}</p>
+    <button onclick="speakContent(event)">Speak Content</button>
+
+    <script>
+      function speakContent(event) {
+        event.preventDefault(); // Prevent form submission
+        console.log("speakContent called");
+        window.speechSynthesis.cancel();
+        var content = document.getElementById("content").innerText;
+        // console.log("Content:", content);
+        // var msg = new SpeechSynthesisUtterance(content);
+        var msg = new SpeechSynthesisUtterance("Hello, world!");
+        msg.volume = 1; // 0 to 1
+        window.speechSynthesis.speak(msg);
+        window.speechSynthesis.cancel();
+        if ("speechSynthesis" in window) {
+          console.log("SpeechSynthesis API is supported");
+        } else {
+          console.log("SpeechSynthesis API is not supported");
+        }
+    }
+    </script> -->
+  </body>
 </html>
