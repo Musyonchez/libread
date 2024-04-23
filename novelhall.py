@@ -26,12 +26,16 @@ def speak_content(text_content):
 
 # Base URL for the chapters
 # base_url = "https://libread.org/libread/cultivation-nerd-259375/chapter-"
-base_url = "https://novelhi.com/s/I-Am-an-Evil-Sword/"
+# base_url = "https://novelhi.com/s/I-Am-an-Evil-Sword/"
+base_url = "https://novelhi.com/s/The-Number-One-Killing-God/"
+
+
 
 
 # Number of chapters to fetch and speak
 num_chapters = 1000 # Adjust this number based on how many chapters you want to read
-current_chapter = 885 # The current chapter number
+# current_chapter = 885 # The current chapter number I am an Evil Sword
+current_chapter = 1 # The current chapter number The Number One Killing God
 # Loop through each chapter number
 for chapter_number in range(current_chapter, num_chapters + 1):
     # Construct the URL for the current chapter

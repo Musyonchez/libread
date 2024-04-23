@@ -27,13 +27,13 @@ def speak_content(text_content):
 # Base URL for the chapters
 # base_url = "https://libread.org/libread/cultivation-nerd-259375/chapter-"
 # base_url = "https://libread.org/libread/my-simulated-road-to-immortality-53995/chapter-"
-base_url = "https://libread.org/libread/the-martial-unity-242653/chapter-"
+base_url = "https://libread.org/libread/a-record-of-a-mortals-journey-to-immortality-novel-191779/chapter-"
 
 
 # Number of chapters to fetch and speak
-num_chapters = 100 # Adjust this number based on how many chapters you want to read
+num_chapters = 1000 # Adjust this number based on how many chapters you want to read
 # current_chapter = 52 # The current chapter number
-current_chapter = 1 # The current chapter number
+current_chapter = 177 # The current chapter number
 # Loop through each chapter number
 for chapter_number in range(current_chapter, num_chapters + 1):
     # Construct the URL for the current chapter
@@ -47,5 +47,8 @@ for chapter_number in range(current_chapter, num_chapters + 1):
     # Read out the content
     speak_content(text_content)
     
+
+    
     # Log the completion of processing the URL
     logging.info(f"Finished processing URL: {url}")
+
