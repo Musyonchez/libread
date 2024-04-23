@@ -28,7 +28,7 @@ def speak_content(text_content):
 base_url = "https://libread.org/libread/immortality-my-cultivation-has-no-bottleneck-64015/chapter-"
 
 # Number of chapters to fetch and speak
-num_chapters = 3 # Adjust this number based on how many chapters you want to read
+num_chapters = 3  # Adjust this number based on how many chapters you want to read
 
 # Loop through each chapter number
 for chapter_number in range(2, num_chapters + 1):

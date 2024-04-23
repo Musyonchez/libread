@@ -25,7 +25,7 @@ voices = engine.getProperty("voices")
 engine.setProperty("voice", voices[11].id)
 
 # Adjust the pitch
-engine.setProperty("pitch", 2.5) # Increase the pitch
+engine.setProperty("pitch", 2.5)  # Increase the pitch
 
 # Change the index to select a different voice
 engine.say(text_content)

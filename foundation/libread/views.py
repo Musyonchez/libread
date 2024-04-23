@@ -38,6 +38,7 @@ def speak_content(text_content):
     engine.say(text_content)
     engine.runAndWait()
 
+
 def save_content_as_mp3(text_content):
     # tts = gTTS(text=text_content, lang="en", slow=False)
     return gTTS(text=text_content, lang="en", slow=False)
@@ -46,11 +47,10 @@ def save_content_as_mp3(text_content):
 
 
 def main(base_url, num_chapters, current_chapter):
-   # Base URL for the chapters
+    # Base URL for the chapters
     # base_url = "https://libread.org/libread/cultivation-nerd-259375/chapter-"
     # base_url = "https://libread.org/libread/my-simulated-road-to-immortality-53995/chapter-"
     # base_url = "https://libread.org/libread/the-martial-unity-242653/chapter-"
-
 
     # Number of chapters to fetch and speak
     # num_chapters = 100  # Adjust this number based on how many chapters you want to read
@@ -73,15 +73,16 @@ def main(base_url, num_chapters, current_chapter):
         logging.info(f"Finished processing URL: {url}")
         return audiofile
 
+
 @csrf_exempt
 def libread(request):
-    if request.method == 'POST':
-        base_url = request.POST.get('base_url')
-        num_chapters = int(request.POST.get('num_chapters'))
-        current_chapter = int(request.POST.get('current_chapter'))
+    if request.method == "POST":
+        base_url = request.POST.get("base_url")
+        num_chapters = int(request.POST.get("num_chapters"))
+        current_chapter = int(request.POST.get("current_chapter"))
         print(base_url, num_chapters, current_chapter)
         # Assuming main() returns the content you want to speak
         content = main(base_url, num_chapters, current_chapter)
         # return render(request, 'form.html', {'content': content})
-        return render(request, 'form.html', {'content': content})
-    return render(request, 'form.html')
+        return render(request, "form.html", {"content": content})
+    return render(request, "form.html")

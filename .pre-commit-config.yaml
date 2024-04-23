@@ -40,7 +40,6 @@ repos:
   #   rev: 21.9b0 # Use the correct version of Black
   #   hooks:
   #     - id: black
-
 # exclude: "^\
 #   (third-party/.*)\
 #   "

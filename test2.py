@@ -17,7 +17,7 @@ for index, voice in enumerate(voices):
 engine.setProperty("voice", voices[11].id)
 
 # Adjust the pitch
-engine.setProperty("pitch", 2.5) # Increase the pitch
+engine.setProperty("pitch", 2.5)  # Increase the pitch
 
 # Now, you can use the engine to speak text with the selected voice
 engine.say("Hello, World!")
