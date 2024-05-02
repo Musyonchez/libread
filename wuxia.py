@@ -37,7 +37,6 @@ def speak_content(text_content):
 base_url = "https://www.wuxiav.com/novel/killing-evolution-from-a-sword_"
 
 
-
 # Number of chapters to fetch and speak
 num_chapters = 1000  # Adjust this number based on how many chapters you want to read
 current_chapter = 34

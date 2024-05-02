@@ -41,7 +41,6 @@ def speak_content(text_content):
 base_url = "https://freewebnovel.noveleast.com/wizards-begin-liver-experience-with-knight-breathing/chapter-"
 
 
-
 # Number of chapters to fetch and speak
 num_chapters = 1000  # Adjust this number based on how many chapters you want to read
 # current_chapter = 52 # The current chapter number
