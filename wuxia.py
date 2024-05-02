@@ -17,7 +17,7 @@ def fetch_content(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.text, "html.parser")
     # content_div = soup.find("div", class_="text-left")
-    content_div = soup.find("div", id="article")
+    content_div = soup.find("div", class_="chapter-content")
     return content_div.get_text() if content_div else "Content not found"
 
 
@@ -34,24 +34,17 @@ def speak_content(text_content):
 
 
 # Base URL for the chapters
-# base_url = "https://libread.org/libread/cultivation-nerd-259375/chapter-"
-# base_url = "https://libread.org/libread/my-simulated-road-to-immortality-53995/chapter-"
-# base_url = "https://libread.org/libread/a-record-of-a-mortals-journey-to-immortality-novel-191779/chapter-"
-# base_url = "https://freewebnovel.noveleast.com/how-the-zergs-were-made/chapter-"
-base_url = "https://freewebnovel.noveleast.com/wizards-begin-liver-experience-with-knight-breathing/chapter-"
+base_url = "https://www.wuxiav.com/novel/killing-evolution-from-a-sword_"
 
 
 
 # Number of chapters to fetch and speak
 num_chapters = 1000  # Adjust this number based on how many chapters you want to read
-# current_chapter = 52 # The current chapter number
-# current_chapter = 177  # The current chapter number
-# current_chapter = 23
-current_chapter = 71
+current_chapter = 34
 # Loop through each chapter number
 for chapter_number in range(current_chapter, num_chapters + 1):
     # Construct the URL for the current chapter
-    url = base_url + str(chapter_number)
+    url = base_url + str(chapter_number) + ".html"
     # Log the URL being processed
     logging.info(f"Processing URL: {url}")
     # Fetch the content from the URL
