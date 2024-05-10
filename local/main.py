@@ -16,8 +16,7 @@ logging.basicConfig(
 def fetch_content(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.text, "html.parser")
-    # content_div = soup.find("div", class_="text-left")
-    content_div = soup.find("div", class_="chapter-content")
+    content_div = soup.find("div", id="article")
     return content_div.get_text() if content_div else "Content not found"
 
 
@@ -34,16 +33,17 @@ def speak_content(text_content):
 
 
 # Base URL for the chapters
-base_url = "https://www.wuxiav.com/novel/killing-evolution-from-a-sword_"
-
+base_url = 
+"https://libread.org/libread/immortality-my-cultivation-has-no-bottleneck-64015/chapter-"
 
 # Number of chapters to fetch and speak
-num_chapters = 1000  # Adjust this number based on how many chapters you want to read
-current_chapter = 34
+num_chapters = 10  
+# Adjust this number based on how many chapters you want to read
+current_chapter = 11  # The current chapter number
 # Loop through each chapter number
 for chapter_number in range(current_chapter, num_chapters + 1):
     # Construct the URL for the current chapter
-    url = base_url + str(chapter_number) + ".html"
+    url = base_url + str(chapter_number)
     # Log the URL being processed
     logging.info(f"Processing URL: {url}")
     # Fetch the content from the URL
@@ -52,6 +52,5 @@ for chapter_number in range(current_chapter, num_chapters + 1):
     logging.info(f"Starting processing URL: {url}")
     # Read out the content
     speak_content(text_content)
-
     # Log the completion of processing the URL
     logging.info(f"Finished processing URL: {url}")

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
+import logging
+
+import pyttsx3
 import requests
 from bs4 import BeautifulSoup
-import pyttsx3
-import logging
 
 # Configure logging
 logging.basicConfig(
@@ -16,7 +17,8 @@ logging.basicConfig(
 def fetch_content(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.text, "html.parser")
-    content_div = soup.find("div", id="article")
+    # content_div = soup.find("div", class_="text-left")
+    content_div = soup.find("div", id="showReading", class_="readBox")
     return content_div.get_text() if content_div else "Content not found"
 
 
@@ -33,11 +35,22 @@ def speak_content(text_content):
 
 
 # Base URL for the chapters
-base_url = "https://libread.org/libread/immortality-my-cultivation-has-no-bottleneck-64015/chapter-"
+# base_url = "https://libread.org/libread/cultivation-nerd-259375/chapter-"
+# base_url = "https://novelhi.com/s/I-Am-an-Evil-Sword/"
+# base_url = "https://novelhi.com/s/Abyss-Demon-of-All-Realms/"
+# base_url = "https://novelhi.com/s/The-Wizard-World/"
+base_url = "https://novelhi.com/s/Ancestor-of-Demons/"
+
 
 # Number of chapters to fetch and speak
-num_chapters = 10  # Adjust this number based on how many chapters you want to read
-current_chapter = 11  # The current chapter number
+num_chapters = 1074
+# Adjust this number based on how many chapters you want to read
+# current_chapter = 1016 # The current chapter number I am an Evil Sword
+# current_chapter = 593
+# The current chapter number The Number One Killing God
+# current_chapter = 235  # The current chapter number The wizard world
+current_chapter = 24
+
 # Loop through each chapter number
 for chapter_number in range(current_chapter, num_chapters + 1):
     # Construct the URL for the current chapter
@@ -50,5 +63,6 @@ for chapter_number in range(current_chapter, num_chapters + 1):
     logging.info(f"Starting processing URL: {url}")
     # Read out the content
     speak_content(text_content)
+
     # Log the completion of processing the URL
     logging.info(f"Finished processing URL: {url}")

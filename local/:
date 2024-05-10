@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
+import logging
+
+import pyttsx3
 import requests
 from bs4 import BeautifulSoup
-import pyttsx3
-import logging
 
 # Configure logging
 logging.basicConfig(
@@ -42,9 +43,11 @@ base_url = "https://novelhi.com/s/Ancestor-of-Demons/"
 
 
 # Number of chapters to fetch and speak
-num_chapters = 1074  # Adjust this number based on how many chapters you want to read
+num_chapters = 1074
+# Adjust this number based on how many chapters you want to read
 # current_chapter = 1016 # The current chapter number I am an Evil Sword
-# current_chapter = 593  # The current chapter number The Number One Killing God
+# current_chapter = 593
+# The current chapter number The Number One Killing God
 # current_chapter = 235  # The current chapter number The wizard world
 current_chapter = 24
 
