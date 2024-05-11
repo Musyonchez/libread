@@ -7,8 +7,8 @@
 
 
 from django.urls import path
-from . import views  # Adjust this import if your views are in a different module
+from read import views
 
 urlpatterns = [
-    path("libread/", views.read, name="read"),
+    path('translate/', views.get, name='translate'),
 ]

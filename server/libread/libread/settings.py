@@ -25,7 +25,11 @@ SECRET_KEY = "django-insecure-d)qdt%9ue1#om-8h5%ijc9=_vc26-p(6s4r#n22xahe+&g&mg%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['http://localhost:3000', '127.0.0.1']
+
+# CORS_ALLOW_ALL_ORIGINS = True  # Allow all origins for development purposes
+# # For production, replace the above line with:
+CORS_ALLOWED_ORIGINS = ['http://localhost:3000', 'http://example.com']
 
 
 # Application definition
@@ -48,6 +52,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "libread.urls"
