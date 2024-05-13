@@ -40,7 +40,7 @@ def speak_content(text_content):
 # base_url = "https://libread.org/libread/a-record-of-a-mortals-journey-to-immortality-novel-191779/chapter-"
 # base_url = "https://freewebnovel.noveleast.com/how-the-zergs-were-made/chapter-"
 # base_url = "https://freewebnovel.noveleast.com/wizards-begin-liver-experience-with-knight-breathing/chapter-"
-base_url = "https://freewebnovel.comenovel.com/the-nebulas-civilization/chapter-"
+base_url = "https://freewebnovel.comenovel.com/warlock-of-the-magus-world/chapter-"
 
 
 # Number of chapters to fetch and speak
@@ -49,7 +49,7 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 177  # The current chapter number
 # current_chapter = 23
 # current_chapter = 71
-current_chapter = 17
+current_chapter = 326
 # Loop through each chapter number
 for chapter_number in range(current_chapter, num_chapters + 1):
     # Construct the URL for the current chapter
