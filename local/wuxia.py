@@ -36,14 +36,23 @@ def speak_content(text_content):
 # Base URL for the chapters
 # base_url = "https://www.wuxiav.com/novel/killing-evolution-from-a-sword_"
 # base_url = "https://www.wuxiav.com/novel/i-the-demon-king-sign-in-the-abyss-for-a-hundred-years_"
-base_url = "https://www.wuxiav.com/novel/otherworldly-merchant_"
+# base_url = "https://www.wuxiav.com/novel/otherworldly-merchant_"
+# base_url = "https://www.wuxiabox.com/novel/the-era-of-generals_"
+# base_url = "https://www.wuxiabox.net/novel/i-have-a-bunch-of-players-on-earth_"
+# base_url = "https://www.wuxiabox.net/novel/a-sorcerers-journey_"
+base_url = "https://www.wuxiabox.net/novel/the-oracle-paths_"
 
 
 # Number of chapters to fetch and speak
 num_chapters = 1000  # Adjust this number based on how many chapters you want to read
 # current_chapter = 45
 # current_chapter = 2
-current_chapter = 1
+# current_chapter = 1
+# current_chapter = 11
+# current_chapter = 21
+# current_chapter = 510
+current_chapter = 243
+
 
 # Loop through each chapter number
 for chapter_number in range(current_chapter, num_chapters + 1):
