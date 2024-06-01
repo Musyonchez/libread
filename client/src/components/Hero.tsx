@@ -3,11 +3,13 @@ import Howto from "./Howto";
 import About from "./About";
 import axios from "axios";
 import SearchResults from "./SearchResults";
+import sanitizeSearch from "../utils/sanitizeSearch";
 
 // Define the handleSearch function using useState to manage the input value
 const Hero = () => {
   const [searchInput, setSearchInput] = useState("");
   const [response, setResponse] = useState(null);
+  const [showThumbnail, setShowThumbnail] = useState(false)
 
   // Update the searchInput state whenever the input changes
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,11 +22,19 @@ const Hero = () => {
     try {
       // Replace 'yourUrlString' with the actual URL string you want to send
       // const urlToSend = "https://www.youtube.com/watch?v=QjihRb2E-YA";
-      const response = await axios.post("http://127.0.0.1:8000/api/v1/url/", {
-        url: searchInput,
-      });
-      console.log(response.data);
-      setResponse(response.data); // Update the state with the response data
+      const sanitizedText = sanitizeSearch({ searchInput });
+      console.log("sanitizedText:", sanitizedText); // Replace this with actual search logic
+      if (sanitizedText === "youtubelink") {
+        const response = await axios.post("http://127.0.0.1:8000/api/v1/url/info", {
+          url: searchInput,
+        });
+        console.log(response.data);
+        setResponse(response.data); // Update the state with the response data
+      } else if (sanitizedText === "textsearch") {
+        console.log("word search", sanitizedText);
+      } else {
+        console.log("cant search");
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
