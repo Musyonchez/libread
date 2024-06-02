@@ -70,7 +70,7 @@ async def url_download(data: URLRequest):
         
         # Get the highest quality audio stream
         audio_stream = youtube.streams.get_audio_only()
-
+        
         # Download the audio stream to a buffer
         audio_buffer = io.BytesIO()
         audio_stream.stream_to_buffer(audio_buffer)
