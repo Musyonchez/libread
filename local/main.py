@@ -33,8 +33,7 @@ def speak_content(text_content):
 
 
 # Base URL for the chapters
-base_url = 
-"https://libread.org/libread/immortality-my-cultivation-has-no-bottleneck-64015/chapter-"
+base_url = "https://libread.org/libread/immortality-my-cultivation-has-no-bottleneck-64015/chapter-"
 
 # Number of chapters to fetch and speak
 num_chapters = 10  

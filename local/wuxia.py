@@ -36,13 +36,19 @@ def speak_content(text_content):
 # Base URL for the chapters
 # base_url = "https://www.wuxiav.com/novel/killing-evolution-from-a-sword_"
 # base_url = "https://www.wuxiav.com/novel/i-the-demon-king-sign-in-the-abyss-for-a-hundred-years_"
-# base_url = "https://www.wuxiav.com/novel/otherworldly-merchant_"
+# base_url = "https://www.wuxiaspot.com/novel/mecha-breaks-the-world_"
 # base_url = "https://www.wuxiabox.com/novel/the-era-of-generals_"
 # base_url = "https://www.wuxiabox.net/novel/i-have-a-bunch-of-players-on-earth_"
 # base_url = "https://www.wuxiabox.net/novel/a-sorcerers-journey_"
 # base_url = "https://www.wuxiabox.net/novel/the-oracle-paths_"
-base_url = "https://www.wuxiabox.com/novel/national-beast-awakening-mythical-talent-at-the-start_"
+# base_url = "https://www.wuxiabox.com/novel/national-beast-awakening-mythical-talent-at-the-start_"
 # base_url = "https://www.wuxiabox.com/novel/the-weakest-summon-the-devils-contract-talent-is-maxed-out-at-the-beginning_"
+# base_url = "https://www.wuxiabox.com/novel/invincible-slaughter-system_"
+# base_url = "https://www.wuxiabox.com/novel/seeking-immortality-in-a-deceitful-way-starts-by-making-oneself-into-a-puppet_"
+# base_url = "https://www.wuxiabox.com/novel/the-strongest-dragon-in-the-age-of-beasts_"
+# base_url = "https://www.wuxiabox.com/novel/diary-of-the-death-wizard_"
+# base_url = "https://www.wuxiabox.com/novel/6952281_"
+base_url = "https://www.wuxiabox.com/novel/dominating-sword-immortal_"
 
 # Number of chapters to fetch and speak
 num_chapters = 1000  # Adjust this number based on how many chapters you want to read
@@ -53,8 +59,15 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 21
 # current_chapter = 510
 # current_chapter = 243
-current_chapter = 114
+# current_chapter = 114
 # current_chapter = 106
+# current_chapter = 3
+# current_chapter = 3
+# current_chapter = 19
+# current_chapter = 28
+# current_chapter = 13
+current_chapter = 1
+
 
 # Loop through each chapter number
 for chapter_number in range(current_chapter, num_chapters + 1):
