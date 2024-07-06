@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 url = "https://libread.org/libread/immortality-my-cultivation-has-no-bottleneck-64015/chapter-1"
 

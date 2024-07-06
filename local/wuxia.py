@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
+import logging
+
+import pyttsx3
 import requests
 from bs4 import BeautifulSoup
-import pyttsx3
-import logging
 
 # Configure logging
 logging.basicConfig(
@@ -48,7 +49,9 @@ def speak_content(text_content):
 # base_url = "https://www.wuxiabox.com/novel/the-strongest-dragon-in-the-age-of-beasts_"
 # base_url = "https://www.wuxiabox.com/novel/diary-of-the-death-wizard_"
 # base_url = "https://www.wuxiabox.com/novel/6952281_"
-base_url = "https://www.wuxiabox.com/novel/dominating-sword-immortal_"
+base_url = (
+    "https://www.wuxiabox.com/novel/puppet-cultivation-if-you-find-the-real-one-i-lose_"
+)
 
 # Number of chapters to fetch and speak
 num_chapters = 1000  # Adjust this number based on how many chapters you want to read
@@ -66,7 +69,7 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 19
 # current_chapter = 28
 # current_chapter = 13
-current_chapter = 1
+current_chapter = 2
 
 
 # Loop through each chapter number
