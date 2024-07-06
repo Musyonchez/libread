@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
+import pyttsx3
 import requests
 from bs4 import BeautifulSoup
-import pyttsx3
 
 # Step 1: Fetch the content from the URL
 url = "https://libread.org/libread/immortality-my-cultivation-has-no-bottleneck-64015/chapter-1"
