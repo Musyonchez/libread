@@ -55,7 +55,13 @@ def speak_content(text_content):
 # base_url = (
 #     "https://www.wuxiabox.com/novel/the-wizards-road-begins-with-the-simulator_"
 # )
-base_url = "https://www.wuxiabox.com/novel/national-star-sea-era_"
+# base_url = "https://www.wuxiabox.com/novel/national-star-sea-era_"
+# base_url = "https://www.wuxiabox.com/novel/the-wizards-road-begins-with-the-simulator_"
+# base_url = "https://www.wuxiabox.com/novel/wizard-world-journey_"
+# base_url = "https://www.wuxiabox.com/novel/wizard-i-can-extract-everything_"
+# base_url = "https://www.wuxiabox.com/novel/constructing-style-wizard_"
+base_url = "https://www.wuxiaspot.com/novel/my-summons-are-weird_"
+
 
 
 
@@ -77,7 +83,14 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 13
 # current_chapter = 2
 # current_chapter = 8
+# current_chapter = 1
+# current_chapter = 116
+# current_chapter = 37
+# current_chapter = 85
+# current_chapter = 10
 current_chapter = 1
+
+
 
 # Loop through each chapter number
 for chapter_number in range(current_chapter, num_chapters + 1):
