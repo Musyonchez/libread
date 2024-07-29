@@ -49,19 +49,18 @@ def speak_content(text_content):
 # base_url = "https://www.wuxiabox.com/novel/the-strongest-dragon-in-the-age-of-beasts_"
 # base_url = "https://www.wuxiabox.com/novel/diary-of-the-death-wizard_"
 # base_url = "https://www.wuxiabox.com/novel/6952281_"
-# base_url = (
-#     "https://www.wuxiabox.com/novel/puppet-cultivation-if-you-find-the-real-one-i-lose_"
-# )
-# base_url = (
-#     "https://www.wuxiabox.com/novel/the-wizards-road-begins-with-the-simulator_"
-# )
+# base_url = "https://www.wuxiabox.com/novel/puppet-cultivation-if-you-find-the-real-one-i-lose_"
+# base_url = "https://www.wuxiabox.com/novel/the-wizards-road-begins-with-the-simulator_"
 # base_url = "https://www.wuxiabox.com/novel/national-star-sea-era_"
 # base_url = "https://www.wuxiabox.com/novel/the-wizards-road-begins-with-the-simulator_"
 # base_url = "https://www.wuxiabox.com/novel/wizard-world-journey_"
 # base_url = "https://www.wuxiabox.com/novel/wizard-i-can-extract-everything_"
 # base_url = "https://www.wuxiabox.com/novel/constructing-style-wizard_"
-base_url = "https://www.wuxiaspot.com/novel/my-summons-are-weird_"
-
+# base_url = "https://www.wuxiabox.com/novel/six-ring-wizard_"
+# base_url = "https://www.wuxiabox.com/novel/the-wizarding-age_"
+# base_url = "https://www.fanmtl.com/novel/the-wizards-immortality-wizarding-immortal_"
+# base_url  = "https://www.wuxiabox.com/novel/extracting-billions-of-toxins-and-tempering-an-unsullied-body_"
+base_url = "https://www.wuxiabox.com/novel/6944348_"
 
 
 
@@ -86,9 +85,15 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 1
 # current_chapter = 116
 # current_chapter = 37
-# current_chapter = 85
+# current_chapter = 162
 # current_chapter = 10
+# current_chapter = 90
+# current_chapter = 40
+# current_chapter = 1
+# current_chapter = 1
 current_chapter = 1
+
+
 
 
 

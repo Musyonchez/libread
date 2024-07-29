@@ -39,7 +39,9 @@ def speak_content(text_content):
 # base_url = "https://novelhi.com/s/I-Am-an-Evil-Sword/"
 # base_url = "https://novelhi.com/s/Abyss-Demon-of-All-Realms/"
 # base_url = "https://novelhi.com/s/The-Wizard-World/"
-base_url = "https://novelhi.com/s/Ancestor-of-Demons/"
+# base_url = "https://novelhi.com/s/Ancestor-of-Demons/"
+base_url = "https://novelhi.com/s/Invincible-Sword-God/"
+
 
 
 # Number of chapters to fetch and speak
@@ -49,7 +51,10 @@ num_chapters = 1074
 # current_chapter = 593
 # The current chapter number The Number One Killing God
 # current_chapter = 235  # The current chapter number The wizard world
-current_chapter = 24
+# current_chapter = 24
+current_chapter = 1
+
+
 
 # Loop through each chapter number
 for chapter_number in range(current_chapter, num_chapters + 1):
