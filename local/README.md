@@ -35,20 +35,3 @@ To get started with this project, follow these straightforward steps:
 ## Conclusion
 
 This project represents a significant step forward in the integration of web scraping and text-to-speech technologies. By providing a user-friendly interface and advanced customization options, it aims to make web content more accessible and engaging for a wide audience. Whether for educational purposes, accessibility enhancements, or simply for entertainment, this application offers a powerful tool for transforming the digital world into an audible one.
-
-Citations:
-[1] https://docs.python-guide.org/writing/structure/
-[2] https://realpython.com/python-application-layouts/
-[3] https://realpython.com/documenting-python-code/
-[4] https://www.the-analytics.club/python-project-structure-best-practices/
-[5] https://dagster.io/blog/python-project-best-practices
-[6] https://stackoverflow.com/questions/193161/what-is-the-best-project-structure-for-a-python-application
-[7] https://realpython.com/python-project-documentation-with-mkdocs/
-[8] https://clouddevs.com/python/project-structure-practices/
-[9] https://towardsdatascience.com/the-good-way-to-structure-a-python-project-d914f27dfcc9
-[10] https://rafafelixphd.medium.com/mastering-python-project-structure-0a5ce3162c75
-[11] https://carlosgrande.me/my-python-project-cheatsheet/
-[12] https://pythonbynight.com/blog/starting-python-project
-[13] https://www.codewithc.com/mastering-python-project-structure-best-practices-for-stellar-results/
-[14] https://towardsdatascience.com/a-guide-to-python-good-practices-90598529da35
-[15] https://testdriven.io/blog/documenting-python/

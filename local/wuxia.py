@@ -61,6 +61,14 @@ def speak_content(text_content):
 # base_url = "https://www.fanmtl.com/novel/the-wizards-immortality-wizarding-immortal_"
 # base_url  = "https://www.wuxiabox.com/novel/extracting-billions-of-toxins-and-tempering-an-unsullied-body_"
 base_url = "https://www.wuxiabox.com/novel/6944348_"
+# base_url = "https://www.wuxiabox.com/novel/6944348_"
+# base_url = "https://www.wuxiabox.com/novel/wizards-chasing-the-truth_"
+# base_url = "https://www.wuxiabox.com/novel/the-wizards-order_"
+# base_url = "https://www.wuxiabox.com/novel/6951084_"
+# base_url = "https://www.wuxiabox.com/novel/6947206_"
+base_url = "https://www.wuxiabox.com/novel/immortal-palace-longevity_"
+
+
 
 
 
@@ -92,6 +100,12 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 1
 # current_chapter = 1
 current_chapter = 1
+# current_chapter = 123
+# current_chapter = 13
+# current_chapter = 123
+# current_chapter = 105
+# current_chapter = 5
+current_chapter = 304
 
 
 
