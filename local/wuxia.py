@@ -60,21 +60,21 @@ def speak_content(text_content):
 # base_url = "https://www.wuxiabox.com/novel/the-wizarding-age_"
 # base_url = "https://www.fanmtl.com/novel/the-wizards-immortality-wizarding-immortal_"
 # base_url  = "https://www.wuxiabox.com/novel/extracting-billions-of-toxins-and-tempering-an-unsullied-body_"
-base_url = "https://www.wuxiabox.com/novel/6944348_"
+# base_url = "https://www.wuxiabox.com/novel/6944348_"
 # base_url = "https://www.wuxiabox.com/novel/6944348_"
 # base_url = "https://www.wuxiabox.com/novel/wizards-chasing-the-truth_"
 # base_url = "https://www.wuxiabox.com/novel/the-wizards-order_"
 # base_url = "https://www.wuxiabox.com/novel/6951084_"
+# base_url = "https://www.wuxiabox.com/novel/immortal-palace-longevity_"
 # base_url = "https://www.wuxiabox.com/novel/6947206_"
-base_url = "https://www.wuxiabox.com/novel/immortal-palace-longevity_"
-
-
-
-
+# base_url = "https://www.wuxiabox.com/novel/i-started-my-cultivation-by-picking-up-the-immortal-skills_"
+# base_url = "https://www.wuxiabox.com/novel/my-longevity-simulation_"
+# base_url = "https://www.wuxiabox.com/novel/farming-in-the-immortal-mansion_"
+base_url = "https://www.wuxiabox.com/novel/infinite-battle_"
 
 # Number of chapters to fetch and speak
 num_chapters = 1000  # Adjust this number based on how many chapters you want to read
-# current_chapter = 45
+# current_chapter = 58
 # current_chapter = 2
 # current_chapter = 1
 # current_chapter = 11
@@ -99,14 +99,17 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 40
 # current_chapter = 1
 # current_chapter = 1
-current_chapter = 1
+# current_chapter = 1
 # current_chapter = 123
 # current_chapter = 13
 # current_chapter = 123
 # current_chapter = 105
+# current_chapter = 314
 # current_chapter = 5
-current_chapter = 304
-
+# current_chapter = 6
+# current_chapter = 45
+# current_chapter = 1
+current_chapter = 1
 
 
 
@@ -115,6 +118,7 @@ current_chapter = 304
 for chapter_number in range(current_chapter, num_chapters + 1):
     # Construct the URL for the current chapter
     url = base_url + str(chapter_number) + ".html"
+    print("url",url)
     # Log the URL being processed
     logging.info(f"Processing URL: {url}")
     # Fetch the content from the URL
@@ -123,6 +127,5 @@ for chapter_number in range(current_chapter, num_chapters + 1):
     logging.info(f"Starting processing URL: {url}")
     # Read out the content
     speak_content(text_content)
-
     # Log the completion of processing the URL
     logging.info(f"Finished processing URL: {url}")
