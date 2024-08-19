@@ -23,6 +23,7 @@ def fetch_content(url):
 
 
 def speak_content(text_content):
+    print("text_content", text_content)
     engine = pyttsx3.init()
     engine.setProperty("rate", 200)  # Speed of speech (words per minute)
     voices = engine.getProperty("voices")
@@ -70,7 +71,18 @@ def speak_content(text_content):
 # base_url = "https://www.wuxiabox.com/novel/i-started-my-cultivation-by-picking-up-the-immortal-skills_"
 # base_url = "https://www.wuxiabox.com/novel/my-longevity-simulation_"
 # base_url = "https://www.wuxiabox.com/novel/farming-in-the-immortal-mansion_"
-base_url = "https://www.wuxiabox.com/novel/infinite-battle_"
+# base_url = "https://www.wuxiabox.com/novel/infinite-battle_"
+# base_url = "https://www.wuxiabox.com/novel/i-can-track-everything_"
+# base_url = "https://www.wuxiabox.com/novel/mortal-cultivation-portable-space_"
+# base_url = "https://www.wuxiabox.com/novel/longevity-start-with-infinite-blue-bar_" # Refine Gu to become immortal from one person
+# base_url = "https://www.wuxiabox.com/novel/mortal-immortal-palace_"
+# base_url = "https://www.wuxiabox.com/novel/mortal-blood_"
+base_url = "https://www.wuxiaspot.com/novel/the-immortal-spiritual-picture_"
+# base_url = "https://www.wuxiabox.com/novel/mortal-seeking-immortal_"
+
+
+
+
 
 # Number of chapters to fetch and speak
 num_chapters = 1000  # Adjust this number based on how many chapters you want to read
@@ -109,8 +121,14 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 6
 # current_chapter = 45
 # current_chapter = 1
+# current_chapter = 1
+# current_chapter = 6
+# current_chapter = 189
+# current_chapter = 118
+# current_chapter = 96
+# current_chapter = 40
 current_chapter = 1
-
+# current_chapter = 28
 
 
 
@@ -118,7 +136,7 @@ current_chapter = 1
 for chapter_number in range(current_chapter, num_chapters + 1):
     # Construct the URL for the current chapter
     url = base_url + str(chapter_number) + ".html"
-    print("url",url)
+    print("url", url)
     # Log the URL being processed
     logging.info(f"Processing URL: {url}")
     # Fetch the content from the URL

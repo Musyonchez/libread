@@ -23,14 +23,17 @@ def fetch_content(url):
 
 
 def speak_content(text_content):
+    # engine = pyttsx3.init()
+    # engine.setProperty("rate", 200)  # Speed of speech (words per minute)
+    # voices = engine.getProperty("voices")
+    # engine.setProperty(
+    #     "voice", voices[11].id
+    # )  # Change the index to select a different voice
+    # engine.setProperty("pitch", 2.5)  # Increase the pitch
+    # engine.say(text_content)
+    # engine.runAndWait()
     engine = pyttsx3.init()
-    engine.setProperty("rate", 200)  # Speed of speech (words per minute)
-    voices = engine.getProperty("voices")
-    engine.setProperty(
-        "voice", voices[11].id
-    )  # Change the index to select a different voice
-    engine.setProperty("pitch", 2.5)  # Increase the pitch
-    engine.say(text_content)
+    engine.say("Testing speech synthesis.")
     engine.runAndWait()
 
 
