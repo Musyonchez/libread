@@ -109,13 +109,11 @@ def speak_content(text_content):
 # base_url = "https://www.wuxiabox.com/novel/fantasy-life-simulator-ten-years-to-immortal-emperor_"
 # base_url = "https://www.wuxiabox.com/novel/tianhai-xiantu_"
 # base_url = "https://www.wuxiabox.com/novel/i-have-simulated-cultivating-immortals-thousands-of-times-and-i-am-invincible_"
-# base_url = "https://www.wuxiabox.com/novel/gu-dao-tianzun-i-can-increase-the-success-rate-of-refining-gu_"
-# base_url = "https://www.wuxiabox.com/novel/starting-from-longevity-gou-dao-becomes-immortal_"
-# base_url = "https://www.wuxiabox.com/novel/6948202_" # Alchemy Dao Immortal
-# base_url = "https://www.wuxiabox.com/novel/wizard-i-can-extract-identities_"
-# base_url = "https://www.wuxiabox.com/novel/6948521_"
-# base_url = "https://www.wuxiabox.com/novel/immortal-refiner_"
-base_url = "https://www.fanmtl.com/novel/xiuxian-the-beginning-starts-with-the-drug-boy_" #Beginning to practice immortality as a refugee
+base_url = "https://www.wuxiabox.com/novel/people-in-gaowu-opening-simulator-bind-the-heavens_001.html"
+
+
+
+
 
 
 
@@ -153,7 +151,7 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 1
 # current_chapter = 1
 # current_chapter = 1
-# current_chapter = 130
+# current_chapter = 123
 # current_chapter = 13
 # current_chapter = 123
 # current_chapter = 105
@@ -165,12 +163,12 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 1
 # current_chapter = 6
 # current_chapter = 189
-# current_chapter = 148
+# current_chapter = 118
 # current_chapter = 98
 # current_chapter = 40
 # current_chapter = 314
 # current_chapter = 30
-# current_chapter = 55
+# current_chapter = 6
 # current_chapter = 52
 # current_chapter = 141
 # current_chapter = 42
@@ -192,13 +190,11 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 129
 # current_chapter = 27
 # current_chapter = 129
-# current_chapter = 66
-# current_chapter = 138
-# current_chapter = 1
-# current_chapter = 142
-# current_chapter = 252
-# current_chapter = 10
-current_chapter = 328
+current_chapter = 1
+
+
+
+
 
 
 
@@ -212,7 +208,7 @@ current_chapter = 328
 # Loop through each chapter number
 for chapter_number in range(current_chapter, num_chapters + 1):
     # Construct the URL for the current chapter
-    url = base_url + str(chapter_number) + ".html"
+    url = base_url.replace('001', str(chapter_number).zfill(3))
     print("url", url)
     # Log the URL being processed
     logging.info(f"Processing URL: {url}")
