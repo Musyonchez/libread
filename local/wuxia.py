@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import logging
-
+import time
 import pyttsx3
 import requests
 from bs4 import BeautifulSoup
@@ -24,17 +24,43 @@ def fetch_content(url):
 
 
 
+
 def speak_content(text_content):
-    # print("text_content", text_content)
     engine = pyttsx3.init()
     engine.setProperty("rate", 450)  # Speed of speech (words per minute)
     voices = engine.getProperty("voices")
     engine.setProperty(
-        "voice", voices[11].id
+        "voice", voices[10].id
     )  # Change the index to select a different voice
-    engine.setProperty("pitch", 2.5)  # Increase the pitch
-    engine.say(text_content)
-    engine.runAndWait()
+    engine.setProperty("pitch", 10)  # Increase the pitch
+    
+    # Splitting the text content into two halves
+    mid_point = len(text_content) // 2
+    first_half = text_content[:mid_point]
+    second_half = text_content[mid_point:]
+
+    success = False
+    retries = 0
+    max_retries = 20  # Define the max number of retries before giving up
+
+    while not success and retries < max_retries:
+        try:
+            # Attempt to speak the content
+            logging.info(f"Attempt {retries + 1} to speak the content.")
+            engine.say(first_half)
+            engine.runAndWait()
+            engine.say(second_half)
+            engine.runAndWait()
+            success = True  # If no exception occurs, mark success as True
+            logging.info("Speech completed successfully.")
+        except Exception as e:
+            retries += 1
+            logging.error(f"Error during speech: {e}")
+            logging.info(f"Retrying... ({retries}/{max_retries})")
+            time.sleep(2)  # Wait for 2 seconds before retrying
+
+    if not success:
+        logging.error("Failed to speak content after multiple attempts.")
 
 
 # Base URL for the chapters
@@ -165,7 +191,7 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 43
 # current_chapter = 83
 # current_chapter = 43
-current_chapter = 9
+current_chapter = 10
 
 
 
