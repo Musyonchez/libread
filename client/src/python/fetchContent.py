@@ -16,4 +16,4 @@ def fetch_content(url):
 if __name__ == "__main__":
     url = sys.stdin.read().strip()
     result = fetch_content(url)
-    print(result)
+    # print(result)
