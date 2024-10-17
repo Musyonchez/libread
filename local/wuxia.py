@@ -23,7 +23,6 @@ def fetch_content(url):
     return content_div.get_text() if content_div else "Content not found"
 
 
-
 def speak_content(text_content):
     engine = pyttsx3.init()
     engine.setProperty("rate", 450)  # Speed of speech (words per minute)
@@ -32,7 +31,7 @@ def speak_content(text_content):
         "voice", voices[10].id
     )  # Change the index to select a different voice
     engine.setProperty("pitch", 10)  # Increase the pitch
-    
+
     # Splitting the text content into two halves
     mid_point = len(text_content) // 2
     first_half = text_content[:mid_point]
@@ -60,8 +59,6 @@ def speak_content(text_content):
 
     if not success:
         logging.error("Failed to speak content after multiple attempts.")
-
-
 
 
 # Base URL for the chapters
@@ -144,9 +141,25 @@ def speak_content(text_content):
 # base_url = "https://www.wuxiabox.com/novel/immortality-cultivation-i-can-use-my-clansmens-energy-and-blood-to-add-points_"
 # base_url = "https://www.wuxiabox.com/novel/beast-control-starts-from-zero-points_"
 base_url = "https://www.wuxiabox.com/novel/an-ordinary-path-to-immortality_"
-
-
-
+# base_url = "https://www.wuxiabox.com/novel/cultivation-of-immortality-in-the-troubled-times-of-demons-and-martial-arts_"
+# base_url = "https://www.wuxiabox.com/novel/mortal-seeking-immortal_"
+# base_url = "https://www.wuxiabox.com/novel/farming-in-the-immortal-mansion_"
+# base_url = "https://www.wuxiabox.com/novel/qingyuan-immortal-palace_"
+# base_url = "https://www.wuxiabox.com/novel/my-martial-arts-will-hang-up_"
+# base_url = "https://www.wuxiabox.com/novel/cultivating-immortals-is-a-hard-job_"
+# base_url = "https://www.wuxiabox.com/novel/immortal-cultivation-simulator-starts-with-low-martial-arts_"
+# base_url = "https://www.wuxiabox.com/novel/longevity-species_"
+# base_url = "https://www.wuxiabox.com/novel/longevity-martial-arts-i-have-a-black-water-snake-clone_"
+# base_url = "https://www.wuxiabox.com/novel/my-immortal-cultivation-simulation_" # Longevity starts with learning
+# base_url = "https://www.wuxiaspot.com/novel/my-talent-for-cultivating-immortals-can-be-refreshed_"
+# base_url = "https://www.wuxiaspot.com/novel/mortals-cultivating-immortality-and-the-fate-of-immortal-jade_"
+# base_url = "https://www.wuxiaspot.com/novel/cultivation-begins-with-the-mysterious-little-tripod_"
+# base_url = "https://www.wuxiaspot.com/novel/demon-sect-cultivation-i-can-disable-debuffs_"
+# base_url = "https://www.wuxiabox.com/novel/become-a-fairy_"
+# base_url = "https://www.wuxiabox.com/novel/living-in-the-world-of-cultivation_"
+# base_url = "https://www.wuxiabox.com/novel/copying-natural-treasures-cultivating-immortality-is-not-difficult_"
+# base_url = "https://www.wuxiabox.com/novel/immortal-cultivation-simulation-the-great-great-grandson-bring-back-cultivation-technique_"
+base_url = "https://www.wuxiabox.com/novel/martial-arts-immortality-my-practice-has-experience_"
 
 
 # Number of chapters to fetch and speak
@@ -231,13 +244,26 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 2
 # current_chapter = 128
 current_chapter = 182
-
-
-
-
-
-
-
+# current_chapter = 28
+# current_chapter = 1
+# current_chapter = 77
+# current_chapter = 94
+# current_chapter = 63
+# current_chapter = 324
+# current_chapter = 198
+# current_chapter = 107
+# current_chapter = 124
+# current_chapter = 61
+# current_chapter = 106
+# current_chapter = 95
+# current_chapter = 45
+# current_chapter = 29
+# current_chapter = 1
+# current_chapter = 409
+# current_chapter = 43
+# current_chapter = 83
+# current_chapter = 43
+current_chapter = 10
 
 
 # Loop through each chapter number
