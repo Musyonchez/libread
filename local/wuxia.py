@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import logging
+import time
 
 import pyttsx3
 import requests
@@ -22,6 +23,7 @@ def fetch_content(url):
     return content_div.get_text() if content_div else "Content not found"
 
 
+
 def speak_content(text_content):
     engine = pyttsx3.init()
     engine.setProperty("rate", 450)  # Speed of speech (words per minute)
@@ -35,12 +37,30 @@ def speak_content(text_content):
     mid_point = len(text_content) // 2
     first_half = text_content[:mid_point]
     second_half = text_content[mid_point:]
-    
-    # Speaking each half separately
-    engine.say(first_half)
-    engine.runAndWait()
-    engine.say(second_half)
-    engine.runAndWait()
+
+    success = False
+    retries = 0
+    max_retries = 20  # Define the max number of retries before giving up
+
+    while not success and retries < max_retries:
+        try:
+            # Attempt to speak the content
+            logging.info(f"Attempt {retries + 1} to speak the content.")
+            engine.say(first_half)
+            engine.runAndWait()
+            engine.say(second_half)
+            engine.runAndWait()
+            success = True  # If no exception occurs, mark success as True
+            logging.info("Speech completed successfully.")
+        except Exception as e:
+            retries += 1
+            logging.error(f"Error during speech: {e}")
+            logging.info(f"Retrying... ({retries}/{max_retries})")
+            time.sleep(2)  # Wait for 2 seconds before retrying
+
+    if not success:
+        logging.error("Failed to speak content after multiple attempts.")
+
 
 
 
@@ -113,13 +133,17 @@ def speak_content(text_content):
 # base_url = "https://www.wuxiabox.com/novel/starting-from-longevity-gou-dao-becomes-immortal_"
 # base_url = "https://www.wuxiabox.com/novel/6948202_" # Alchemy Dao Immortal
 # base_url = "https://www.wuxiabox.com/novel/wizard-i-can-extract-identities_"
-# base_url = "https://www.wuxiabox.com/novel/6948521_"
+# base_url = "https://www.wuxiabox.com/novel/6948521_" Simulation of all things: starting with copper skin and iron bones
 # base_url = "https://www.wuxiabox.com/novel/immortal-refiner_"
-base_url = "https://www.fanmtl.com/novel/xiuxian-the-beginning-starts-with-the-drug-boy_" #Beginning to practice immortality as a refugee
-
-
-
-
+# base_url = "https://www.fanmtl.com/novel/xiuxian-the-beginning-starts-with-the-drug-boy_" #Beginning to practice immortality as a refugee
+# base_url = "https://www.wuxiabox.com/novel/become-a-fairy_"
+# base_url = "https://www.wuxiabox.com/novel/beastmaster-i-can-set-the-evolution-route_"
+# base_url = "https://www.wuxiabox.com/novel/copying-natural-treasures-cultivating-immortality-is-not-difficult_"
+# base_url = "https://www.wuxiabox.com/novel/my-beast-conquers-everything_"
+# base_url = "https://www.wuxiabox.com/novel/beast-tamer-start-from-sss-talent_"
+# base_url = "https://www.wuxiabox.com/novel/immortality-cultivation-i-can-use-my-clansmens-energy-and-blood-to-add-points_"
+# base_url = "https://www.wuxiabox.com/novel/beast-control-starts-from-zero-points_"
+base_url = "https://www.wuxiabox.com/novel/an-ordinary-path-to-immortality_"
 
 
 
@@ -195,11 +219,18 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 66
 # current_chapter = 138
 # current_chapter = 1
-# current_chapter = 142
+# current_chapter = 184
 # current_chapter = 252
 # current_chapter = 10
-current_chapter = 328
-
+# current_chapter = 346
+# current_chapter = 141
+# current_chapter = 83
+# current_chapter = 217
+# current_chapter = 251
+# current_chapter = 40
+# current_chapter = 2
+# current_chapter = 128
+current_chapter = 182
 
 
 
