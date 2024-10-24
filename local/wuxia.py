@@ -39,7 +39,7 @@ def speak_content(text_content):
 
     success = False
     retries = 0
-    max_retries = 20  # Define the max number of retries before giving up
+    max_retries = 50  # Define the max number of retries before giving up
 
     while not success and retries < max_retries:
         try:
@@ -140,7 +140,7 @@ def speak_content(text_content):
 # base_url = "https://www.wuxiabox.com/novel/beast-tamer-start-from-sss-talent_"
 # base_url = "https://www.wuxiabox.com/novel/immortality-cultivation-i-can-use-my-clansmens-energy-and-blood-to-add-points_"
 # base_url = "https://www.wuxiabox.com/novel/beast-control-starts-from-zero-points_"
-base_url = "https://www.wuxiabox.com/novel/an-ordinary-path-to-immortality_"
+# base_url = "https://www.wuxiabox.com/novel/an-ordinary-path-to-immortality_"
 # base_url = "https://www.wuxiabox.com/novel/cultivation-of-immortality-in-the-troubled-times-of-demons-and-martial-arts_"
 # base_url = "https://www.wuxiabox.com/novel/mortal-seeking-immortal_"
 # base_url = "https://www.wuxiabox.com/novel/farming-in-the-immortal-mansion_"
@@ -159,7 +159,22 @@ base_url = "https://www.wuxiabox.com/novel/an-ordinary-path-to-immortality_"
 # base_url = "https://www.wuxiabox.com/novel/living-in-the-world-of-cultivation_"
 # base_url = "https://www.wuxiabox.com/novel/copying-natural-treasures-cultivating-immortality-is-not-difficult_"
 # base_url = "https://www.wuxiabox.com/novel/immortal-cultivation-simulation-the-great-great-grandson-bring-back-cultivation-technique_"
-base_url = "https://www.wuxiabox.com/novel/martial-arts-immortality-my-practice-has-experience_"
+# base_url = "https://www.wuxiabox.com/novel/martial-arts-immortality-my-practice-has-experience_"
+# base_url = "https://www.wuxiabox.com/novel/beast-tamer-i-can-simulate-the-eternal-beast_"
+# base_url = "https://www.wuxiabox.com/novel/farming-tree-spirit_"
+# base_url = "https://www.wuxiabox.com/novel/royal-beast-i-can-evolve-infinitely_"
+# base_url = "https://www.wuxiabox.com/novel/beast-tamer-simulator-my-beast-can-evolve-infinitely_"
+# base_url = "https://www.wuxiabox.com/novel/beast-tamer-is-invincible-others-spend-money-but-i-spend-my-life_"
+# base_url = "https://www.wuxiabox.com/novel/beasts-are-just-for-me-to-bond-with_"
+# base_url = "https://www.wuxiabox.com/novel/the-strongest-dragon-in-the-age-of-beasts_"
+base_url = "https://www.wuxiabox.com/novel/beast-master-for-all-i-can-see-the-hidden-evolution-route_"
+
+
+
+
+
+
+
 
 
 # Number of chapters to fetch and speak
@@ -243,7 +258,7 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 40
 # current_chapter = 2
 # current_chapter = 128
-current_chapter = 182
+# current_chapter = 182
 # current_chapter = 28
 # current_chapter = 1
 # current_chapter = 77
@@ -263,7 +278,18 @@ current_chapter = 182
 # current_chapter = 43
 # current_chapter = 83
 # current_chapter = 43
-current_chapter = 10
+# current_chapter = 10
+# current_chapter = 197
+# current_chapter = 81
+# current_chapter = 168
+# current_chapter = 84
+# current_chapter = 199
+# current_chapter = 2
+# current_chapter = 20
+current_chapter = 34
+
+
+
 
 
 # Loop through each chapter number
