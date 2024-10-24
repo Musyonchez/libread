@@ -1,19 +1,21 @@
 import { spawn } from "child_process";
 import { NextApiRequest, NextApiResponse } from "next";
-import path from "path";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { text_content } = req.body;
 
-  const content = spawn("python3", ["src/python/fetchContent.py"]);
+  const content = spawn("python3", ["src/python/convertAudio.py"]);
 
+  // Send text content to Python script
   content.stdin.write(`SPEAK:${text_content}`);
   content.stdin.end();
 
-  let output = "";
+  // Set headers for streaming audio
+  res.setHeader("Content-Type", "audio/mpeg");
 
+  // Stream the output from Python back to the client
   content.stdout.on("data", (data) => {
-    output += data.toString();
+    res.write(data);  // Stream audio chunks as they come
   });
 
   content.stderr.on("data", (data) => {
@@ -21,16 +23,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   });
 
   content.on("close", () => {
-    if (output) {
-      try {
-        const { audio_file } = JSON.parse(output);
-        const filePath = path.join(process.cwd(), "src/python", audio_file);
-        res.status(200).json({ audioPath: `/api/audio/${audio_file}` });
-      } catch (error) {
-        res.status(500).json({ error: "Failed to parse JSON" });
-      }
-    } else {
-      res.status(500).json({ error: "No output received" });
-    }
+    res.end();  // End the response when done
   });
 }

@@ -5,6 +5,7 @@ const Index: React.FC = () => {
   const [fetchedContent, setFetchedContent] = useState<string | null>(null);
   const [audioSrc, setAudioSrc] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [converting, setConverting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,8 +30,8 @@ const Index: React.FC = () => {
       setLoading(false);
     }
   };
-
   const handleConvertToAudio = async () => {
+    setConverting(true);
     if (fetchedContent) {
       try {
         const response = await fetch("/api/textToSpeech", {
@@ -43,10 +44,16 @@ const Index: React.FC = () => {
           }),
         });
 
-        const data = await response.json();
-        setAudioSrc(data.audioPath);
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+
+        // Set the audio source and play
+        const audio = new Audio(audioUrl);
+        audio.play();
       } catch (error) {
         console.error("Error converting text to audio:", error);
+      } finally {
+        setConverting(false);
       }
     }
   };
@@ -89,7 +96,7 @@ const Index: React.FC = () => {
             onClick={handleConvertToAudio}
             className="py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-300 ease-in-out"
           >
-            Convert to Audio
+            {converting ? " Converting to Audio..." : " Convert to Audio"}
           </button>
         </div>
       )}

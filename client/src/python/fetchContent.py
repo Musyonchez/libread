@@ -3,7 +3,7 @@ import json
 from bs4 import BeautifulSoup
 import requests
 from gtts import gTTS
-import os
+from io import BytesIO
 
 def fetch_content(url):
     try:
@@ -15,27 +15,19 @@ def fetch_content(url):
     except Exception as e:
         return json.dumps({"error": str(e)})
 
-def convert_text_to_audio(text_content):   
-    try:
-        # Define the directory and file name
-        audio_dir = os.path.join(os.getcwd(), "api", "audio")
-        file_name = "output_audio.mp3"
-        
-        # Ensure the 'api/audio' directory exists
-        if not os.path.exists(audio_dir):
-            os.makedirs(audio_dir)
-        
-        # Save the file in the 'api/audio' directory
-        file_path = os.path.join(audio_dir, file_name)
-        
-        # Convert text to speech and save the audio file
-        tts = gTTS(text=text_content, lang='en')
-        tts.save(file_path)
 
-        # Return the file path or file name
-        return file_name
-    except Exception as e:
-        return {"error": str(e)}
+def generate_audio(text):
+    # Convert the text to audio
+    tts = gTTS(text)
+    audio_io = BytesIO()
+    tts.write_to_fp(audio_io)
+    audio_io.seek(0)
+    return audio_io
+
+def stream_audio(text_content):
+    for chunk in text_content:
+        audio_io = generate_audio(chunk)
+        yield audio_io.read()  # Stream the audio in chunks
 
 if __name__ == "__main__":
     request_type = sys.stdin.read().strip()
@@ -47,5 +39,5 @@ if __name__ == "__main__":
 
     elif request_type.startswith("SPEAK:"):
         text_content = request_type.split("SPEAK:")[1].strip()
-        audio_file = convert_text_to_audio(text_content)
+        audio_file = stream_audio(text_content)
         print(json.dumps({"audio_file": audio_file}))
