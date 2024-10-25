@@ -2,7 +2,7 @@ import { spawn } from "child_process";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { url } = req.body;
+  const { url, element, className, elementId } = req.body;
 
   try {
     // Validate URL
@@ -11,7 +11,22 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const content = spawn("python3", ["src/python/fetchContent.py"]);
 
-    content.stdin.write(`FETCH:${url}`);
+    // Construct the command string based on available parameters
+    let commandString = `FETCH:${url}`;
+
+    if (element) {
+      commandString += `|${element}`;
+    }
+
+    if (className) {
+      commandString += `|${className}`;
+    }
+
+    if (elementId) {
+      commandString += `|${elementId}`;
+    }
+
+    content.stdin.write(commandString);
     content.stdin.end();
 
     let output = "";

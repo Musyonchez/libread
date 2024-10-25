@@ -25,7 +25,7 @@ def fetch_content(url):
 
 def speak_content(text_content):
     engine = pyttsx3.init()
-    engine.setProperty("rate", 450)  # Speed of speech (words per minute)
+    engine.setProperty("rate", 350)  # Speed of speech (words per minute)
     voices = engine.getProperty("voices")
     engine.setProperty(
         "voice", voices[10].id
@@ -166,10 +166,10 @@ def speak_content(text_content):
 # base_url = "https://www.wuxiabox.com/novel/beast-tamer-simulator-my-beast-can-evolve-infinitely_"
 # base_url = "https://www.wuxiabox.com/novel/beast-tamer-is-invincible-others-spend-money-but-i-spend-my-life_"
 # base_url = "https://www.wuxiabox.com/novel/beasts-are-just-for-me-to-bond-with_"
-# base_url = "https://www.wuxiabox.com/novel/the-strongest-dragon-in-the-age-of-beasts_"
-base_url = "https://www.wuxiabox.com/novel/beast-master-for-all-i-can-see-the-hidden-evolution-route_"
-
-
+base_url = "https://www.wuxiabox.com/novel/the-strongest-dragon-in-the-age-of-beasts_"
+# base_url = "https://www.wuxiabox.com/novel/beast-master-for-all-i-can-see-the-hidden-evolution-route_"
+# base_url = "https://www.wuxiabox.com/novel/beast-familiarization-for-all-mythical-potential-spirit-beasts-at-the-beginning_"
+# base_url = "https://www.wuxiabox.com/novel/is-the-beast-master-the-weakest-profession-i-made-a-contract-with-the-mythical-beast-white-tiger_"
 
 
 
@@ -285,9 +285,10 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 84
 # current_chapter = 199
 # current_chapter = 2
-# current_chapter = 20
-current_chapter = 34
-
+current_chapter = 60
+# current_chapter = 77
+# current_chapter = 109
+# current_chapter = 1
 
 
 
