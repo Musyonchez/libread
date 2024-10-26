@@ -1,10 +1,106 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Play from "./Play";
 
 const Display = ({ fetchedContent }: { fetchedContent: string | null }) => {
   const [formattedContent, setFormattedContent] = useState<JSX.Element | null>(
     null
   );
+
+  const formatContent = useCallback((element: Element | Document) => {
+    const formattedElements: JSX.Element[] = [];
+
+    element.childNodes.forEach((node, index) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        // Handle text nodes, ensuring the content is not just whitespace
+        const text = node.textContent?.trim();
+        if (text) {
+          formattedElements.push(
+            <p key={`text-${index}`} className="mb-4">
+              {text}
+            </p>
+          );
+        }
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        const el = node as HTMLElement;
+
+        switch (el.tagName) {
+          case "H1":
+          case "H2":
+          case "H3":
+            // Headings: Render each as their respective tags
+            formattedElements.push(
+              React.createElement(
+                el.tagName.toLowerCase(),
+                {
+                  key: `${el.tagName}-${index}`,
+                  className: "text-xl font-bold mt-4",
+                },
+                el.textContent
+              )
+            );
+            break;
+
+          case "P":
+            // Paragraphs: Render as <p> elements
+            formattedElements.push(
+              <p key={`p-${index}`} className="mb-4">
+                {el.textContent}
+              </p>
+            );
+            break;
+
+          case "BR":
+            // Line breaks: Render as <br /> elements
+            formattedElements.push(<br key={`br-${index}`} />);
+            break;
+
+          case "DIV":
+          case "SECTION":
+          case "ARTICLE":
+            // Recursive handling for nested content within divs, sections, articles
+            formattedElements.push(
+              <div key={`div-${index}`} className="mb-4">
+                {formatContent(el)}
+              </div>
+            );
+            break;
+
+          case "UL":
+          case "OL":
+            // Lists: Render as <ul> or <ol>, handling their children <li>
+            const listItems = Array.from(el.getElementsByTagName("li")).map(
+              (li, liIndex) => (
+                <li key={`li-${liIndex}`} className="mb-2">
+                  {li.textContent}
+                </li>
+              )
+            );
+            formattedElements.push(
+              React.createElement(
+                el.tagName.toLowerCase(),
+                {
+                  key: `${el.tagName}-${index}`,
+                  className: "mb-4 list-disc pl-5",
+                },
+                listItems
+              )
+            );
+            break;
+
+          default:
+            // Default case: Render unsupported elements as plain divs
+            formattedElements.push(
+              <div key={`default-${index}`} className="mb-4">
+                {el.textContent}
+              </div>
+            );
+            break;
+        }
+      }
+    });
+
+    return <>{formattedElements}</>;
+  }, []);
 
   useEffect(() => {
     if (fetchedContent) {
@@ -37,7 +133,6 @@ const Display = ({ fetchedContent }: { fetchedContent: string | null }) => {
         contentElement = doc.body || doc.documentElement;
       }
 
-      
       // If we found content, format it
       if (contentElement) {
         setFormattedContent(formatContent(contentElement));
@@ -45,92 +140,12 @@ const Display = ({ fetchedContent }: { fetchedContent: string | null }) => {
         setFormattedContent(<p>No content found.</p>);
       }
     }
-  }, [fetchedContent]);
-
-  const formatContent = (element: Element | Document) => {
-    // Create an array to hold formatted elements
-    const formattedElements: JSX.Element[] = [];
-
-    // Define a list of elements to include in the formatting
-    const elementsToInclude = [
-      { tag: "h1", component: "h1" },
-      { tag: "h2", component: "h2" },
-      { tag: "h3", component: "h3" },
-      { tag: "p", component: "p" },
-      { tag: "blockquote", component: "blockquote" },
-      { tag: "ul", component: "ul", listItem: true },
-      { tag: "ol", component: "ol", listItem: true },
-      { tag: "li", component: "li", listItem: false },
-      { tag: "div", component: "div" },
-    ];
-    console.log("element form display useEffect", element)
-
-    // Loop through each defined element type
-    elementsToInclude.forEach(({ tag, component, listItem }) => {
-      const elements = Array.from(element.getElementsByTagName(tag));
-
-      elements.forEach((el, index) => {
-        const parent = el.parentNode as ParentNode;
-
-        if (listItem && component === "li") {
-          // If it's a list item, wrap it in a parent <ul> or <ol> if not already done
-          if (
-            parent &&
-            (parent.nodeName === "UL" || parent.nodeName === "OL")
-          ) {
-            formattedElements.push(
-              <li key={`${tag}-${index}`}>{el.textContent}</li>
-            );
-          }
-        } else if (
-          component === "h1" ||
-          component === "h2" ||
-          component === "h3"
-        ) {
-          // For headings, render each heading found
-          formattedElements.push(
-            React.createElement(
-              component,
-              { key: `${tag}-${index}`, className: "text-xl font-bold mt-4" },
-              el.textContent
-            )
-          );
-        } else if (component === "p") {
-          // For paragraphs, render each paragraph found
-          formattedElements.push(
-            <p key={index} className="mb-4">
-              {el.textContent}
-            </p>
-          );
-        } else if (component === "div") {
-          // For divs, render each paragraph found
-          formattedElements.push(
-            <p key={index} className="mb-4">
-              {el.textContent}
-            </p>
-          );
-        } else {
-          // For other elements, render directly
-          formattedElements.push(
-            React.createElement(
-              component,
-              { key: `${tag}-${index}`, className: listItem ? "mb-2" : "" },
-              el.textContent
-            )
-          );
-        }
-      });
-    });
-
-    console.log("formattedElements form display useEffect", formattedElements)
-
-    return <>{formattedElements}</>;
-  };
+  }, [fetchedContent, formatContent]);
 
   return (
     <div className="text-black w-full">
       <Play formattedContent={formattedContent} />
-      <p>{formattedContent}</p>
+      {/* <p>{formattedContent}</p> */}
     </div>
   );
 };

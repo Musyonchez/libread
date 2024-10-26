@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 const Play = ({ formattedContent }: { formattedContent: JSX.Element | null }) => {
   const [converting, setConverting] = useState(false);
+  console.log("formattedContent",formattedContent)
 
   // Handle converting a specific line of text to audio
   const handleConvertToAudio = async (text: string) => {
@@ -54,11 +55,11 @@ const Play = ({ formattedContent }: { formattedContent: JSX.Element | null }) =>
 
   return (
     <div>
-      {formattedContent ? (
+      {/* {formattedContent ? (
         <div>{formattedContent}</div>
       ) : (
         <p>Loading content...</p>
-      )}
+      )} */}
 
       {formattedContent && (
         <div className="mt-6 w-full">
