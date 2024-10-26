@@ -2,11 +2,15 @@ import React, { useState } from "react";
 
 const Play = ({ formattedContent }: { formattedContent: JSX.Element | null }) => {
   const [converting, setConverting] = useState(false);
+  const [selectedLine, setSelectedLine] = useState<number | null>(null); // Track the selected line
+
   console.log("formattedContent",formattedContent)
 
-  // Handle converting a specific line of text to audio
-  const handleConvertToAudio = async (text: string) => {
+    // Handle converting a specific line of text to audio
+  const handleConvertToAudio = async (text: string, lineIndex: number) => {
     setConverting(true);
+    setSelectedLine(lineIndex); // Highlight the line being read
+
     try {
       const response = await fetch("/api/textToSpeech", {
         method: "POST",
@@ -23,6 +27,7 @@ const Play = ({ formattedContent }: { formattedContent: JSX.Element | null }) =>
 
       // Set the audio source and play
       const audio = new Audio(audioUrl);
+      audio.playbackRate = 3; // Adjust this value for faster playback
       audio.play();
     } catch (error) {
       console.error("Error converting text to audio:", error);
@@ -67,14 +72,16 @@ const Play = ({ formattedContent }: { formattedContent: JSX.Element | null }) =>
           {extractLines(formattedContent).map((line, index) => (
             <p
               key={index}
-              className="text-black mb-2 cursor-pointer"
-              onClick={() => handleConvertToAudio(line)}
+              className={`text-black mb-2 cursor-pointer ${
+                selectedLine === index ? "bg-blue-100" : "" // Highlight the selected line
+              }`}
+              onClick={() => handleConvertToAudio(line, index)}
             >
               {line}
             </p>
           ))}
           <button
-            onClick={() => handleConvertToAudio("All content")} // Change this as needed
+            onClick={() => handleConvertToAudio("All content", -1)} // Change this as needed
             className="py-2 px-4 bg-green-500 text-black font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-300 ease-in-out"
           >
             {converting ? "Converting to Audio..." : "Convert Selected Line to Audio"}
