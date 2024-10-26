@@ -44,7 +44,7 @@ const Input = ({
       const data = await response.json();
       if (response.ok) {
         setFetchedContent(data.html_content);
-        console.log(data.html_content);
+        // console.log("return input.tsx after submit", data.html_content);
       } else {
         setFetchedContent("Failed to fetch content.");
       }

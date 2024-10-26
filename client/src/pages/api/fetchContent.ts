@@ -45,13 +45,16 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
           const parsedOutput = JSON.parse(output);
           res.status(200).json(parsedOutput);
         } catch (error) {
-          res.status(500).json({ error: "Failed to parse JSON from the child process." });
+          res
+            .status(500)
+            .json({ error: "Failed to parse JSON from the child process." });
         }
       } else {
-        res.status(500).json({ error: "No output received from the child process." });
+        res
+          .status(500)
+          .json({ error: "No output received from the child process." });
       }
     });
-
   } catch (err) {
     res.status(400).json({ error: "Invalid URL" });
   }

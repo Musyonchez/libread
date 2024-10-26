@@ -10,7 +10,7 @@ const Index = () => {
 
 
   return (
-    <div className=" bg-white min-h-screen">
+    <div className=" bg-white text-black min-h-screen">
       <Navbar />
       <div className=" w-full flex flex-col justify-center items-center">
         <Input
@@ -18,6 +18,7 @@ const Index = () => {
           setText={setText}
           setFetchedContent={setFetchedContent}
         />
+        {/* <p>hscfsiufchs{fetchedContent}</p> */}
         <Display fetchedContent={fetchedContent} />
       </div>
       <Footer />

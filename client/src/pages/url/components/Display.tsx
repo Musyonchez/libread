@@ -12,19 +12,42 @@ const Display = ({ fetchedContent }: { fetchedContent: string | null }) => {
       const parser = new DOMParser();
       const doc = parser.parseFromString(fetchedContent, "text/html");
 
-      // Extract the relevant content from the chapter-content class
-      const chapterContent = doc.querySelector(".chapter-content");
+      // Define potential selectors for the content area
+      const selectors = [
+        "#main-content", // Assuming the main content is within an element with this ID
+        ".article-body", // Common class for article bodies
+        ".content-wrapper", // Wrapper around the main content
+        ".chapter-content", // As per your original requirement
+        "div.content", // Div with a class of 'content'
+        "article", // Article tag
+        "section", // Section tag
+      ];
 
-      // If there's chapter content, format it
-      if (chapterContent) {
-        setFormattedContent(formatContent(chapterContent));
+      let contentElement;
+
+      // Try each selector until we find a match
+      for (const selector of selectors) {
+        contentElement = doc.querySelector(selector);
+        if (contentElement) {
+          break;
+        }
+      }
+
+      if (!contentElement) {
+        contentElement = doc.body || doc.documentElement;
+      }
+
+      
+      // If we found content, format it
+      if (contentElement) {
+        setFormattedContent(formatContent(contentElement));
       } else {
         setFormattedContent(<p>No content found.</p>);
       }
     }
   }, [fetchedContent]);
 
-  const formatContent = (element: Element) => {
+  const formatContent = (element: Element | Document) => {
     // Create an array to hold formatted elements
     const formattedElements: JSX.Element[] = [];
 
@@ -40,6 +63,7 @@ const Display = ({ fetchedContent }: { fetchedContent: string | null }) => {
       { tag: "li", component: "li", listItem: false },
       { tag: "div", component: "div" },
     ];
+    console.log("element form display useEffect", element)
 
     // Loop through each defined element type
     elementsToInclude.forEach(({ tag, component, listItem }) => {
@@ -78,6 +102,13 @@ const Display = ({ fetchedContent }: { fetchedContent: string | null }) => {
               {el.textContent}
             </p>
           );
+        } else if (component === "div") {
+          // For divs, render each paragraph found
+          formattedElements.push(
+            <p key={index} className="mb-4">
+              {el.textContent}
+            </p>
+          );
         } else {
           // For other elements, render directly
           formattedElements.push(
@@ -91,12 +122,15 @@ const Display = ({ fetchedContent }: { fetchedContent: string | null }) => {
       });
     });
 
+    console.log("formattedElements form display useEffect", formattedElements)
+
     return <>{formattedElements}</>;
   };
 
   return (
     <div className="text-black w-full">
       <Play formattedContent={formattedContent} />
+      <p>{formattedContent}</p>
     </div>
   );
 };
