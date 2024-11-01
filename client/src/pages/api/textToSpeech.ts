@@ -1,10 +1,12 @@
 import { spawn } from "child_process";
+import { log } from "console";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const audioCache = new Map<string, Buffer>();
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { text_content } = req.body;
+  console.log("text_content from text to speech", text_content)
 
   if (audioCache.has(text_content)) {
     // Serve from cache if available

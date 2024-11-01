@@ -1,22 +1,19 @@
 import React, { useState } from "react";
+import { usePlayback } from "../components/context/PlaybackContext"; // Adjust the path as necessary
 
 // Define the props interface
-interface ControlProps {
-  playbackSpeed: number; // playbackSpeed is a number
-  setPlaybackSpeed: (value: number) => void; // setPlaybackSpeed is a function that takes a number and returns void
-}
 
 // Define the Control component with props
-const Control: React.FC<ControlProps> = ({
-  playbackSpeed,
-  setPlaybackSpeed,
-}) => {
+const Control = () => {
+  const { handleBackPlay, handleForwardPlay, playbackSpeed, setPlaybackSpeed } =
+    usePlayback(); // Use the custom hook
+
   const [showPlaybackSpeedMenu, setShowPlaybackSpeedMenu] = useState(false);
   // Create an array for playback speed options from 1 to 5
   const speeds = [1, 2, 3, 4, 5];
 
   const handleSpeedChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement>
   ): void => {
     event.preventDefault();
     const newSpeed = parseFloat(event.target.value);
@@ -34,6 +31,7 @@ const Control: React.FC<ControlProps> = ({
             stroke-width="1.5"
             stroke="currentColor"
             className="size-10"
+            onClick={handleBackPlay}
           >
             <path
               stroke-linecap="round"
@@ -66,6 +64,7 @@ const Control: React.FC<ControlProps> = ({
             stroke-width="1.5"
             stroke="currentColor"
             className="size-10"
+            onClick={handleForwardPlay}
           >
             <path
               stroke-linecap="round"
