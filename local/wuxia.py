@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
 import logging
+import os
 import time
 
 import pyttsx3
 import requests
 from bs4 import BeautifulSoup
+
+# from gtts import gTTS
 
 # Configure logging
 logging.basicConfig(
@@ -171,11 +174,8 @@ def speak_content(text_content):
 # base_url = "https://www.wuxiabox.com/novel/beast-familiarization-for-all-mythical-potential-spirit-beasts-at-the-beginning_"
 # base_url = "https://www.wuxiabox.com/novel/my-beast-has-unlimited-evolution_"
 # base_url = "https://www.wuxiabox.com/novel/super-god-starts-from-controlling-beasts_"
-base_url = "https://www.wuxiaspot.com/novel/the-global-era-the-arrival-of-the-beast_"
-
-
-
-
+# base_url = "https://www.wuxiaspot.com/novel/the-global-era-the-arrival-of-the-beast_"
+base_url = "https://www.wuxiabox.com/novel/beast-taming-i-can-bestow-attributes_"
 
 
 # Number of chapters to fetch and speak
@@ -282,7 +282,7 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 10
 # current_chapter = 197
 # current_chapter = 81
-# current_chapter = 367
+# current_chapter = 438
 # current_chapter = 84
 # current_chapter = 199
 # current_chapter = 2
@@ -291,9 +291,8 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 109
 # current_chapter = 31
 # current_chapter = 1
+# current_chapter = 1
 current_chapter = 1
-
-
 
 # Loop through each chapter number
 for chapter_number in range(current_chapter, num_chapters + 1):

@@ -1,28 +1,35 @@
 import { spawn } from "child_process";
 import { NextApiRequest, NextApiResponse } from "next";
 
+const audioCache = new Map<string, Buffer>();
+
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { text_content } = req.body;
 
+  if (audioCache.has(text_content)) {
+    // Serve from cache if available
+    const cachedAudio = audioCache.get(text_content);
+    res.setHeader("Content-Type", "audio/mpeg");
+    return res.end(cachedAudio);
+  }
+
   const content = spawn("python3", ["src/python/convertAudio.py"]);
 
-  // Send text content to Python script
   content.stdin.write(`SPEAK:${text_content}`);
   content.stdin.end();
 
-  // Set headers for streaming audio
   res.setHeader("Content-Type", "audio/mpeg");
 
-  // Stream the output from Python back to the client
-  content.stdout.on("data", (data) => {
-    res.write(data);  // Stream audio chunks as they come
-  });
+  let audioChunks: Buffer[] = [];
 
-  content.stderr.on("data", (data) => {
-    console.error(`stderr: ${data}`);
+  content.stdout.on("data", (data: Buffer) => {
+    audioChunks.push(data); // Collect audio chunks
+    res.write(data); // Stream audio to client
   });
 
   content.on("close", () => {
-    res.end();  // End the response when done
+    const completeAudio = Buffer.concat(audioChunks);
+    audioCache.set(text_content, completeAudio); // Cache the full audio
+    res.end();
   });
 }

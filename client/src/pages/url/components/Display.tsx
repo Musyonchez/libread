@@ -3,7 +3,7 @@ import Play from "./Play";
 
 const Display = ({ fetchedContent }: { fetchedContent: string | null }) => {
   const [formattedContent, setFormattedContent] = useState<JSX.Element | null>(
-    null
+    null,
   );
 
   const formatContent = useCallback((element: Element | Document) => {
@@ -17,7 +17,7 @@ const Display = ({ fetchedContent }: { fetchedContent: string | null }) => {
           formattedElements.push(
             <p key={`text-${index}`} className="mb-4">
               {text}
-            </p>
+            </p>,
           );
         }
       } else if (node.nodeType === Node.ELEMENT_NODE) {
@@ -33,20 +33,15 @@ const Display = ({ fetchedContent }: { fetchedContent: string | null }) => {
                 el.tagName.toLowerCase(),
                 {
                   key: `${el.tagName}-${index}`,
-                  className: "text-xl font-bold mt-4",
                 },
-                el.textContent
-              )
+                el.textContent,
+              ),
             );
             break;
 
           case "P":
             // Paragraphs: Render as <p> elements
-            formattedElements.push(
-              <p key={`p-${index}`} className="mb-4">
-                {el.textContent}
-              </p>
-            );
+            formattedElements.push(<p key={`p-${index}`}>{el.textContent}</p>);
             break;
 
           case "BR":
@@ -59,9 +54,7 @@ const Display = ({ fetchedContent }: { fetchedContent: string | null }) => {
           case "ARTICLE":
             // Recursive handling for nested content within divs, sections, articles
             formattedElements.push(
-              <div key={`div-${index}`} className="mb-4">
-                {formatContent(el)}
-              </div>
+              <div key={`div-${index}`}>{formatContent(el)}</div>,
             );
             break;
 
@@ -69,30 +62,23 @@ const Display = ({ fetchedContent }: { fetchedContent: string | null }) => {
           case "OL":
             // Lists: Render as <ul> or <ol>, handling their children <li>
             const listItems = Array.from(el.getElementsByTagName("li")).map(
-              (li, liIndex) => (
-                <li key={`li-${liIndex}`} className="mb-2">
-                  {li.textContent}
-                </li>
-              )
+              (li, liIndex) => <li key={`li-${liIndex}`}>{li.textContent}</li>,
             );
             formattedElements.push(
               React.createElement(
                 el.tagName.toLowerCase(),
                 {
                   key: `${el.tagName}-${index}`,
-                  className: "mb-4 list-disc pl-5",
                 },
-                listItems
-              )
+                listItems,
+              ),
             );
             break;
 
           default:
             // Default case: Render unsupported elements as plain divs
             formattedElements.push(
-              <div key={`default-${index}`} className="mb-4">
-                {el.textContent}
-              </div>
+              <div key={`default-${index}`}>{el.textContent}</div>,
             );
             break;
         }
@@ -135,6 +121,7 @@ const Display = ({ fetchedContent }: { fetchedContent: string | null }) => {
 
       // If we found content, format it
       if (contentElement) {
+        console.log("contentElement from display.txt", contentElement);
         setFormattedContent(formatContent(contentElement));
       } else {
         setFormattedContent(<p>No content found.</p>);

@@ -1,6 +1,6 @@
-import React from 'react'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
+import React from "react";
+import Navbar from "./../components/Navbar";
+import Footer from "./../components/Footer";
 
 const index = () => {
   return (
@@ -8,7 +8,7 @@ const index = () => {
       <Navbar />
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default index
+export default index;

@@ -13,7 +13,6 @@ const Input = ({
   const [selectedElement, setSelectedElement] = useState("");
   const [selectedClassName, setSelectedClassName] = useState("");
   const [selectedElementId, setSelectedElementId] = useState("");
-  
 
   const handlePaste = async () => {
     try {
@@ -36,8 +35,8 @@ const Input = ({
         body: JSON.stringify({
           url: text,
           element: selectedElement || null,
-          className: selectedClassName || null, 
-          elementId: selectedElementId || null, 
+          className: selectedClassName || null,
+          elementId: selectedElementId || null,
         }),
       });
 
@@ -77,7 +76,9 @@ const Input = ({
             placeholder="Element (e.g., div, p)"
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500 transition duration-200 mt-1 text-black"
           />
-          <label className="block text-sm text-gray-700 mt-2">Class Name:</label>
+          <label className="block text-sm text-gray-700 mt-2">
+            Class Name:
+          </label>
           <input
             type="text"
             value={selectedClassName}
@@ -85,7 +86,9 @@ const Input = ({
             placeholder="Class name (optional)"
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500 transition duration-200 mt-1 text-black"
           />
-          <label className="block text-sm text-gray-700 mt-2">Element ID:</label>
+          <label className="block text-sm text-gray-700 mt-2">
+            Element ID:
+          </label>
           <input
             type="text"
             value={selectedElementId}

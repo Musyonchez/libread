@@ -1,6 +1,8 @@
 import sys
-from gtts import gTTS
 from io import BytesIO
+
+from gtts import gTTS
+
 
 def generate_audio(text):
     tts = gTTS(text)
@@ -9,14 +11,16 @@ def generate_audio(text):
     audio_io.seek(0)
     return audio_io.read()
 
+
 def stream_audio(text_content):
     # Split text into sentences or chunks
-    chunks = text_content.split('.')
-    
+    chunks = text_content.split(".")
+
     for chunk in chunks:
         chunk = chunk.strip()  # Remove any leading/trailing whitespace
         if chunk:  # Ensure chunk is not empty
             yield generate_audio(chunk)  # Yield audio chunks as they are generated
+
 
 if __name__ == "__main__":
     request_type = sys.stdin.read().strip()

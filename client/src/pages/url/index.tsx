@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
 import Input from "./components/Input";
 import Display from "./components/Display";
 
 const Index = () => {
   const [text, setText] = useState("");
   const [fetchedContent, setFetchedContent] = useState<string | null>(null);
-
 
   return (
     <div className=" bg-white text-black min-h-screen">
