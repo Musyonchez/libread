@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import logging
-import os
+# import os
 import time
 
 import pyttsx3
@@ -28,7 +28,7 @@ def fetch_content(url):
 
 def speak_content(text_content):
     engine = pyttsx3.init()
-    engine.setProperty("rate", 450)  # Speed of speech (words per minute)
+    engine.setProperty("rate", 400)  # Speed of speech (words per minute)
     voices = engine.getProperty("voices")
     engine.setProperty(
         "voice", voices[10].id
@@ -175,7 +175,16 @@ def speak_content(text_content):
 # base_url = "https://www.wuxiabox.com/novel/my-beast-has-unlimited-evolution_"
 # base_url = "https://www.wuxiabox.com/novel/super-god-starts-from-controlling-beasts_"
 # base_url = "https://www.wuxiaspot.com/novel/the-global-era-the-arrival-of-the-beast_"
-base_url = "https://www.wuxiabox.com/novel/beast-taming-i-can-bestow-attributes_"
+# base_url = "https://www.wuxiabox.com/novel/beast-taming-i-can-bestow-attributes_"
+base_url = "https://www.wuxiabox.com/novel/creation-of-the-world-binding-god-simulator-at-the-beginning_"
+
+
+
+
+
+
+
+
 
 
 # Number of chapters to fetch and speak
@@ -292,7 +301,14 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 31
 # current_chapter = 1
 # current_chapter = 1
-current_chapter = 1
+# current_chapter = 1
+current_chapter = 2
+
+
+
+
+
+
 
 # Loop through each chapter number
 for chapter_number in range(current_chapter, num_chapters + 1):
