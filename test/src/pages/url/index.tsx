@@ -27,10 +27,13 @@ export default function Home() {
 
       // Split text into chunks based on full stops (periods)
       const chunks = text
-        .split(/\.(?!\d)/) // Split on periods but avoid splitting decimal numbers
-        .map((chunk) => chunk.trim())
-        .filter((chunk) => chunk.length > 0)
-        .map((chunk) => ({ text: chunk + ".", isPlaying: false })); // Add back the period to each chunk
+        .split(/\.(?!\d)/)
+        .map((chunk: string) => chunk.trim())
+        .filter((chunk: string) => chunk.length > 0)
+        .map((chunk: { text: string; isPlaying: boolean }) => ({
+          text: chunk + ".",
+          isPlaying: false,
+        }));
 
       setTextChunks(chunks);
     } catch (error) {
