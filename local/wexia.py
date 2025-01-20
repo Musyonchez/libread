@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 
 import logging
+
+# import os
 import time
 
 import pyttsx3
 import requests
 from bs4 import BeautifulSoup
-from requests.exceptions import RequestException
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+
+# from gtts import gTTS
 
 # Configure logging
 logging.basicConfig(
@@ -16,75 +21,74 @@ logging.basicConfig(
 )
 
 
-def fetch_content(url):
+def fetch_content(url, max_retries=20):
+    session = requests.Session()
+
+    # Configure retry behavior
+    retries = Retry(
+        total=max_retries,
+        backoff_factor=1,
+        status_forcelist=[429, 500, 501, 502, 503, 504],
+        backoff_max=20,
+    )
+
+    session.mount("https://", HTTPAdapter(max_retries=retries))
+
     try:
-        response = requests.get(url, timeout=3)  # 10 seconds timeout
-        response.raise_for_status()  # Raise HTTPError for bad responses
+        response = session.get(url, timeout=10)
+        response.raise_for_status()
+
+        # Parse the HTML content
         soup = BeautifulSoup(response.text, "html.parser")
         content_div = soup.find("div", class_="chapter-content")
+
+        # Return the extracted content
         return content_div.get_text() if content_div else "Content not found"
-    except RequestException as e:
-        logging.error(f"Error fetching URL {url}: {e}")
-        return "Error fetching content"
+
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred while fetching the content: {e}")
+        return f"Failed to fetch content: {str(e)}"
+
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return f"Unexpected error: {str(e)}"
 
 
 def speak_content(text_content):
-    def speak_with_new_instance(content, attempt):
-        """Speaks a given content with a new pyttsx3 instance."""
-        local_engine = pyttsx3.init()
-        local_engine.setProperty("rate", 350)
-        voices = local_engine.getProperty("voices")
-        local_engine.setProperty(
-            "voice", voices[10].id
-        )  # Change the index to select a different voice
-        local_engine.setProperty("pitch", 10)  # Increase the pitch
+    engine = pyttsx3.init()
+    engine.setProperty("rate", 450)  # Speed of speech (words per minute)
+    voices = engine.getProperty("voices")
+    engine.setProperty(
+        "voice", voices[10].id
+    )  # Change the index to select a different voice
+    engine.setProperty("pitch", 10)  # Increase the pitch
 
+    success = False
+    retries = 0
+    max_retries = 100  # Define the max number of retries before giving up
+
+    while not success and retries < max_retries:
         try:
-            logging.info(f"Speaking part {attempt}...")
-            local_engine.say(content)
-            local_engine.runAndWait()
-            logging.info(f"Part {attempt} spoken successfully.")
+            # # Clear the queue before starting new speech
+            # engine.stop()
+
+            # Attempt to speak the content
+            logging.info(f"Attempt {retries + 1} to speak the content.")
+            engine.say(text_content)
+            engine.runAndWait()
+            success = True
+            logging.info("Speech completed successfully.")
         except Exception as e:
-            logging.error(f"Error during speech for part {attempt}: {e}")
-        finally:
-            local_engine.stop()
+            retries += 1
+            logging.error(f"Error during speech: {e}")
+            logging.info(f"Retrying... ({retries}/{max_retries})")
+            time.sleep(2)  # Wait for 2 seconds before retrying
 
-    # Splitting the text content into two halves
-    mid_point = len(text_content) // 2
-    first_half = text_content[:mid_point]
-    second_half = text_content[mid_point:]
+    if not success:
+        logging.error("Failed to speak content after multiple attempts.")
 
-    max_retries = 50  # Define the max number of retries before giving up
-    success_first_half, success_second_half = False, False
-
-    # Attempt to speak the first half
-    first_retries = 0
-    while not success_first_half and first_retries < max_retries:
-        try:
-            speak_with_new_instance(first_half, 1)
-            success_first_half = True
-        except Exception as e:
-            first_retries += 1
-            logging.error(
-                f"Retry {first_retries}/{max_retries} for first half failed: {e}"
-            )
-            time.sleep(2)  # Wait before retrying
-
-    # Attempt to speak the second half
-    second_retries = 0
-    while not success_second_half and second_retries < max_retries:
-        try:
-            speak_with_new_instance(second_half, 2)
-            success_second_half = True
-        except Exception as e:
-            second_retries += 1
-            logging.error(
-                f"Retry {second_retries}/{max_retries} for second half failed: {e}"
-            )
-            time.sleep(2)  # Wait before retrying
-
-    if not success_first_half or not success_second_half:
-        logging.error("Failed to speak one or both parts after multiple attempts.")
+    # Clean up resources
+    engine.stop()
 
 
 # Base URL for the chapters
@@ -197,24 +201,23 @@ def speak_content(text_content):
 # base_url = "https://www.wuxiabox.com/novel/beast-familiarization-for-all-mythical-potential-spirit-beasts-at-the-beginning_"
 # base_url = "https://www.wuxiabox.com/novel/my-beast-has-unlimited-evolution_"
 # base_url = "https://www.wuxiabox.com/novel/super-god-starts-from-controlling-beasts_"
-# base_url = "https://www.wuxiabox.com/novel/doomsday-game-awakening-sss-level-anti-armor-at-the-beginning_"
-# base_url = "https://www.wuxiabox.com/novel/in-the-world-of-xianwu-i-with-my-simulator-swept-the-world-of-tianjiao_"
-# base_url = "https://www.wuxiabox.com/novel/fantasy-i-have-a-system-that-returns-the-effect-of-cultivation-ten-thousand-times_"
-# base_url = "https://www.wuxiabox.com/novel/fantasy-i-who-listen-to-music-in-a-brothel-simulate-becoming-a-god_"
-# base_url = "https://www.wuxiabox.com/novel/my-understanding-defies-heaven-i-create-laws-and-preach-in-the-heavens_"
-# base_url = "https://www.wuxiabox.com/novel/spending-money-does-not-decrease-but-increases-i-am-invincible-with-dual-systems_"
-# base_url = "https://www.wuxiabox.com/novel/can-life-span-be-exchanged-for-treasure-i-am-invincible-with-infinite-life-span_"
-# base_url = "https://www.wuxiabox.com/novel/asking-about-longevity_"
-# base_url = "https://www.wuxiabox.com/novel/who-told-him-to-cultivate-immortality_"
-# base_url = "https://www.wuxiabox.com/novel/what-is-it-like-to-start-as-tiandao_"
-# base_url = "https://www.wuxiabox.com/novel/steady-cultivation-of-immortality-the-entire-cultivation-world-is-my-home_"
-# base_url = "https://www.wuxiabox.com/novel/start-with-a-blood-drinking-sword-and-destroy-the-world-of-immortal-cultivation_"
-# base_url = "https://www.wuxiabox.com/novel/i-can-copy-the-three-thousand-avenues_"
-# base_url = "https://www.wuxiabox.com/novel/mortal-immortal-palace_"
-# base_url = "https://www.wuxiabox.com/novel/the-ancestor-of-talismans_"
-# base_url = "https://www.wuxiabox.com/novel/the-immortal-spiritual-picture_"
-# base_url = "https://www.wuxiabox.com/novel/a-treasure-map-every-day-i-dig-for-treasure-and-revitalize-my-family_"
-base_url = "https://www.wuxiabox.com/novel/wizard-i-want-to-be-a-top-student_"
+# base_url = "https://www.wuxiaspot.com/novel/the-global-era-the-arrival-of-the-beast_"
+# base_url = "https://www.wuxiabox.com/novel/beast-taming-i-can-bestow-attributes_"
+# base_url = (
+#     "https://www.wuxiabox.com/novel/citizen-lord-let-me-draw-a-card-i-choose-it-myself_"
+# )
+# base_url = (
+#     "https://www.wuxiabox.com/novel/imperial-beast-my-spirit-beasts-are-all-mythical_"
+# )
+# base_url = "https://www.wuxiabox.com/novel/lord-amplify-a-hundredfold-and-create-the-supreme-divine-domain_"
+# base_url = "https://www.wuxiabox.com/novel/gods-the-swarm_"
+# base_url = "https://www.wuxiav.net/novel/global-gu-refining-i-can-deduce-the-combined-refining-route_"
+# base_url = "https://www.wuxiabox.com/novel/global-lords-hundredfold-increments-starting-with-the-undead_"
+# base_url = "https://www.wuxiabox.com/novel/i-can-copy-other-peoples-talents_"
+base_url = (
+    "https://www.wuxiabox.com/novel/all-people-cave-i-can-add-points-to-everything_"
+)
+
 
 # Number of chapters to fetch and speak
 num_chapters = 1000  # Adjust this number based on how many chapters you want to read
@@ -319,36 +322,29 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 43
 # current_chapter = 10
 # current_chapter = 197
-# current_chapter = 8
-# current_chapter = 367
+# current_chapter = 81
+# current_chapter = 438
 # current_chapter = 84
 # current_chapter = 199
 # current_chapter = 2
-# current_chapter = 60￼
+# current_chapter = 60
 # current_chapter = 83
 # current_chapter = 109
 # current_chapter = 31
 # current_chapter = 1
-# current_chapter = 145
-# current_chapter = 149
-# current_chapter = 141
-# current_chapter = 118
-# current_chapter = 186
-# current_chapter = 330
-# current_chapter = 37
-# current_chapter = 115
-# current_chapter = 39
-# current_chapter = 49
-# current_chapter = 113
-# current_chapter = 85
-# current_chapter = 60
-# current_chapter = 152
-# current_chapter = 102
-# current_chapter = 209
+# current_chapter = 1
+# current_chapter = 1
+# current_chapter = 88
+# current_chapter = 76
+# current_chapter = 107
 # current_chapter = 171
-current_chapter = 161
+# current_chapter = 152
+# current_chapter = 23
+# current_chapter = 1
+current_chapter = 1
 
-# Loop through each chapter number
+
+# Loop through each chapter  number
 for chapter_number in range(current_chapter, num_chapters + 1):
     # Construct the URL for the current chapter
     url = base_url + str(chapter_number) + ".html"
