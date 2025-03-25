@@ -40,7 +40,7 @@ def fetch_content(url, max_retries=20):
 
         # Parse the HTML content
         soup = BeautifulSoup(response.text, "html.parser")
-        content_div = soup.find("div", class_="chapter-content")
+        content_div = soup.find("div", class_="ct-div-block ChapterContentWrapper")
 
         # Return the extracted content
         return content_div.get_text() if content_div else "Content not found"
@@ -214,9 +214,7 @@ def speak_content(text_content):
 # base_url = "https://www.wuxiav.net/novel/global-gu-refining-i-can-deduce-the-combined-refining-route_"
 # base_url = "https://www.wuxiabox.com/novel/global-lords-hundredfold-increments-starting-with-the-undead_"
 # base_url = "https://www.wuxiabox.com/novel/i-can-copy-other-peoples-talents_"
-base_url = (
-    "https://www.wuxiabox.com/novel/all-people-cave-i-can-add-points-to-everything_"
-)
+base_url = "https://www.mvlempyr.com/chapter/5677-"
 
 
 # Number of chapters to fetch and speak
@@ -347,7 +345,7 @@ current_chapter = 1
 # Loop through each chapter  number
 for chapter_number in range(current_chapter, num_chapters + 1):
     # Construct the URL for the current chapter
-    url = base_url + str(chapter_number) + ".html"
+    url = base_url + str(chapter_number)  # + ".html"
     print("url", url)
     # Log the URL being processed
     logging.info(f"Processing URL: {url}")

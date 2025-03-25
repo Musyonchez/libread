@@ -211,7 +211,9 @@ def speak_content(text_content):
 # )
 # base_url = "https://www.wuxiabox.com/novel/lord-amplify-a-hundredfold-and-create-the-supreme-divine-domain_"
 # base_url = "https://www.wuxiabox.com/novel/gods-the-swarm_"
-base_url = "https://novelbin.lanovels.net/book/i-can-copy-talents/chapter-"
+base_url = (
+    "https://novelbin.com/b/the-absolute-beast-tamer/chapter-1-a-new-world-new-me"
+)
 
 # Number of chapters to fetch and speak
 num_chapters = 1000  # Adjust this number based on how many chapters you want to read
@@ -332,7 +334,7 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 76
 # current_chapter = 107
 # current_chapter = 171
-current_chapter = 64
+current_chapter = 41
 
 # Loop through each chapter number
 for chapter_number in range(current_chapter, num_chapters + 1):

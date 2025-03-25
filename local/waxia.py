@@ -17,27 +17,41 @@ logging.basicConfig(
 
 
 def fetch_content(url):
-    try:
-        response = requests.get(url, timeout=3)  # 10 seconds timeout
-        response.raise_for_status()  # Raise HTTPError for bad responses
-        soup = BeautifulSoup(response.text, "html.parser")
-        content_div = soup.find("div", class_="chapter-content")
-        return content_div.get_text() if content_div else "Content not found"
-    except RequestException as e:
-        logging.error(f"Error fetching URL {url}: {e}")
-        return "Error fetching content"
+    while True:
+        try:
+            # Use requests to fetch the content
+            response = requests.get(url, timeout=3)  # Internal timeout for the request
+            response.raise_for_status()  # Raise an exception for bad status codes (4xx, 5xx)
+
+            # Parse the HTML content
+            soup = BeautifulSoup(response.text, "html.parser")
+            content_div = soup.find("div", class_="chapter-content")
+
+            # Check if the content is found and not empty
+            if content_div and content_div.get_text().strip():
+                return content_div.get_text()  # Return the content if found
+            else:
+                logging.warning("Content not found or empty, retrying...")
+
+        except requests.RequestException as e:
+            logging.error(f"Error fetching URL {url}: {e}")
+        except Exception as e:
+            logging.error(f"Unexpected error: {e}")
+
+        # Wait for a short period before retrying
+        time.sleep(1)
 
 
 def speak_content(text_content):
     def speak_with_new_instance(content, attempt):
         """Speaks a given content with a new pyttsx3 instance."""
         local_engine = pyttsx3.init()
-        local_engine.setProperty("rate", 350)
+        local_engine.setProperty("rate", 450)
         voices = local_engine.getProperty("voices")
         local_engine.setProperty(
             "voice", voices[10].id
         )  # Change the index to select a different voice
-        local_engine.setProperty("pitch", 10)  # Increase the pitch
+        local_engine.setProperty("pitch", 1)  # Increase the pitch
 
         try:
             logging.info(f"Speaking part {attempt}...")
@@ -87,7 +101,7 @@ def speak_content(text_content):
         logging.error("Failed to speak one or both parts after multiple attempts.")
 
 
-# Base URL for the chapters
+# Base URL for the chaptershttps://www.wuxiabox.com/novel/luckily-i-have-an-immortal-cultivation-simulator_1.html
 # base_url = "https://www.wuxiav.com/novel/killing-evolution-from-a-sword_"
 # base_url = "https://www.wuxiav.com/novel/i-the-demon-king-sign-in-the-abyss-for-a-hundred-years_"
 # base_url = "https://www.wuxiaspot.com/novel/mecha-breaks-the-world_"
@@ -189,7 +203,7 @@ def speak_content(text_content):
 # base_url = "https://www.wuxiabox.com/novel/beast-tamer-i-can-simulate-the-eternal-beast_"
 # base_url = "https://www.wuxiabox.com/novel/farming-tree-spirit_"
 # base_url = "https://www.wuxiabox.com/novel/royal-beast-i-can-evolve-infinitely_"
-# base_url = "https://www.wuxiabox.com/novel/beast-tamer-simulator-my-beast-can-evolve-infinitely_"
+# base_url = "https://www.wuxiabox.com/novel/beast-tamhttps://www.wuxiabox.com/novel/card-creator-my-cards-unlimited-chain_16.htmler-simulator-my-beast-can-evolve-infinitely_"
 # base_url = "https://www.wuxiabox.com/novel/beast-tamer-is-invincible-others-spend-money-but-i-spend-my-life_"
 # base_url = "https://www.wuxiabox.com/novel/beasts-are-just-for-me-to-bond-with_"
 # base_url = "https://www.wuxiabox.com/novel/the-strongest-dragon-in-the-age-of-beasts_"
@@ -214,7 +228,23 @@ def speak_content(text_content):
 # base_url = "https://www.wuxiabox.com/novel/the-ancestor-of-talismans_"
 # base_url = "https://www.wuxiabox.com/novel/the-immortal-spiritual-picture_"
 # base_url = "https://www.wuxiabox.com/novel/a-treasure-map-every-day-i-dig-for-treasure-and-revitalize-my-family_"
-base_url = "https://www.wuxiabox.com/novel/wizard-i-want-to-be-a-top-student_"
+# base_url = "https://www.wuxiabox.com/novel/immortal-cultivation-family-immortality-begins-from-binding-to-the-family_"
+# base_url = "https://www.wuxiabox.com/novel/family-cultivation-start-with-the-fire-spirit-body-to-gain-experience_"
+# base_url = "https://www.wuxiabox.com/novel/6949011_" #Starting Liver Proficiency from Alchemy
+# base_url = "https://www.wuxiabox.com/novel/snake-immortal-devour-the-immortal-emperor-at-the-beginning_"
+# base_url = "https://www.wuxiabox.com/novel/becoming-an-immortal-emperor-depends-entirely-on-the-efforts-of-the-enemy_"
+# base_url = "https://www.wuxiabox.com/novel/steady-immortal-cultivation-my-gain-effect-is-randomly-doubled_"
+# base_url = ("https://www.wuxiabox.com/novel/family-cultivation-my-comprehension-can-be-stored_")
+# base_url = "https://www.wuxiabox.com/novel/practice-starts-with-skill-points_"
+# base_url = "https://www.wuxiabox.com/novel/lingxu-sword-coffin-blind-swordsman_"
+# base_url = "https://www.wuxiabox.com/novel/invincible-divine-sword_"
+# base_url = "https://www.wuxiabox.com/novel/mortals-cultivate-immortality-and-their-iq-is-playing-with-their-heartbeats_"
+# base_url = "https://www.wuxiabox.com/novel/6953423_"
+# base_url = "https://www.wuxiabox.com/novel/beast-familiar-becomes-stronger-my-beast-is-invincible_"
+# base_url = "https://www.wuxiabox.com/novel/beast-tamer-carrying-a-small-world-of-the-end-times-with-you_"
+# base_url = "https://www.wuxiabox.com/novel/all-imperial-beasts-start-with-the-black-goat-of-mori_0"
+base_url = "https://www.wuxiabox.com/novel/god-pets-infinitely-evolve_"
+
 
 # Number of chapters to fetch and speak
 num_chapters = 1000  # Adjust this number based on how many chapters you want to read
@@ -344,9 +374,25 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 60
 # current_chapter = 152
 # current_chapter = 102
-# current_chapter = 209
+# current_chapter = 223
 # current_chapter = 171
-current_chapter = 161
+# current_chapter = 544
+# current_chapter = 233
+# current_chapter = 110
+# current_chapter = 61
+# current_chapter = 211
+# current_chapter = 129
+# current_chapter = 150
+# current_chapter = 269
+# current_chapter = 34
+# current_chapter = 352
+# current_chapter = 104
+# current_chapter = 49
+# current_chapter = 56
+# current_chapter = 321
+# current_chapter = 19
+current_chapter = 1
+
 
 # Loop through each chapter number
 for chapter_number in range(current_chapter, num_chapters + 1):
@@ -359,7 +405,7 @@ for chapter_number in range(current_chapter, num_chapters + 1):
     text_content = fetch_content(url)
     # Log the completion of processing the URL
     logging.info(f"Starting processing URL: {url}")
-    # Read out the content
+    # Read out the contentchevron_left
     speak_content(text_content)
     # Log the completion of processing the URL
     logging.info(f"Finished processing URL: {url}")
