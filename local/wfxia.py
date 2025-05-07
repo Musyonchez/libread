@@ -238,7 +238,9 @@ def speak_content(text_content):
 # base_url = "https://www.wuxiabox.com/novel/practice-starts-with-skill-points_"
 # base_url = "https://www.wuxiabox.com/novel/lingxu-sword-coffin-blind-swordsman_"
 # base_url = "https://www.wuxiabox.com/novel/invincible-divine-sword_"
-base_url = "https://freewebnovel.com/novel/beast-taming-patrol/chapter-"
+base_url = (
+    "https://freewebnovel.com/novel/strongest-spirit-beast-master-family/chapter-"
+)
 
 
 # Number of chapters to fetch and speak
@@ -381,7 +383,7 @@ num_chapters = 1000  # Adjust this number based on how many chapters you want to
 # current_chapter = 269
 # current_chapter = 34
 # current_chapter = 352
-current_chapter = 3
+current_chapter = 1
 
 
 # Loop through each chapter number
