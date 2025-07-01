@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
 # from email.mime import base
+import logging
 from io import BytesIO
-from gtts import gTTS, tts_exception
+
+import pyttsx3
 import requests
 from bs4 import BeautifulSoup
-import pyttsx3
-import logging
+from gtts import gTTS, tts_exception
 
 # Configure logging
 logging.basicConfig(

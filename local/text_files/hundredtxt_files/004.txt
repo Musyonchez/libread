@@ -1,0 +1,185 @@
+APP 4080 – Collaborative Software Development
+1
+Dr. Bernard Ondara, PhD
+COLLABORATIVE SOFTWARE DEVELOPMENT
+Lecture Notes
+© 2025
+APP 4080 – Collaborative Software Development
+2
+Dr. Bernard Ondara, PhD
+4. SOURCE CODE MANAGEMENT WITH Git
+Objective: This lecture will cover Git, one of the most widely used Distributed Version
+Control Systems (DVCS) in collaborative software development. We will explore how to
+install Git and cover Git fundamentals such as basic Git commands, repository initialization,
+staging, committing, and managing branches.
+1. Introduction to Git for Collaborative Software Development
+Git is a powerful and flexible distributed version control system that allows developers to
+manage and track changes in their codebase. It is widely used in both open-source and enterprise
+software projects due to its speed, reliability, and support for collaborative workflows.
+ Distributed System: Git enables each developer to have a local repository with a complete
+history of the project, making it possible to work offline and synchronize changes with others at
+any time.
+ Collaboration: Git allows developers to collaborate by creating branches, committing changes,
+merging changes, and handling conflicts efficiently.
+APP 4080 – Collaborative Software Development
+3
+Dr. Bernard Ondara, PhD
+2. Installing Git
+Before using Git, you need to install it on your machine. Git is available for Windows, macOS,
+and Linux. Below are the installation steps for each operating system:
+2.1 Installing Git on Windows
+1. Go to the official Git website.
+2. Download the installer for Windows.
+3. Run the installer and follow the on-screen instructions.
+o When prompted, make sure to select the option to add Git to your system PATH so you
+can run Git from the command line.
+4. After installation, open Git Bash (a terminal interface for Git) and verify the installation by
+typing:
+5. git --version
+This should return the installed Git version.
+2.2 Installing Git on macOS
+1. Open the Terminal.
+2. Install Git using Homebrew (a package manager for macOS) by typing:
+3. brew install git
+Alternatively, you can install Git from the official website by downloading the .dmg installer.
+4. After installation, verify by typing:
+5. git --version
+2.3 Installing Git on Linux
+1. Open the Terminal.
+2. For Debian/Ubuntu-based systems, use the following command:
+3. sudo apt-get install git
+For Red Hat/CentOS/Fedora, use:
+sudo yum install git
+4. After installation, verify by typing:
+5. git –version
+APP 4080 – Collaborative Software Development
+4
+Dr. Bernard Ondara, PhD
+3. Git Fundamentals
+Once Git is installed, you can start using it to manage your source code. The basic workflow
+with Git typically involves creating a repository, staging changes, and committing those
+changes. Let’s dive into the fundamental concepts and commands.
+3.1 Git Repository
+A Git repository (or repo) is where your project and its version history are stored. A Git
+repository can be created locally on your machine or cloned from a remote server (e.g., GitHub,
+GitLab).
+ Initialize a Repository: To initialize a new Git repository in a project folder, use the
+following command inside the project directory:
+ git init
+This creates a .git directory that will track the project’s history.
+ Clone a Repository: To work with an existing repository hosted remotely (e.g., on
+GitHub), clone the repository to your local machine using:
+ git clone <repository-url>
+Example:
+git clone https://github.com/user/repo.git
+APP 4080 – Collaborative Software Development
+5
+Dr. Bernard Ondara, PhD
+3.2 Git Status
+ Check Repository Status: Use the git status command to view the current state of your
+working directory and staging area:
+ git status
+This shows which files have been modified, which are staged for commit, and which are
+untracked.
+3.3 Staging Changes
+In Git, you don’t commit changes immediately after editing files. You must first stage changes,
+which prepares them to be committed.
+ Stage Changes: After modifying a file, use the git add command to stage it for commit:
+ git add <file-name>
+For example:
+git add index.html
+ Stage All Changes: To stage all modified files (including new and deleted files), use:
+ git add .
+3.4 Committing Changes
+A commit in Git is a snapshot of your changes. It represents a point in the project’s history and
+is linked to a commit message that describes the changes made.
+ Commit Changes: Once changes are staged, commit them to the repository with a
+meaningful message:
+ git commit -m "A meaningful commit message describing the change"
+Example:
+git commit -m "Fixed bug in the user login feature"
+ Amend the Last Commit: If you forgot to add something or need to modify the last
+commit, you can use:
+ git commit --amend
+3.5 Git Log
+The git log command shows the commit history of the repository. It displays commit hashes,
+commit messages, authors, and dates.
+APP 4080 – Collaborative Software Development
+6
+Dr. Bernard Ondara, PhD
+ View Commit History:
+ git log
+ Shortened Log: You can display a condensed version of the commit history:
+ git log --oneline
+3.6 Branching in Git
+Branches in Git allow developers to work on features, bug fixes, or experiments without
+affecting the main codebase (typically the master or main branch).
+ List Branches: View the existing branches in the repository:
+ git branch
+ Create a New Branch: To create a new branch, use:
+ git branch <branch-name>
+Example:
+git branch feature-login
+ Switch to a Branch: To switch to another branch, use:
+ git checkout <branch-name>
+Example:
+git checkout feature-login
+ Create and Switch to a Branch: To create and switch to a branch in a single command:
+ git checkout -b <branch-name>
+ Merge Branches: Once a feature or fix is complete, merge the branch back into the main
+branch:
+ git checkout main
+ git merge <branch-name>
+3.7 Git Push and Pull
+In collaborative projects, it is common to work with a remote repository. You need to
+synchronize your local repository with the remote one using push and pull commands.
+ Push Changes: Push your local commits to the remote repository:
+ git push origin <branch-name>
+Example:
+git push origin feature-login
+ Pull Changes: Fetch and merge changes from the remote repository into your local
+branch:
+ git pull origin <branch-name>
+APP 4080 – Collaborative Software Development
+7
+Dr. Bernard Ondara, PhD
+Example:
+git pull origin main
+3.8 Resolving Conflicts
+Sometimes, when multiple people edit the same part of the code, Git cannot automatically merge
+the changes. This results in a merge conflict.
+ Identify Conflicts: When you pull changes or merge branches, Git will indicate merge conflicts.
+ Resolve Conflicts: Open the conflicting file(s), and manually merge the changes. Conflicts are
+marked with <<<<<<<, =======, and >>>>>>>. After resolving the conflict, stage and commit
+the changes:
+ git add <file-name>
+ git commit -m "Resolved merge conflict"
+4. Best Practices for Git Usage in Collaborative Software Development
+1. Commit Frequently: Make small, frequent commits with descriptive messages. This allows
+easier tracking of changes.
+2. Use Branches for Features: Create separate branches for each feature, bug fix, or experiment.
+This keeps the main codebase stable.
+3. Pull Regularly: Always pull the latest changes from the remote repository before starting work
+to avoid conflicts.
+4. Push Early and Often: Push your changes to the remote repository regularly to share your work
+and prevent losing it.
+5. Write Clear Commit Messages: Commit messages should describe the why and what of the
+changes, making it easier for teammates to understand the context.
+6. Avoid Large Commits: Avoid committing huge changes at once. It’s better to commit small,
+logical changes incrementally.
+5. Conclusion
+Git is an essential tool for managing source code in collaborative software development. By
+understanding how to initialize a repository, stage changes, commit, create branches, and
+synchronize with remote repositories, developers can collaborate effectively and maintain a
+clean, organized codebase.
+Git enables smooth collaboration by allowing teams to work asynchronously, resolve conflicts
+efficiently, and maintain a comprehensive history of changes.
+APP 4080 – Collaborative Software Development
+8
+Dr. Bernard Ondara, PhD
+Discussion Questions
+1. How does Git improve collaboration in large, distributed teams compared to traditional version
+control systems?
+2. What are the advantages of using branches for feature development and bug fixing in Git?
+3. How can Git’s merge conflict resolution process be improved through collaboration and
+communication within the team?

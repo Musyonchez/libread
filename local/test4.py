@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
+import pyttsx3
 import requests
 from bs4 import BeautifulSoup
-import pyttsx3
 
 
 def fetch_content(url):

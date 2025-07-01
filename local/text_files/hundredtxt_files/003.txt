@@ -1,0 +1,183 @@
+APP 4080 – Collaborative Software Development
+1
+Dr. Bernard Ondara, PhD
+COLLABORATIVE SOFTWARE DEVELOPMENT
+Lecture Notes
+© 2025
+APP 4080 – Collaborative Software Development
+2
+Dr. Bernard Ondara, PhD
+3. SOURCE CODE MANAGEMENT
+Objective: This lecture focuses on the importance of Source Code Management (SCM) in
+collaborative software development, highlighting the need for version control, and explores the
+different types of version control systems (VCS) commonly used in the industry.
+1. Introduction to Source Code Management (SCM)
+Source Code Management (SCM) is the process of managing and tracking changes to a
+codebase over time. SCM is critical for software development, particularly in collaborative
+environments, where multiple developers work on the same codebase simultaneously.
+SCM tools help keep track of who made changes, when changes were made, and what exactly
+changed. This ensures a systematic approach to versioning, integration, and collaboration across
+teams.
+2. The Need for Version Control
+Version control is at the core of effective source code management, and it addresses several
+challenges that arise in collaborative software development:
+APP 4080 – Collaborative Software Development
+3
+Dr. Bernard Ondara, PhD
+2.1 Collaboration on a Shared Codebase
+ Problem: Multiple developers may work on the same files or codebase, potentially leading to
+merge conflicts and overwritten code.
+ Solution: Version control systems enable developers to work on separate branches, and later
+merge their changes into the main codebase. This ensures that code is never lost, even when
+multiple people are contributing to the same project.
+2.2 Tracking Changes and History
+ Problem: Without version control, keeping track of who made which changes, and when those
+changes occurred, is nearly impossible. Identifying the root cause of bugs or understanding the
+evolution of a project can be difficult.
+ Solution: Version control allows developers to maintain a detailed history of all changes,
+enabling the identification of problems, reverting to previous versions, and auditing the
+development process.
+2.3 Experimentation and Safe Development
+ Problem: When working on new features or debugging, there is always the risk of introducing
+bugs or breaking existing functionality.
+ Solution: Version control allows developers to create branches to experiment with new features
+or bug fixes without affecting the main codebase (typically referred to as the master or main
+branch). Once the feature is completed and verified, it can be merged back into the main
+branch.
+2.4 Distributed Work and Remote Collaboration
+ Problem: In distributed teams or teams working remotely, collaboration on a single codebase
+without proper tools can result in chaotic changes, lost work, and integration issues.
+ Solution: Version control systems offer a platform for developers working in different locations
+and time zones to synchronize their work without conflicts. Developers can work
+asynchronously and push their changes to a centralized repository.
+2.5 Continuous Integration (CI) and Deployment (CD)
+ Problem: For continuous integration and continuous deployment pipelines, managing and
+tracking code changes is vital to ensure smooth integration and delivery.
+ Solution: Version control systems are foundational for CI/CD processes, allowing automated
+builds and tests to run on every new commit, ensuring software quality and reliability.
+APP 4080 – Collaborative Software Development
+4
+Dr. Bernard Ondara, PhD
+3. Types of Version Control Systems
+Version control systems come in various types, each offering unique features suited to different
+project needs. These systems can generally be divided into two main categories: Centralized
+Version Control Systems (CVCS) and Distributed Version Control Systems (DVCS).
+3.1 Centralized Version Control Systems (CVCS)
+Definition: In a Centralized Version Control System (CVCS), there is a single central
+repository where the entire codebase is stored. Developers check out code from this repository,
+make changes, and then commit those changes back to the central repository.
+ Key Features:
+o Single Central Repository: All changes are tracked in one location.
+o Check-out and Check-in: Developers check out the latest version of the code, make
+changes, and check in those changes.
+o Less Redundancy: Since there is one central repository, only one copy of the code is
+stored, which reduces storage requirements.
+APP 4080 – Collaborative Software Development
+5
+Dr. Bernard Ondara, PhD
+ Popular CVCS Examples:
+o Subversion (SVN): SVN is one of the most widely used CVCSs. It allows for centralized
+management of code and has many features for managing branches and tags.
+o Perforce: Known for its performance and ability to handle large binary files, Perforce is a
+centralized VCS commonly used in enterprise settings.
+ Advantages:
+o Simple setup and management (with a single repository).
+o Easier for teams to track code changes from a central location.
+o Suitable for smaller teams or teams that need a controlled environment.
+ Disadvantages:
+o Single Point of Failure: If the central server goes down, no one can access the code until
+the server is restored.
+o Limited offline work; developers must be connected to the central repository to commit
+changes.
+o Slower performance for large teams with complex branching.
+3.2 Distributed Version Control Systems (DVCS)
+Definition: In a Distributed Version Control System (DVCS), every developer has a local copy
+(repository) of the entire codebase, including its history. Changes are made locally, and commits
+can be pushed or pulled from other developers' repositories.
+ Key Features:
+o Complete Local Repository: Developers have the entire project history on their local
+machines, enabling offline work.
+o Branching and Merging: DVCSs provide sophisticated branching and merging
+capabilities, making it easy to experiment with new features or fixes without affecting
+the main codebase.
+o Synchronization: Developers can push and pull changes from other repositories (usually
+a central "remote" repository) to keep codebases in sync.
+APP 4080 – Collaborative Software Development
+6
+Dr. Bernard Ondara, PhD
+ Popular DVCS Examples:
+o Git: Git is by far the most popular and widely used DVCS, particularly for open-source
+projects. It allows for fast branching and merging and supports workflows like GitFlow or
+trunk-based development.
+o Mercurial (Hg): Mercurial is another popular DVCS, known for its ease of use and
+simplicity, similar to Git but with a different command set and philosophy.
+o Bazaar (Bzr): Bazaar is a DVCS that supports both centralized and decentralized
+workflows, providing flexibility depending on the needs of the team.
+ Advantages:
+o Offline Work: Developers can work offline with a complete history of the project.
+o Faster Performance: Because each developer has a local copy of the codebase,
+operations like branching, committing, and viewing history are faster.
+o Enhanced Collaboration: DVCS supports branching and merging, enabling
+experimentation and feature development without interfering with the main codebase.
+o Fault Tolerance: Since every developer has a full copy of the repository, there is no risk
+of losing the entire project if the central server fails.
+ Disadvantages:
+o More complex setup and management, particularly for larger teams or organizations.
+o Can be challenging to handle large repositories with many contributors, particularly if
+merge conflicts are frequent.
+4. Popular Version Control Systems
+4.1 Git
+ Overview: Git is a DVCS created by Linus Torvalds in 2005, designed to manage source
+code efficiently in large, distributed projects. It is widely used in both open-source and
+private software development projects.
+APP 4080 – Collaborative Software Development
+7
+Dr. Bernard Ondara, PhD
+ Key Features:
+o Branching and Merging: Git allows for lightweight branching, which enables developers
+to experiment and implement new features without affecting the main branch.
+o Distributed Architecture: Every contributor has a full local copy of the project, making it
+possible to work offline and track the entire project history.
+o Popular Platforms: Platforms like GitHub, GitLab, and Bitbucket provide cloud-based
+repositories that integrate with Git.
+ Why It's Popular: Git is fast, flexible, and widely adopted, with strong support for
+remote collaboration and complex workflows.
+4.2 Subversion (SVN)
+ Overview: SVN is a centralized version control system that was created in 2000 to
+replace CVS (Concurrent Versions System). While it is less commonly used in new
+projects today, it is still maintained and used in many enterprises and legacy systems.
+APP 4080 – Collaborative Software Development
+8
+Dr. Bernard Ondara, PhD
+ Key Features:
+o Centralized Architecture: All project history is stored in a single server-based repository.
+o Commit History: Every change made to the codebase is logged, enabling teams to trace
+the history and revert to previous versions.
+ Why It's Still Used: SVN is simpler for smaller teams or enterprises that need a more
+controlled environment, and it integrates well with older systems.
+4.3 Mercurial (Hg)
+ Overview: Mercurial is another distributed version control system designed to be fast,
+simple, and scalable. It has a similar architecture and features to Git but differs in
+command syntax and philosophy.
+APP 4080 – Collaborative Software Development
+9
+Dr. Bernard Ondara, PhD
+ Key Features:
+o Simpler Interface: Mercurial offers an easier interface for users who are not familiar
+with command-line tools.
+o Integration with Platforms: Mercurial works well with platforms like Bitbucket and
+provides a good alternative to Git for teams looking for a simpler solution.
+5. Conclusion
+Version control is essential for effective collaboration in software development. It allows teams
+to track changes, manage multiple versions of code, and safely experiment with new features.
+Understanding the different types of version control systems—Centralized Version Control
+Systems (CVCS) and Distributed Version Control Systems (DVCS)—helps developers choose
+the right tool for their needs, improving team collaboration, reducing errors, and maintaining a
+smooth development workflow.
+Discussion Questions
+1. What are the advantages of using Git over a centralized version control system like SVN in a
+large-scale development project?
+2. How do distributed version control systems like Git improve collaboration in geographically
+distributed teams?
+3. In what scenarios might a centralized version control system like SVN still be preferable over a
+distributed system like Git?

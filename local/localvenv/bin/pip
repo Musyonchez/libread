@@ -1,4 +1,4 @@
-#!/home/musyonchez/Code/libread/local/localvenv/bin/python3
+#!/home/musyonchez_arch/Code/libread/local/localvenv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

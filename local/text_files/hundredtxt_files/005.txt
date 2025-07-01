@@ -1,0 +1,186 @@
+APP 4080 – Collaborative Software Development
+1
+Dr. Bernard Ondara, PhD
+COLLABORATIVE SOFTWARE DEVELOPMENT
+Lecture Notes
+© 2025
+APP 4080 – Collaborative Software Development
+2
+Dr. Bernard Ondara, PhD
+5. PERFORMING CODE REVIEWS
+Objective: This lecture focuses on the importance of code reviews in collaborative software
+development, exploring why they are necessary, the different types of code reviews, and how to
+enforce an effective code review process.
+1. Introduction to Code Reviews in Collaborative Software Development
+Code reviews are a critical practice in modern software development. A code review involves
+the systematic examination of code by one or more developers (other than the author) to identify
+defects, improve code quality, and ensure that it aligns with the project's standards.
+APP 4080 – Collaborative Software Development
+3
+Dr. Bernard Ondara, PhD
+In collaborative software development, where teams work together, code reviews are essential
+for:
+ Improving code quality and maintainability.
+ Ensuring consistency and adherence to coding standards.
+ Enhancing collaboration and knowledge sharing among team members.
+ Catching bugs early, reducing the cost of fixing them later.
+2. The Need for Code Reviews
+The need for code reviews in collaborative software development arises due to several reasons:
+2.1 Improving Code Quality
+ Quality Assurance: Code reviews ensure that the code meets quality standards, is optimized,
+and follows best practices. They help identify inefficiencies, potential bugs, and incorrect logic.
+ Bug Detection: Early identification of bugs or potential problems in the code can save time and
+money in the long run.
+ Code Consistency: A team codebase needs consistency in formatting, naming conventions, and
+logic structures. Code reviews ensure that these are adhered to across the codebase.
+2.2 Knowledge Sharing and Team Collaboration
+ Shared Ownership: Code reviews encourage a sense of shared ownership of the codebase.
+Developers become familiar with different sections of the project, which promotes cross-team
+knowledge sharing.
+ Learning Opportunity: Junior developers or new team members can learn best practices, coding
+conventions, and design patterns from experienced developers during the review process.
+ Team Communication: The review process fosters communication among team members,
+aligning them with project goals and expectations. It also ensures that all team members are on
+the same page regarding implementation details.
+APP 4080 – Collaborative Software Development
+4
+Dr. Bernard Ondara, PhD
+2.3 Maintaining Project Standards
+ Coding Guidelines: Code reviews enforce adherence to project-specific coding standards, such
+as indentation, naming conventions, and file organization.
+ Consistency: It helps ensure that code follows a common design pattern, making it easier to
+understand and maintain over time.
+2.4 Reducing Technical Debt
+ Preventing Short-Term Solutions: Code reviews can spot quick-and-dirty fixes, which could lead
+to long-term technical debt. By identifying these early, code reviews help developers focus on
+sustainable, maintainable code.
+ Refactoring and Improvement: During reviews, areas of the codebase that can be improved or
+refactored can be identified and handled before they accumulate into larger problems.
+2.5 Improving Security
+ Security Vulnerabilities: Code reviews help identify potential security risks, such as data leaks,
+injection attacks, and improper authentication methods, and ensure that security best practices
+are followed.
+3. Types of Code Reviews
+There are several types of code reviews, each serving different purposes and suited for different
+team needs.
+3.1 Formal Code Review
+Formal code reviews are structured meetings where developers review the code in a formal
+setting, often with the presence of a designated moderator or facilitator. This is the most
+structured form of code review.
+APP 4080 – Collaborative Software Development
+5
+Dr. Bernard Ondara, PhD
+ Process: Typically involves several stages:
+o Pre-review preparation.
+o Code walkthrough by the author.
+o In-depth review of each part of the code.
+o Compilation of feedback and recommendations.
+ Advantages: This method allows for thorough discussion and in-depth analysis of the code.
+ Disadvantages: It can be time-consuming and may not be feasible for smaller teams or rapid
+development cycles.
+3.2 Pair Programming
+Pair programming involves two developers working together at the same computer to write
+code. One acts as the "driver" who writes the code, while the other acts as the "navigator" who
+reviews and suggests improvements in real-time.
+ Process: Both developers work in parallel on the same task, continuously reviewing each other’s
+code as it is being written.
+ Advantages:
+o Immediate feedback and continuous collaboration.
+o High code quality from the start.
+o Great for knowledge transfer and mentoring.
+ Disadvantages: Requires more resources (two developers for the task) and may not be suitable
+for all tasks.
+3.3 Over-the-Shoulder Code Review
+Over-the-shoulder reviews are informal and quick reviews where a developer reviews the code
+of another developer by looking over their shoulder and giving real-time feedback.
+ Process: The author explains the code to the reviewer, who provides feedback and suggestions.
+ Advantages:
+o Fast and informal.
+o Ideal for small code changes or bug fixes.
+ Disadvantages: Can be unstructured and might not cover all aspects of the code in detail.
+3.4 Tool-Assisted Code Review
+With tool-assisted code reviews, code is submitted to a version control system like GitHub or
+GitLab, and team members leave comments directly in the pull request or merge request
+interface.
+ Process: The author creates a pull request or merge request to submit code changes, and team
+members review and comment directly on the lines of code.
+ Advantages:
+o Comments and suggestions are documented and can be referred to later.
+o Reviewers can check for automated tests and continuous integration (CI) status before
+approving.
+APP 4080 – Collaborative Software Development
+6
+Dr. Bernard Ondara, PhD
+o Ideal for distributed teams, as it doesn’t require face-to-face interaction.
+ Disadvantages: Lacks the immediacy of verbal or face-to-face discussions, and there’s a chance
+that less experienced developers might overlook key issues.
+3.5 Walkthrough Code Review
+A walkthrough is a detailed, step-by-step walkthrough of the code by the author, explaining its
+logic, design decisions, and areas of concern. The reviewers ask questions and provide feedback
+as the code is presented.
+ Process: The author presents the code, explaining what it does and how it works. Reviewers ask
+questions and provide feedback.
+ Advantages:
+o Deep understanding of the code and design decisions.
+o Allows authors to clarify the rationale behind their decisions.
+ Disadvantages: Can be time-consuming for larger code changes, and might not be effective for
+small fixes.
+4. Enforcing Code Reviews
+Enforcing a consistent and effective code review process is crucial to ensure that reviews
+contribute positively to the development workflow. Here are strategies to enforce code reviews
+effectively:
+4.1 Set Clear Code Review Guidelines
+ Establish Coding Standards: Set clear guidelines for what constitutes high-quality code. These
+may include naming conventions, documentation standards, testing practices, and security
+protocols.
+ Create a Code Review Checklist: A checklist ensures that all relevant aspects (e.g., code
+readability, performance, security) are covered during each review.
+4.2 Integrate Code Reviews into the Development Workflow
+ Pull Requests (PRs)/Merge Requests (MRs): Use pull requests (in GitHub/GitLab) or merge
+requests to facilitate code reviews. Developers submit their changes for review before merging
+them into the main branch.
+ Automate Review Requests: Use automation tools to request code reviews from specific team
+members based on areas of expertise or workload.
+ Define Review Criteria: Set expectations on who should review the code and how many
+approvals are needed before merging the code.
+APP 4080 – Collaborative Software Development
+7
+Dr. Bernard Ondara, PhD
+4.3 Encourage Constructive Feedback
+ Maintain a Positive Tone: Ensure feedback is constructive and focused on improving the code,
+rather than criticizing the developer personally.
+ Foster Knowledge Sharing: Encourage experienced developers to provide mentorship and
+explanations behind their feedback to promote learning.
+4.4 Set Time Limits for Reviews
+ Avoid Bottlenecks: Set clear timelines for code reviews. Delayed reviews can hold up
+development and negatively impact team productivity.
+ Review Prioritization: Prioritize reviews based on the importance and complexity of the code
+change. Small fixes or low-priority changes should be reviewed quicker than large feature
+additions or critical bug fixes.
+4.5 Track Code Review Metrics
+ Review Metrics: Track key metrics such as time spent on reviews, number of changes
+requested, and the number of issues identified during reviews. This can help teams improve
+their review process over time.
+ Monitor Reviewer Participation: Ensure that all team members participate in reviews to
+prevent bottlenecks and maintain a fair distribution of work.
+4.6 Make Code Reviews a Team Culture
+ Encourage Regular Reviews: Code reviews should be part of the team’s daily workflow, and
+everyone should participate.
+ Promote Knowledge Sharing: Use code reviews as an opportunity to share knowledge, point out
+reusable components, and suggest improvements to the codebase.
+5. Code Review Best Practices
+APP 4080 – Collaborative Software Development
+8
+Dr. Bernard Ondara, PhD
+6. Conclusion
+Code reviews are a vital practice in collaborative software development. They improve code
+quality, ensure consistency, foster knowledge sharing, and prevent technical debt. By
+implementing structured and effective code review practices—whether through formal reviews,
+pair programming, or tool-assisted reviews—teams can collaborate better, reduce errors, and
+create more maintainable software.
+6. Discussion Questions
+1. What are the advantages of tool-assisted code reviews compared to face-to-face reviews?
+2. How can you ensure that code reviews foster a positive learning environment rather than
+becoming a source of tension among team members?
+3. How do you balance the need for thorough code reviews with the pressure to meet tight
+deadlines?

@@ -1,10 +1,13 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 
 import logging
 import os
 import time
 
 import pyttsx3
+
+# from text_file_names_10 import TEXT_FILE_NAMES
+from text_file_names_100 import TEXT_FILE_NAMES
 
 # Configure logging
 logging.basicConfig(
@@ -14,22 +17,11 @@ logging.basicConfig(
 )
 
 # Folder and file list
-TEXT_FOLDER = "text_files"
-TEXT_FILE_NAMES = [
-    "one",
-    "two",
-    "three",
-    "four",
-    "five",
-    "six",
-    "seven",
-    "eight",
-    "nine",
-    "ten",
-]
+TEXT_FOLDER = os.path.join("text_files", "hundredtxt_files")
+
 
 # Manually set the starting file name
-start_file_name = "one"  # Change this to any from "one" to "ten"
+start_file_name = "003"  # Change this to any from "one" to "ten"
 
 # Determine the starting index
 if start_file_name in TEXT_FILE_NAMES:
@@ -51,7 +43,7 @@ def speak_content(text_content):
     def speak_with_new_instance(content, attempt):
         """Speaks a given content with a new pyttsx3 instance."""
         local_engine = pyttsx3.init()
-        local_engine.setProperty("rate", 450)
+        local_engine.setProperty("rate", 300)
         voices = local_engine.getProperty("voices")
         local_engine.setProperty(
             "voice", voices[10].id if len(voices) > 10 else voices[0].id
@@ -68,38 +60,33 @@ def speak_content(text_content):
         finally:
             local_engine.stop()
 
-    # Split content into two halves
-    mid_point = len(text_content) // 2
-    first_half = text_content[:mid_point]
-    second_half = text_content[mid_point:]
+    # Split content into four parts
+    quarter = len(text_content) // 4
+    parts = [
+        text_content[:quarter],
+        text_content[quarter : quarter * 2],
+        text_content[quarter * 2 : quarter * 3],
+        text_content[quarter * 3 :],
+    ]
 
     max_retries = 50
-    success_first_half, success_second_half = False, False
+    success = [False] * 4
 
-    # Speak first half
-    for retry in range(max_retries):
-        try:
-            speak_with_new_instance(first_half, 1)
-            success_first_half = True
-            break
-        except Exception as e:
-            logging.error(f"Retry {retry + 1}/{max_retries} for first half failed: {e}")
-            time.sleep(2)
+    # Speak all four parts
+    for i in range(4):
+        for retry in range(max_retries):
+            try:
+                speak_with_new_instance(parts[i], i + 1)
+                success[i] = True
+                break
+            except Exception as e:
+                logging.error(
+                    f"Retry {retry + 1}/{max_retries} for part {i + 1} failed: {e}"
+                )
+                time.sleep(2)
 
-    # Speak second half
-    for retry in range(max_retries):
-        try:
-            speak_with_new_instance(second_half, 2)
-            success_second_half = True
-            break
-        except Exception as e:
-            logging.error(
-                f"Retry {retry + 1}/{max_retries} for second half failed: {e}"
-            )
-            time.sleep(2)
-
-    if not success_first_half or not success_second_half:
-        logging.error("Failed to speak one or both parts after multiple attempts.")
+    if not all(success):
+        logging.error("Failed to speak one or more parts after multiple attempts.")
 
 
 # Infinite loop reading and speaking text files in a cycle
