@@ -1,126 +1,139 @@
 #!/usr/bin/env python3
 
+import argparse
 import logging
+import re
+import sys
 import time
 
 import pyttsx3
 import requests
 from bs4 import BeautifulSoup
-from requests.exceptions import RequestException
-
-# Configure logging
-logging.basicConfig(
-    filename="app.log",
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-)
 
 
-def fetch_content(url):
-    while True:
+def fetch_content(url, max_retries=5):
+    for attempt in range(max_retries):
         try:
-            # Use requests to fetch the content
-            response = requests.get(url, timeout=3)  # Internal timeout for the request
-            response.raise_for_status()  # Raise an exception for bad status codes (4xx, 5xx)
-
-            # Parse the HTML content
+            response = requests.get(url, timeout=10)
+            response.raise_for_status()
             soup = BeautifulSoup(response.text, "html.parser")
             content_div = soup.find("div", class_="chapter-content")
-
-            # Check if the content is found and not empty
-            if content_div and content_div.get_text().strip():
-                return content_div.get_text()  # Return the content if found
+            if content_div and content_div.get_text(strip=True):
+                return content_div.get_text()
             else:
-                logging.warning("Content not found or empty, retrying...")
-
+                logging.warning(f"Content not found or empty at {url}. Retrying...")
         except requests.RequestException as e:
-            logging.error(f"Error fetching URL {url}: {e}")
-        except Exception as e:
-            logging.error(f"Unexpected error: {e}")
-
-        # Wait for a short period before retrying
-        time.sleep(1)
+            logging.error(f"Attempt {attempt + 1} failed: Error fetching {url}: {e}")
+        time.sleep(2)  # Wait before retrying
+    logging.error(f"Failed to fetch content from {url} after {max_retries} attempts.")
+    return None
 
 
-def speak_content(text_content):
-    def speak_with_new_instance(content, attempt):
-        """Speaks a given content with a new pyttsx3 instance."""
-        local_engine = pyttsx3.init()
-        local_engine.setProperty("rate", 450)
-        voices = local_engine.getProperty("voices")
-        local_engine.setProperty(
-            "voice", voices[10].id
-        )  # Change the index to select a different voice
-        local_engine.setProperty("pitch", 1)  # Increase the pitch
+def _speak_chunk(text, voice_index, rate, pitch, attempt):
+    engine = None
+    try:
+        engine = pyttsx3.init()
+        voices = engine.getProperty("voices")
+        if 0 <= voice_index < len(voices):
+            engine.setProperty("voice", voices[voice_index].id)
+        engine.setProperty("rate", rate)
+        engine.setProperty("pitch", pitch)
+        engine.say(text)
+        logging.info(f"Speaking part {attempt}...")
+        engine.runAndWait()
+        logging.info(f"Part {attempt} spoken successfully.")
+        return True
+    except Exception as e:
+        logging.error(f"Error during speech for part {attempt}: {e}")
+        return False
+    finally:
+        if engine:
+            engine.stop()
 
-        try:
-            logging.info(f"Speaking part {attempt}...")
-            local_engine.say(content)
-            local_engine.runAndWait()
-            logging.info(f"Part {attempt} spoken successfully.")
-        except Exception as e:
-            logging.error(f"Error during speech for part {attempt}: {e}")
-        finally:
-            local_engine.stop()
 
-    # Splitting the text content into two halves
-    mid_point = len(text_content) // 2
-    first_half = text_content[:mid_point]
-    second_half = text_content[mid_point:]
+def speak_content(text_content, voice_index, rate, pitch, max_retries=5, clump_size=3):
+    # Split the text into sentences
+    sentences = re.split(r"(?<=[.!?])\s+", text_content)
 
-    max_retries = 50  # Define the max number of retries before giving up
-    success_first_half, success_second_half = False, False
+    # Group sentences into clumps
+    clumps = [
+        " ".join(sentences[i : i + clump_size])
+        for i in range(0, len(sentences), clump_size)
+    ]
 
-    # Attempt to speak the first half
-    first_retries = 0
-    while not success_first_half and first_retries < max_retries:
-        try:
-            speak_with_new_instance(first_half, 1)
-            success_first_half = True
-        except Exception as e:
-            first_retries += 1
-            logging.error(
-                f"Retry {first_retries}/{max_retries} for first half failed: {e}"
+    for i, clump in enumerate(clumps):
+        for attempt in range(max_retries):
+            if _speak_chunk(clump, voice_index, rate, pitch, i + 1):
+                break
+            logging.warning(
+                f"Retrying to speak clump {i + 1} (attempt {attempt + 1})..."
             )
-            time.sleep(2)  # Wait before retrying
+            time.sleep(1)
 
-    # Attempt to speak the second half
-    second_retries = 0
-    while not success_second_half and second_retries < max_retries:
-        try:
-            speak_with_new_instance(second_half, 2)
-            success_second_half = True
-        except Exception as e:
-            second_retries += 1
-            logging.error(
-                f"Retry {second_retries}/{max_retries} for second half failed: {e}"
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Web scraper and text-to-speech reader for wuxiabox.com.",
+        formatter_class=argparse.RawTextHelpFormatter,
+    )
+    parser.add_argument("--url", type=str, help="Base URL of the novel.")
+    parser.add_argument("--start", type=int, help="Starting chapter.")
+    parser.add_argument(
+        "--voice-index", type=int, default=26, help="Index of the TTS voice."
+    )
+    parser.add_argument("--rate", type=int, default=450, help="Speech rate.")
+    parser.add_argument("--pitch", type=float, default=0.5, help="Speech pitch.")
+    parser.add_argument(
+        "--clump-size",
+        type=int,
+        default=4,
+        help="Number of sentences to speak at a time.",
+    )
+
+    args = parser.parse_args()
+
+    if not args.url:
+        args.url = input("Please enter the base URL of the novel: ")
+
+    if args.start is None:
+        while True:
+            try:
+                start_input = input("Please enter the starting chapter (default: 1): ")
+                if not start_input:
+                    args.start = 1
+                    break
+                args.start = int(start_input)
+                break
+            except ValueError:
+                print("Invalid input. Please enter a number.")
+
+    logging.basicConfig(
+        filename="app.log",
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+    )
+
+    num_chapters = 1000  # Read up to 1000 chapters
+
+    for chapter_number in range(args.start, args.start + num_chapters):
+        url = f"{args.url}{chapter_number}.html"
+        print(f"Processing URL: {url}")
+        logging.info(f"Processing URL: {url}")
+
+        text_content = fetch_content(url)
+        if text_content:
+            logging.info(f"Successfully fetched content from {url}.")
+            speak_content(
+                text_content,
+                args.voice_index,
+                args.rate,
+                args.pitch,
+                clump_size=args.clump_size,
             )
-            time.sleep(2)  # Wait before retrying
-
-    if not success_first_half or not success_second_half:
-        logging.error("Failed to speak one or both parts after multiple attempts.")
-
-
-base_url = "https://www.wuxiabox.com/novel/6978647_"
+            logging.info(f"Finished processing {url}.")
+        else:
+            logging.error(f"Skipping chapter {chapter_number} due to fetch failure.")
 
 
-# Number of chapters to fetch and speak
-num_chapters = 1000  # Adjust this number based on how many chapters you want to read
-current_chapter = 15
-
-
-# Loop through each chapter number
-for chapter_number in range(current_chapter, num_chapters + 1):
-    # Construct the URL for the current chapter
-    url = base_url + str(chapter_number) + ".html"
-    print("url", url)
-    # Log the URL being processed
-    logging.info(f"Processing URL: {url}")
-    # Fetch the content from the URL
-    text_content = fetch_content(url)
-    # Log the completion of processing the URL
-    logging.info(f"Starting processing URL: {url}")
-    # Read out the contentchevron_left
-    speak_content(text_content)
-    # Log the completion of processing the URL
-    logging.info(f"Finished processing URL: {url}")
+if __name__ == "__main__":
+    main()
