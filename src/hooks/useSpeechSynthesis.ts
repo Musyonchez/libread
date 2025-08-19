@@ -23,6 +23,7 @@ export function useSpeechSynthesis() {
   const onParagraphChangeRef = useRef<((index: number) => void) | null>(null);
   const pausedAtParagraphRef = useRef<number>(0);
   const isPausingRef = useRef<boolean>(false);
+  const isJumpingRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
@@ -54,6 +55,7 @@ export function useSpeechSynthesis() {
     // Wait a moment for cancel to complete
     setTimeout(() => {
       isPausingRef.current = false;
+      isJumpingRef.current = false;
       paragraphsRef.current = paragraphs;
       onParagraphChangeRef.current = onParagraphChange || null;
 
@@ -107,15 +109,15 @@ export function useSpeechSynthesis() {
         };
 
         utterance.onend = () => {
-          // Only move to next paragraph if we're not pausing
-          if (!isPausingRef.current) {
+          // Only move to next paragraph if we're not pausing or jumping
+          if (!isPausingRef.current && !isJumpingRef.current) {
             setTimeout(() => speakParagraph(index + 1), 100);
           }
         };
 
         utterance.onerror = () => {
-          // Only skip to next paragraph if we're not pausing
-          if (!isPausingRef.current) {
+          // Only skip to next paragraph if we're not pausing or jumping
+          if (!isPausingRef.current && !isJumpingRef.current) {
             setTimeout(() => speakParagraph(index + 1), 100);
           }
         };
@@ -152,6 +154,7 @@ export function useSpeechSynthesis() {
   const stop = useCallback(() => {
     if (isSupported) {
       isPausingRef.current = false;
+      isJumpingRef.current = false;
       speechSynthesis.cancel();
       utteranceRef.current = null;
       pausedAtParagraphRef.current = 0;
@@ -167,6 +170,9 @@ export function useSpeechSynthesis() {
   }, []);
 
   const jumpToParagraph = useCallback((paragraphIndex: number) => {
+    // Set jumping flag to prevent auto-progression from canceled speech
+    isJumpingRef.current = true;
+    
     // Always stop any current speech first
     speechSynthesis.cancel();
     isPausingRef.current = false;
@@ -174,10 +180,12 @@ export function useSpeechSynthesis() {
     // If we were playing or paused, start from the new paragraph
     if (speechState.isPlaying || speechState.isPaused) {
       setTimeout(() => {
+        isJumpingRef.current = false; // Clear flag before speaking
         speak(paragraphsRef.current, paragraphIndex, onParagraphChangeRef.current || undefined);
       }, 100);
     } else {
       // If not playing, just update the current paragraph for when play is pressed
+      isJumpingRef.current = false; // Clear flag
       setSpeechState(prev => ({ ...prev, currentParagraph: paragraphIndex }));
       if (onParagraphChangeRef.current) {
         onParagraphChangeRef.current(paragraphIndex);
