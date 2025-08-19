@@ -27,6 +27,7 @@ export function useSpeechSynthesis() {
   const isPausingRef = useRef<boolean>(false);
   const isJumpingRef = useRef<boolean>(false);
   const isStoppingRef = useRef<boolean>(false);
+  const isChangingRateRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
@@ -42,7 +43,7 @@ export function useSpeechSynthesis() {
     }
   }, []);
 
-  const speak = useCallback((paragraphs: string[], startFromParagraph: number = 0, onParagraphChange?: (index: number) => void) => {
+  const speak = useCallback((paragraphs: string[], startFromParagraph: number = 0, onParagraphChange?: (index: number) => void, overrideRate?: number) => {
     if (!isSupported || !paragraphs.length) return;
 
     // Check if voices are available
@@ -60,6 +61,7 @@ export function useSpeechSynthesis() {
       isPausingRef.current = false;
       isJumpingRef.current = false;
       isStoppingRef.current = false;
+      isChangingRateRef.current = false;
       paragraphsRef.current = paragraphs;
       onParagraphChangeRef.current = onParagraphChange || null;
 
@@ -101,7 +103,7 @@ export function useSpeechSynthesis() {
           }
         }
         
-        utterance.rate = Math.max(0.5, Math.min(2, speechState.rate));
+        utterance.rate = Math.max(0.5, Math.min(2, overrideRate ?? speechState.rate));
         utterance.volume = 1;
         utterance.pitch = 1;
 
@@ -113,15 +115,15 @@ export function useSpeechSynthesis() {
         };
 
         utterance.onend = () => {
-          // Only move to next paragraph if we're not pausing, jumping, or stopping
-          if (!isPausingRef.current && !isJumpingRef.current && !isStoppingRef.current) {
+          // Only move to next paragraph if we're not pausing, jumping, stopping, or changing rate
+          if (!isPausingRef.current && !isJumpingRef.current && !isStoppingRef.current && !isChangingRateRef.current) {
             setTimeout(() => speakParagraph(index + 1), 100);
           }
         };
 
         utterance.onerror = () => {
-          // Only skip to next paragraph if we're not pausing, jumping, or stopping
-          if (!isPausingRef.current && !isJumpingRef.current && !isStoppingRef.current) {
+          // Only skip to next paragraph if we're not pausing, jumping, stopping, or changing rate
+          if (!isPausingRef.current && !isJumpingRef.current && !isStoppingRef.current && !isChangingRateRef.current) {
             setTimeout(() => speakParagraph(index + 1), 100);
           }
         };
@@ -179,10 +181,22 @@ export function useSpeechSynthesis() {
 
   const setRate = useCallback((rate: number) => {
     setSpeechState(prev => ({ ...prev, rate }));
-    if (utteranceRef.current) {
-      utteranceRef.current.rate = rate;
+    
+    // If currently playing, restart the current paragraph with new speed
+    if (speechState.isPlaying && !speechState.isPaused) {
+      const currentParagraph = speechState.currentParagraph;
+      
+      // Set rate changing flag to prevent auto-progression
+      isChangingRateRef.current = true;
+      speechSynthesis.cancel();
+      
+      // Restart current paragraph with new speed after a brief delay
+      setTimeout(() => {
+        isChangingRateRef.current = false;
+        speak(paragraphsRef.current, currentParagraph, onParagraphChangeRef.current || undefined, rate);
+      }, 100);
     }
-  }, []);
+  }, [speechState.isPlaying, speechState.isPaused, speechState.currentParagraph, speak]);
 
   const jumpToParagraph = useCallback((paragraphIndex: number, paragraphs?: string[]) => {
     // Set jumping flag to prevent auto-progression from canceled speech
