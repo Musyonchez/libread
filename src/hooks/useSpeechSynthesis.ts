@@ -157,7 +157,7 @@ export function useSpeechSynthesis() {
     }
   }, [isSupported, speechState.isPaused, speak]);
 
-  const stop = useCallback(() => {
+  const stop = useCallback((onParagraphChange?: (index: number) => void) => {
     if (isSupported) {
       // Set stopping flag to prevent auto-progression
       isStoppingRef.current = true;
@@ -168,9 +168,10 @@ export function useSpeechSynthesis() {
       pausedAtParagraphRef.current = 0;
       // Reset to first paragraph (index 0)
       setSpeechState(prev => ({ ...prev, isPlaying: false, isPaused: false, currentParagraph: 0 }));
-      // Also update the parent component's current paragraph
-      if (onParagraphChangeRef.current) {
-        onParagraphChangeRef.current(0);
+      // Update parent component - use passed callback or fallback to ref
+      const updateCallback = onParagraphChange || onParagraphChangeRef.current;
+      if (updateCallback) {
+        updateCallback(0);
       }
       // Clear stopping flag after a brief delay
       setTimeout(() => {

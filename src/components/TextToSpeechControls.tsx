@@ -119,7 +119,7 @@ export default function TextToSpeechControls({
           </button>
 
           <button
-            onClick={stop}
+            onClick={() => stop(onParagraphChange)}
             disabled={!speechState.isPlaying}
             className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
           >
@@ -262,7 +262,7 @@ export default function TextToSpeechControls({
             </button>
 
             <button
-              onClick={stop}
+              onClick={() => stop(onParagraphChange)}
               disabled={!speechState.isPlaying}
               className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
             >
@@ -380,7 +380,7 @@ export default function TextToSpeechControls({
           </button>
 
           <button
-            onClick={stop}
+            onClick={() => stop(onParagraphChange)}
             disabled={!speechState.isPlaying}
             className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
           >
