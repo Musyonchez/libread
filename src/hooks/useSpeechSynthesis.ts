@@ -21,6 +21,8 @@ export function useSpeechSynthesis() {
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const paragraphsRef = useRef<string[]>([]);
   const onParagraphChangeRef = useRef<((index: number) => void) | null>(null);
+  const pausedAtParagraphRef = useRef<number>(0);
+  const isPausingRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
@@ -51,6 +53,7 @@ export function useSpeechSynthesis() {
     
     // Wait a moment for cancel to complete
     setTimeout(() => {
+      isPausingRef.current = false;
       paragraphsRef.current = paragraphs;
       onParagraphChangeRef.current = onParagraphChange || null;
 
@@ -104,13 +107,17 @@ export function useSpeechSynthesis() {
         };
 
         utterance.onend = () => {
-          // Move to next paragraph
-          setTimeout(() => speakParagraph(index + 1), 100);
+          // Only move to next paragraph if we're not pausing
+          if (!isPausingRef.current) {
+            setTimeout(() => speakParagraph(index + 1), 100);
+          }
         };
 
         utterance.onerror = () => {
-          // Skip this paragraph and continue with the next
-          setTimeout(() => speakParagraph(index + 1), 100);
+          // Only skip to next paragraph if we're not pausing
+          if (!isPausingRef.current) {
+            setTimeout(() => speakParagraph(index + 1), 100);
+          }
         };
 
         // Start speaking
@@ -123,22 +130,31 @@ export function useSpeechSynthesis() {
 
   const pause = useCallback(() => {
     if (isSupported && speechSynthesis.speaking) {
-      speechSynthesis.pause();
+      // Set pausing flag to prevent auto-progression
+      isPausingRef.current = true;
+      // Store current paragraph for resume
+      pausedAtParagraphRef.current = speechState.currentParagraph;
+      speechSynthesis.cancel();
       setSpeechState(prev => ({ ...prev, isPaused: true }));
     }
-  }, [isSupported]);
+  }, [isSupported, speechState.currentParagraph]);
 
   const resume = useCallback(() => {
-    if (isSupported && speechSynthesis.paused) {
-      speechSynthesis.resume();
+    if (isSupported && speechState.isPaused) {
+      // Clear pausing flag to allow normal progression
+      isPausingRef.current = false;
       setSpeechState(prev => ({ ...prev, isPaused: false }));
+      // Resume from where we paused
+      speak(paragraphsRef.current, pausedAtParagraphRef.current, onParagraphChangeRef.current || undefined);
     }
-  }, [isSupported]);
+  }, [isSupported, speechState.isPaused, speak]);
 
   const stop = useCallback(() => {
     if (isSupported) {
+      isPausingRef.current = false;
       speechSynthesis.cancel();
       utteranceRef.current = null;
+      pausedAtParagraphRef.current = 0;
       setSpeechState(prev => ({ ...prev, isPlaying: false, isPaused: false, currentParagraph: 0 }));
     }
   }, [isSupported]);
