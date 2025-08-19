@@ -56,10 +56,18 @@ src/
 # Key Features
 1. **URL Content Fetching**: Scrapes web content using Cheerio, filters out ads/navigation
 2. **Text-to-Speech**: Browser Web Speech API with chunking for long content
-3. **Paragraph Navigation**: Click paragraphs to jump to specific sections
-4. **Audio Controls**: Play/pause/stop, speed adjustment, paragraph skipping
-5. **Browser Compatibility**: Detects 20+ browsers with specific guidance
-6. **Responsive Design**: Works on desktop and mobile devices
+3. **Paragraph Navigation**: Click paragraphs to jump to specific sections and start playing
+4. **Advanced Audio Controls**: 
+   - Play/pause/stop with proper state management
+   - Speed presets (0.5x, 1x, 1.5x, 2x) plus fine control slider
+   - Previous/next paragraph navigation
+   - Traffic light status indicators (green/amber/red)
+5. **Responsive Design**: 
+   - Mobile (< 640px): Collapsible controls with toggle
+   - Tablet (640px-1023px): Two-row layout with space-around
+   - Desktop (≥ 1024px): Horizontal three-column layout
+6. **Browser Compatibility**: Detects 20+ browsers with specific guidance
+7. **Real-time Speed Changes**: Speed adjustments apply immediately during playback
 
 # Development Workflow
 - **IMPORTANT**: Always run `npm run build` and `npm run lint` before committing
@@ -75,12 +83,20 @@ src/
 - **Error Handling**: Skip failed paragraphs, continue with next
 - **Performance**: Chunk long text into ~400 character segments
 - **User Guidance**: Show browser-specific compatibility messages
+- **State Management**: 
+  - `hasEverStarted` flag prevents confusing "Stopped" status on fresh load
+  - Multiple ref flags prevent race conditions (isPausingRef, isJumpingRef, isStoppingRef, isChangingRateRef)
+- **Speed Control**: Real-time speed changes restart current paragraph with new rate
+- **Paragraph Jumping**: Always starts playback from clicked paragraph regardless of current state
 
 # Key Files
 - @package.json - Dependencies and npm scripts
 - @src/app/api/fetch-content/route.ts - Web scraping API endpoint
-- @src/hooks/useSpeechSynthesis.ts - Core speech synthesis logic
-- @src/components/BrowserCompatibility.tsx - Browser detection logic
+- @src/hooks/useSpeechSynthesis.ts - Core speech synthesis logic with advanced state management
+- @src/components/TextToSpeechControls.tsx - Responsive audio controls with mobile toggle
+- @src/components/BrowserCompatibility.tsx - Browser detection logic for 20+ browsers
+- @src/components/ContentDisplay.tsx - Article display with clickable paragraphs
+- @docs/CLAUDE_MD_BEST_PRACTICES.md - Documentation best practices guide
 - @tailwind.config.js - Tailwind CSS configuration
 - @tsconfig.json - TypeScript configuration
 
@@ -92,9 +108,13 @@ src/
 
 # Styling Guidelines
 - Use Tailwind utility classes for consistent design
-- Color scheme: Blue primary (blue-600), green for success, orange for warnings
+- Color scheme: Blue primary (blue-600), green for success/playing, amber for paused, red for stopped
 - Responsive breakpoints: sm: (640px), md: (768px), lg: (1024px)
 - Professional SaaS-level UI with proper spacing and typography
+- **Responsive Patterns**:
+  - Mobile: Collapsible interface with toggle (ChevronDown/ChevronUp icons)
+  - Tablet: Two-row layout with justify-around spacing
+  - Desktop: Horizontal three-column layout (Title | Controls | Speed+Status)
 
 # Browser Compatibility Handling
 - Detect specific browsers and provide tailored messaging
@@ -112,3 +132,13 @@ src/
 - **No Voices Available**: Usually Brave browser privacy settings or Linux missing espeak
 - **Synthesis Failed**: Long paragraphs need chunking, special characters cause issues  
 - **CORS Issues**: Web scraping limited by same-origin policy, handle gracefully
+- **Speed Changes Not Applying**: Fixed with overrideRate parameter to prevent race conditions
+- **Paragraph Jumping Issues**: Fixed with multiple ref flags to prevent auto-progression conflicts
+- **Mobile Interface Too Cluttered**: Use toggle to collapse/expand controls as needed
+
+# Recent Improvements
+- **Enhanced Audio Controls**: Added preset speed buttons, traffic light status, improved responsive design
+- **Mobile Optimization**: Collapsible interface saves screen space while maintaining functionality  
+- **Race Condition Fixes**: Robust state management prevents speech synthesis conflicts
+- **Better UX**: Paragraph clicking always starts playback, stop button resets to first paragraph
+- **Responsive Design**: Three-tier layout optimized for mobile, tablet, and desktop
