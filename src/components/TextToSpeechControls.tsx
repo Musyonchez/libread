@@ -143,6 +143,24 @@ export default function TextToSpeechControls({
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3">
             <label className="text-sm font-medium text-gray-700 whitespace-nowrap">Speed</label>
+            
+            {/* Preset speed buttons */}
+            <div className="flex gap-1">
+              {[0.5, 1, 1.5, 2].map((presetRate) => (
+                <button
+                  key={presetRate}
+                  onClick={() => setRate(presetRate)}
+                  className={`px-2 py-1 text-xs rounded transition-colors ${
+                    Math.abs(speechState.rate - presetRate) < 0.05
+                      ? 'bg-blue-100 text-blue-700 border border-blue-300'
+                      : 'bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-200'
+                  }`}
+                >
+                  {presetRate}x
+                </button>
+              ))}
+            </div>
+            
             <span className="text-sm text-gray-600 min-w-[3rem]">{speechState.rate}x</span>
             <input
               type="range"
@@ -151,7 +169,7 @@ export default function TextToSpeechControls({
               step="0.1"
               value={speechState.rate}
               onChange={(e) => setRate(parseFloat(e.target.value))}
-              className="w-24 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+              className="w-20 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
             />
           </div>
 
