@@ -92,7 +92,124 @@ export default function TextToSpeechControls({
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-4">
-      <div className="flex items-center justify-between gap-6">
+      {/* Mobile/Tablet: Stacked layout */}
+      <div className="flex flex-col gap-4 lg:hidden">
+        {/* Title and paragraph info */}
+        <div className="text-center">
+          <h3 className="text-lg font-semibold text-gray-900">Audio Controls</h3>
+          <p className="text-sm text-gray-600">
+            Paragraph {currentParagraph + 1} of {paragraphs.length}
+          </p>
+        </div>
+
+        {/* Playback controls */}
+        <div className="flex items-center justify-center space-x-4">
+          <button
+            onClick={handlePrevious}
+            disabled={currentParagraph === 0}
+            className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <SkipBack className="h-5 w-5 text-gray-700" />
+          </button>
+
+          <button
+            onClick={handlePlayPause}
+            className="p-4 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+          >
+            {speechState.isPlaying && !speechState.isPaused ? (
+              <Pause className="h-6 w-6" />
+            ) : (
+              <Play className="h-6 w-6" />
+            )}
+          </button>
+
+          <button
+            onClick={stop}
+            disabled={!speechState.isPlaying}
+            className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <Square className="h-5 w-5 text-gray-700" />
+          </button>
+
+          <button
+            onClick={handleNext}
+            disabled={currentParagraph >= paragraphs.length - 1}
+            className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <SkipForward className="h-5 w-5 text-gray-700" />
+          </button>
+        </div>
+
+        {/* Speed controls */}
+        <div className="flex flex-col items-center gap-3">
+          <label className="text-sm font-medium text-gray-700">Speed</label>
+          
+          {/* Preset speed buttons */}
+          <div className="flex gap-2">
+            {[0.5, 1, 1.5, 2].map((presetRate) => (
+              <button
+                key={presetRate}
+                onClick={() => setRate(presetRate)}
+                className={`px-3 py-2 text-sm rounded-lg transition-colors ${
+                  Math.abs(speechState.rate - presetRate) < 0.05
+                    ? 'bg-blue-100 text-blue-700 border border-blue-300'
+                    : 'bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-200'
+                }`}
+              >
+                {presetRate}x
+              </button>
+            ))}
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-gray-600 min-w-[3rem]">{speechState.rate}x</span>
+            <input
+              type="range"
+              min="0.5"
+              max="2"
+              step="0.1"
+              value={speechState.rate}
+              onChange={(e) => setRate(parseFloat(e.target.value))}
+              className="w-32 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+            />
+          </div>
+        </div>
+
+        {/* Status indicator */}
+        {speechState.hasEverStarted && (
+          <div className={`flex items-center justify-center gap-2 rounded-lg px-4 py-2 ${
+            speechState.isPlaying && !speechState.isPaused
+              ? 'bg-green-50 border border-green-200'
+              : speechState.isPlaying && speechState.isPaused
+              ? 'bg-amber-50 border border-amber-200'
+              : 'bg-red-50 border border-red-200'
+          }`}>
+            <Volume2 className={`h-4 w-4 ${
+              speechState.isPlaying && !speechState.isPaused
+                ? 'text-green-600'
+                : speechState.isPlaying && speechState.isPaused
+                ? 'text-amber-600'
+                : 'text-red-600'
+            }`} />
+            <span className={`text-sm ${
+              speechState.isPlaying && !speechState.isPaused
+                ? 'text-green-800'
+                : speechState.isPlaying && speechState.isPaused
+                ? 'text-amber-800'
+                : 'text-red-800'
+            }`}>
+              {speechState.isPlaying && !speechState.isPaused
+                ? 'Playing'
+                : speechState.isPlaying && speechState.isPaused
+                ? 'Paused'
+                : 'Stopped'}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Desktop: Horizontal layout */}
+      <div className="hidden lg:flex items-center justify-between gap-6">
         {/* Left side - Title and paragraph info */}
         <div className="flex-shrink-0">
           <h3 className="text-lg font-semibold text-gray-900">Audio Controls</h3>
@@ -173,28 +290,28 @@ export default function TextToSpeechControls({
             />
           </div>
 
-          {/* Status indicator - traffic light colors */}
+          {/* Status indicator */}
           {speechState.hasEverStarted && (
             <div className={`flex items-center gap-2 rounded-lg px-3 py-1 ${
               speechState.isPlaying && !speechState.isPaused
-                ? 'bg-green-50 border border-green-200' // Green for playing
+                ? 'bg-green-50 border border-green-200'
                 : speechState.isPlaying && speechState.isPaused
-                ? 'bg-amber-50 border border-amber-200' // Amber for paused
-                : 'bg-red-50 border border-red-200' // Red for stopped
+                ? 'bg-amber-50 border border-amber-200'
+                : 'bg-red-50 border border-red-200'
             }`}>
               <Volume2 className={`h-4 w-4 ${
                 speechState.isPlaying && !speechState.isPaused
-                  ? 'text-green-600' // Green for playing
+                  ? 'text-green-600'
                   : speechState.isPlaying && speechState.isPaused
-                  ? 'text-amber-600' // Amber for paused
-                  : 'text-red-600' // Red for stopped
+                  ? 'text-amber-600'
+                  : 'text-red-600'
               }`} />
               <span className={`text-sm whitespace-nowrap ${
                 speechState.isPlaying && !speechState.isPaused
-                  ? 'text-green-800' // Green for playing
+                  ? 'text-green-800'
                   : speechState.isPlaying && speechState.isPaused
-                  ? 'text-amber-800' // Amber for paused
-                  : 'text-red-800' // Red for stopped
+                  ? 'text-amber-800'
+                  : 'text-red-800'
               }`}>
                 {speechState.isPlaying && !speechState.isPaused
                   ? 'Playing'
