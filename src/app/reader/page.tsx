@@ -4,6 +4,7 @@ import { useState } from 'react';
 import URLInput from '@/components/URLInput';
 import TextToSpeechControls from '@/components/TextToSpeechControls';
 import ContentDisplay from '@/components/ContentDisplay';
+import BrowserCompatibility from '@/components/BrowserCompatibility';
 import { Loader2 } from 'lucide-react';
 
 interface ContentData {
@@ -60,6 +61,8 @@ export default function Reader() {
         </div>
 
         <URLInput onSubmit={handleUrlSubmit} disabled={loading} />
+
+        <BrowserCompatibility />
 
         {loading && (
           <div className="flex items-center justify-center py-12">
