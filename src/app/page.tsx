@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Play, Volume2, BookOpen, Zap, Globe, Headphones } from 'lucide-react';
+import { Play, Volume2, BookOpen, FileText, Globe, Brain } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -37,134 +37,102 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Why Choose LibRead?
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Experience the future of content consumption with our powerful features
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-6">
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Volume2 className="h-8 w-8 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                Natural Voice Synthesis
-              </h3>
-              <p className="text-gray-600">
-                High-quality, natural-sounding voices with adjustable speed and tone
-                for the perfect listening experience.
-              </p>
-            </div>
-
-            <div className="text-center p-6">
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Zap className="h-8 w-8 text-green-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                Smart Content Parsing
-              </h3>
-              <p className="text-gray-600">
-                Advanced algorithms extract clean, readable content from any webpage,
-                removing ads and clutter automatically.
-              </p>
-            </div>
-
-            <div className="text-center p-6">
-              <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                <BookOpen className="h-8 w-8 text-purple-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                Paragraph Navigation
-              </h3>
-              <p className="text-gray-600">
-                Click any paragraph to start reading from there, or use our intuitive
-                controls to navigate through content seamlessly.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                Multiple Reading Modes
-              </h2>
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="bg-blue-100 p-2 rounded-full">
-                    <Globe className="h-5 w-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">Web Reader</h3>
-                    <p className="text-gray-600">Convert any web article or blog post to audio</p>
-                  </div>
+      <section className="py-24 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="group hover:scale-105 transition-transform duration-200">
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl h-full">
+                <div className="bg-blue-600 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                  <FileText className="h-6 w-6 text-white" />
                 </div>
-                <div className="flex items-start gap-4">
-                  <div className="bg-green-100 p-2 rounded-full">
-                    <BookOpen className="h-5 w-5 text-green-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">Document Reader</h3>
-                    <p className="text-gray-600">Upload PDFs, Word docs, and text files</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="bg-purple-100 p-2 rounded-full">
-                    <Headphones className="h-5 w-5 text-purple-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">Text & Novel Readers</h3>
-                    <p className="text-gray-600">Paste text directly or read novels with progress tracking</p>
-                  </div>
-                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Text</h3>
+                <p className="text-gray-600">Paste any text and listen instantly</p>
               </div>
             </div>
-            <div className="mt-12 lg:mt-0">
-              <div className="bg-white rounded-lg shadow-xl p-8">
-                <div className="text-center">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                    Choose Your Reading Mode
-                  </h3>
-                  <div className="bg-gray-100 rounded-lg p-4 mb-6 text-sm text-gray-600">
-                    Text • Document • Web • Novel
-                  </div>
-                  <Link
-                    href="/web"
-                    className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
-                  >
-                    <Play className="h-4 w-4" />
-                    Get Started
-                  </Link>
+
+            <div className="group hover:scale-105 transition-transform duration-200">
+              <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-8 rounded-2xl h-full">
+                <div className="bg-emerald-600 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                  <BookOpen className="h-6 w-6 text-white" />
                 </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Document</h3>
+                <p className="text-gray-600">Upload PDFs, Word docs, and more</p>
+              </div>
+            </div>
+
+            <div className="group hover:scale-105 transition-transform duration-200">
+              <div className="bg-gradient-to-br from-violet-50 to-violet-100 p-8 rounded-2xl h-full">
+                <div className="bg-violet-600 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                  <Globe className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Web</h3>
+                <p className="text-gray-600">Any article or blog post by URL</p>
+              </div>
+            </div>
+
+            <div className="group hover:scale-105 transition-transform duration-200">
+              <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-8 rounded-2xl h-full">
+                <div className="bg-orange-600 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                  <Brain className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Novel</h3>
+                <p className="text-gray-600">Chapter tracking and progress saving</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-blue-600">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-white mb-6">
-            Ready to Transform Your Reading Experience?
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+            Made for how you 
+            <span className="text-blue-600">actually</span> consume content
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
-            Join thousands who are already enjoying hands-free content consumption
+          <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
+            Whether you&apos;re driving, exercising, working, or just prefer listening—
+            turn any text into your personal audiobook in seconds.
           </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <div className="text-center">
+              <div className="text-4xl mb-4">🚗</div>
+              <h3 className="font-semibold text-gray-900 mb-2">While commuting</h3>
+              <p className="text-gray-600 text-sm">Turn travel time into learning time</p>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl mb-4">💪</div>
+              <h3 className="font-semibold text-gray-900 mb-2">During workouts</h3>
+              <p className="text-gray-600 text-sm">Stay motivated with great content</p>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl mb-4">♿</div>
+              <h3 className="font-semibold text-gray-900 mb-2">Accessibility</h3>
+              <p className="text-gray-600 text-sm">Content should be for everyone</p>
+            </div>
+          </div>
+
           <Link
             href="/web"
-            className="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors inline-flex items-center gap-2"
+            className="inline-flex items-center gap-3 bg-blue-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
           >
             <Play className="h-5 w-5" />
-            Start Now - It&apos;s Free
+            Try with any URL
+          </Link>
+        </div>
+      </section>
+
+      <section className="py-20 bg-gray-900">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-bold text-white mb-8">
+            Ready to listen?
+          </h2>
+          <Link
+            href="/web"
+            className="bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
+          >
+            <Play className="h-5 w-5" />
+            Try it now
           </Link>
         </div>
       </section>
