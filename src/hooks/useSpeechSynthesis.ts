@@ -24,6 +24,7 @@ export function useSpeechSynthesis() {
   const pausedAtParagraphRef = useRef<number>(0);
   const isPausingRef = useRef<boolean>(false);
   const isJumpingRef = useRef<boolean>(false);
+  const isStoppingRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
@@ -56,6 +57,7 @@ export function useSpeechSynthesis() {
     setTimeout(() => {
       isPausingRef.current = false;
       isJumpingRef.current = false;
+      isStoppingRef.current = false;
       paragraphsRef.current = paragraphs;
       onParagraphChangeRef.current = onParagraphChange || null;
 
@@ -109,15 +111,15 @@ export function useSpeechSynthesis() {
         };
 
         utterance.onend = () => {
-          // Only move to next paragraph if we're not pausing or jumping
-          if (!isPausingRef.current && !isJumpingRef.current) {
+          // Only move to next paragraph if we're not pausing, jumping, or stopping
+          if (!isPausingRef.current && !isJumpingRef.current && !isStoppingRef.current) {
             setTimeout(() => speakParagraph(index + 1), 100);
           }
         };
 
         utterance.onerror = () => {
-          // Only skip to next paragraph if we're not pausing or jumping
-          if (!isPausingRef.current && !isJumpingRef.current) {
+          // Only skip to next paragraph if we're not pausing, jumping, or stopping
+          if (!isPausingRef.current && !isJumpingRef.current && !isStoppingRef.current) {
             setTimeout(() => speakParagraph(index + 1), 100);
           }
         };
@@ -153,12 +155,23 @@ export function useSpeechSynthesis() {
 
   const stop = useCallback(() => {
     if (isSupported) {
+      // Set stopping flag to prevent auto-progression
+      isStoppingRef.current = true;
       isPausingRef.current = false;
       isJumpingRef.current = false;
       speechSynthesis.cancel();
       utteranceRef.current = null;
       pausedAtParagraphRef.current = 0;
+      // Reset to first paragraph (index 0)
       setSpeechState(prev => ({ ...prev, isPlaying: false, isPaused: false, currentParagraph: 0 }));
+      // Also update the parent component's current paragraph
+      if (onParagraphChangeRef.current) {
+        onParagraphChangeRef.current(0);
+      }
+      // Clear stopping flag after a brief delay
+      setTimeout(() => {
+        isStoppingRef.current = false;
+      }, 200);
     }
   }, [isSupported]);
 
