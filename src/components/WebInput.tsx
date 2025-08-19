@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { Link, Play } from 'lucide-react';
 
-interface URLInputProps {
+interface WebInputProps {
   onSubmit: (url: string) => void;
   disabled?: boolean;
 }
 
-export default function URLInput({ onSubmit, disabled }: URLInputProps) {
+export default function WebInput({ onSubmit, disabled }: WebInputProps) {
   const [url, setUrl] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {

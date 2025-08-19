@@ -1,6 +1,6 @@
-# LibRead - Web Content Text-to-Speech Reader
+# LibRead - Multi-Modal Text-to-Speech Platform
 
-A Next.js application that fetches web content from URLs and provides text-to-speech functionality with advanced controls for an immersive audio reading experience.
+A comprehensive Next.js application that provides text-to-speech functionality across multiple input methods: web content, direct text, documents, and specialized novel reading. Built for an immersive audio reading experience with advanced controls and responsive design.
 
 ## Tech Stack
 - **Frontend**: Next.js 15 with App Router, React 19, TypeScript
@@ -16,23 +16,35 @@ A Next.js application that fetches web content from URLs and provides text-to-sp
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint (MUST pass before committing)
 
-# Project Structure
+# Project Structure (Current - Expanding to Multi-Reader Platform)
 ```
 src/
 ├── app/
-│   ├── api/fetch-content/  # API route for web scraping
-│   ├── reader/            # Main reader page
-│   ├── layout.tsx         # Root layout with navbar/footer
-│   └── page.tsx           # Landing page
+│   ├── api/
+│   │   ├── fetch-content/     # Web scraping API for URL reader
+│   │   └── parse-document/    # PLANNED: Document parsing API
+│   ├── web/                  # Web reader (renamed from /reader)
+│   ├── text/                 # PLANNED: Direct text input reader
+│   ├── document/             # PLANNED: Document upload reader  
+│   ├── novel/                # PLANNED: Specialized novel reader
+│   ├── layout.tsx            # Root layout with enhanced navigation
+│   └── page.tsx              # Landing page with reader selection
 ├── components/
-│   ├── BrowserCompatibility.tsx  # Browser detection & compatibility
-│   ├── ContentDisplay.tsx        # Article content with paragraphs
-│   ├── Footer.tsx               # Site footer
-│   ├── Navbar.tsx              # Site navigation
-│   ├── TextToSpeechControls.tsx # Audio controls & synthesis
-│   └── URLInput.tsx            # URL input form
+│   ├── shared/               # PLANNED: Shared across all readers
+│   │   ├── BrowserCompatibility.tsx  # Browser detection & compatibility
+│   │   ├── Footer.tsx               # Site footer
+│   │   ├── Navbar.tsx              # Enhanced navigation
+│   │   └── TextToSpeechControls.tsx # Universal audio controls
+│   ├── web/                  # PLANNED: Web reader specific
+│   │   ├── WebInput.tsx             # Web URL input form
+│   │   └── ContentDisplay.tsx       # Web content display
+│   ├── text/                 # PLANNED: Text reader components
+│   ├── document/             # PLANNED: Document reader components
+│   └── novel/                # PLANNED: Novel reader components
 └── hooks/
-    └── useSpeechSynthesis.ts   # Custom hook for speech synthesis
+    ├── useSpeechSynthesis.ts        # Core speech synthesis
+    ├── useDocumentParser.ts         # PLANNED: Document parsing
+    └── useReadingProgress.ts        # PLANNED: Novel progress tracking
 ```
 
 # Architecture
@@ -53,7 +65,9 @@ src/
 - **CSS**: Use Tailwind utility classes, avoid custom CSS unless necessary
 - **Icons**: Use Lucide React components
 
-# Key Features
+# Key Features (Current & Planned)
+
+## Current Features (Web Reader)
 1. **URL Content Fetching**: Scrapes web content using Cheerio, filters out ads/navigation
 2. **Text-to-Speech**: Browser Web Speech API with chunking for long content
 3. **Paragraph Navigation**: Click paragraphs to jump to specific sections and start playing
@@ -68,6 +82,14 @@ src/
    - Desktop (≥ 1024px): Horizontal three-column layout
 6. **Browser Compatibility**: Detects 20+ browsers with specific guidance
 7. **Real-time Speed Changes**: Speed adjustments apply immediately during playback
+
+## Planned Multi-Reader Platform
+1. **Text Reader**: Direct text input with paste functionality and word count
+2. **Document Reader**: Upload PDFs, DOCX, TXT files with parsing and preview
+3. **Web Reader**: Enhanced current functionality (renamed from /reader)
+4. **Novel Reader**: Specialized for novels with chapter navigation and progress tracking
+5. **Unified Experience**: Consistent speech controls across all readers
+6. **Cross-Reader Features**: Shared settings, bookmarks, reading history
 
 # Development Workflow
 - **IMPORTANT**: Always run `npm run build` and `npm run lint` before committing
@@ -100,11 +122,21 @@ src/
 - @tailwind.config.js - Tailwind CSS configuration
 - @tsconfig.json - TypeScript configuration
 
-# API Endpoints
+# API Endpoints (Current & Planned)
+
+## Current Endpoints
 - `POST /api/fetch-content` - Fetches and parses web content
   - Input: `{ url: string }`
   - Output: `{ title, content, paragraphs, wordCount, estimatedReadTime }`
   - Error handling for invalid URLs and parsing failures
+
+## Planned Endpoints
+- `POST /api/parse-document` - Parse uploaded documents
+  - Input: FormData with file upload
+  - Output: `{ title, content, paragraphs, wordCount, fileType }`
+  - Support: PDF, DOCX, TXT, RTF files
+- `GET /api/reading-progress/:id` - Retrieve reading progress (for novels)
+- `POST /api/reading-progress` - Save reading progress (for novels)
 
 # Styling Guidelines
 - Use Tailwind utility classes for consistent design
@@ -122,11 +154,15 @@ src/
 - Show appropriate icons and colors based on compatibility
 - Guide users to compatible browsers when needed
 
+# Expansion Roadmap
+See @docs/EXPANSION_PLAN.md for detailed implementation strategy and file structure evolution for the multi-reader platform.
+
 # Do Not Touch
 - node_modules/ directory
 - .next/ directory (build output)
 - Auto-generated files
 - Package-lock.json (unless updating dependencies)
+- docs/ directory (documentation and planning files)
 
 # Common Issues
 - **No Voices Available**: Usually Brave browser privacy settings or Linux missing espeak

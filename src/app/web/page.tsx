@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import URLInput from '@/components/URLInput';
+import WebInput from '@/components/WebInput';
 import TextToSpeechControls from '@/components/TextToSpeechControls';
 import ContentDisplay from '@/components/ContentDisplay';
 import BrowserCompatibility from '@/components/BrowserCompatibility';
@@ -16,7 +16,7 @@ interface ContentData {
   estimatedReadTime: number;
 }
 
-export default function Reader() {
+export default function WebReader() {
   const [contentData, setContentData] = useState<ContentData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -68,7 +68,7 @@ export default function Reader() {
           </p>
         </div>
 
-        <URLInput onSubmit={handleUrlSubmit} disabled={loading} />
+        <WebInput onSubmit={handleUrlSubmit} disabled={loading} />
 
         <BrowserCompatibility />
 
