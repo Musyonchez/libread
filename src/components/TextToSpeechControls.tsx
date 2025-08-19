@@ -1,8 +1,8 @@
 'use client';
 
 import { useSpeechSynthesis } from '@/hooks/useSpeechSynthesis';
-import { Play, Pause, Square, SkipBack, SkipForward, Volume2 } from 'lucide-react';
-import { useEffect, useCallback, MutableRefObject } from 'react';
+import { Play, Pause, Square, SkipBack, SkipForward, Volume2, ChevronDown, ChevronUp } from 'lucide-react';
+import { useEffect, useCallback, MutableRefObject, useState } from 'react';
 
 interface TextToSpeechControlsProps {
   paragraphs: string[];
@@ -27,6 +27,9 @@ export default function TextToSpeechControls({
     setRate,
     jumpToParagraph,
   } = useSpeechSynthesis();
+
+  // Mobile controls toggle state
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Set the jumpToParagraph function in the ref so parent can use it
   useEffect(() => {
@@ -92,119 +95,136 @@ export default function TextToSpeechControls({
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-4">
-      {/* Mobile: Vertical stacked layout */}
-      <div className="flex flex-col gap-4 sm:hidden">
-        {/* Title and paragraph info */}
-        <div className="text-center">
-          <h3 className="text-lg font-semibold text-gray-900">Audio Controls</h3>
-          <p className="text-sm text-gray-600">
-            Paragraph {currentParagraph + 1} of {paragraphs.length}
-          </p>
-        </div>
-
-        {/* Playback controls */}
-        <div className="flex items-center justify-center space-x-4">
+      {/* Mobile: Compact/Expandable layout */}
+      <div className="flex flex-col gap-3 sm:hidden">
+        {/* Always visible: Playback controls with toggle */}
+        <div className="flex items-center justify-center space-x-3">
           <button
             onClick={handlePrevious}
             disabled={currentParagraph === 0}
-            className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
+            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
           >
-            <SkipBack className="h-5 w-5 text-gray-700" />
+            <SkipBack className="h-4 w-4 text-gray-700" />
           </button>
 
           <button
             onClick={handlePlayPause}
-            className="p-4 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+            className="p-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
           >
             {speechState.isPlaying && !speechState.isPaused ? (
-              <Pause className="h-6 w-6" />
+              <Pause className="h-5 w-5" />
             ) : (
-              <Play className="h-6 w-6" />
+              <Play className="h-5 w-5" />
             )}
           </button>
 
           <button
             onClick={stop}
             disabled={!speechState.isPlaying}
-            className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
+            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
           >
-            <Square className="h-5 w-5 text-gray-700" />
+            <Square className="h-4 w-4 text-gray-700" />
           </button>
 
           <button
             onClick={handleNext}
             disabled={currentParagraph >= paragraphs.length - 1}
-            className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
+            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
           >
-            <SkipForward className="h-5 w-5 text-gray-700" />
+            <SkipForward className="h-4 w-4 text-gray-700" />
+          </button>
+
+          {/* Toggle button */}
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+          >
+            {isExpanded ? (
+              <ChevronUp className="h-4 w-4 text-gray-700" />
+            ) : (
+              <ChevronDown className="h-4 w-4 text-gray-700" />
+            )}
           </button>
         </div>
 
-        {/* Speed controls */}
-        <div className="flex flex-col items-center gap-3">
-          <label className="text-sm font-medium text-gray-700">Speed</label>
-          
-          {/* Preset speed buttons */}
-          <div className="flex gap-2">
-            {[0.5, 1, 1.5, 2].map((presetRate) => (
-              <button
-                key={presetRate}
-                onClick={() => setRate(presetRate)}
-                className={`px-3 py-2 text-sm rounded-lg transition-colors ${
-                  Math.abs(speechState.rate - presetRate) < 0.05
-                    ? 'bg-blue-100 text-blue-700 border border-blue-300'
-                    : 'bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-200'
-                }`}
-              >
-                {presetRate}x
-              </button>
-            ))}
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-600 min-w-[3rem]">{speechState.rate}x</span>
-            <input
-              type="range"
-              min="0.5"
-              max="2"
-              step="0.1"
-              value={speechState.rate}
-              onChange={(e) => setRate(parseFloat(e.target.value))}
-              className="w-32 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-            />
-          </div>
-        </div>
+        {/* Expandable content */}
+        {isExpanded && (
+          <>
+            {/* Title and paragraph info */}
+            <div className="text-center">
+              <h3 className="text-lg font-semibold text-gray-900">Audio Controls</h3>
+              <p className="text-sm text-gray-600">
+                Paragraph {currentParagraph + 1} of {paragraphs.length}
+              </p>
+            </div>
 
-        {/* Status indicator */}
-        {speechState.hasEverStarted && (
-          <div className={`flex items-center justify-center gap-2 rounded-lg px-4 py-2 ${
-            speechState.isPlaying && !speechState.isPaused
-              ? 'bg-green-50 border border-green-200'
-              : speechState.isPlaying && speechState.isPaused
-              ? 'bg-amber-50 border border-amber-200'
-              : 'bg-red-50 border border-red-200'
-          }`}>
-            <Volume2 className={`h-4 w-4 ${
-              speechState.isPlaying && !speechState.isPaused
-                ? 'text-green-600'
-                : speechState.isPlaying && speechState.isPaused
-                ? 'text-amber-600'
-                : 'text-red-600'
-            }`} />
-            <span className={`text-sm ${
-              speechState.isPlaying && !speechState.isPaused
-                ? 'text-green-800'
-                : speechState.isPlaying && speechState.isPaused
-                ? 'text-amber-800'
-                : 'text-red-800'
-            }`}>
-              {speechState.isPlaying && !speechState.isPaused
-                ? 'Playing'
-                : speechState.isPlaying && speechState.isPaused
-                ? 'Paused'
-                : 'Stopped'}
-            </span>
-          </div>
+            {/* Speed controls */}
+            <div className="flex flex-col items-center gap-2">
+              <label className="text-sm font-medium text-gray-700">Speed</label>
+              
+              {/* Preset speed buttons */}
+              <div className="flex gap-1">
+                {[0.5, 1, 1.5, 2].map((presetRate) => (
+                  <button
+                    key={presetRate}
+                    onClick={() => setRate(presetRate)}
+                    className={`px-2 py-1 text-xs rounded transition-colors ${
+                      Math.abs(speechState.rate - presetRate) < 0.05
+                        ? 'bg-blue-100 text-blue-700 border border-blue-300'
+                        : 'bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-200'
+                    }`}
+                  >
+                    {presetRate}x
+                  </button>
+                ))}
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600 min-w-[2.5rem]">{speechState.rate}x</span>
+                <input
+                  type="range"
+                  min="0.5"
+                  max="2"
+                  step="0.1"
+                  value={speechState.rate}
+                  onChange={(e) => setRate(parseFloat(e.target.value))}
+                  className="w-28 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                />
+              </div>
+            </div>
+
+            {/* Status indicator */}
+            {speechState.hasEverStarted && (
+              <div className={`flex items-center justify-center gap-2 rounded-lg px-3 py-1 ${
+                speechState.isPlaying && !speechState.isPaused
+                  ? 'bg-green-50 border border-green-200'
+                  : speechState.isPlaying && speechState.isPaused
+                  ? 'bg-amber-50 border border-amber-200'
+                  : 'bg-red-50 border border-red-200'
+              }`}>
+                <Volume2 className={`h-4 w-4 ${
+                  speechState.isPlaying && !speechState.isPaused
+                    ? 'text-green-600'
+                    : speechState.isPlaying && speechState.isPaused
+                    ? 'text-amber-600'
+                    : 'text-red-600'
+                }`} />
+                <span className={`text-sm ${
+                  speechState.isPlaying && !speechState.isPaused
+                    ? 'text-green-800'
+                    : speechState.isPlaying && speechState.isPaused
+                    ? 'text-amber-800'
+                    : 'text-red-800'
+                }`}>
+                  {speechState.isPlaying && !speechState.isPaused
+                    ? 'Playing'
+                    : speechState.isPlaying && speechState.isPaused
+                    ? 'Paused'
+                    : 'Stopped'}
+                </span>
+              </div>
+            )}
+          </>
         )}
       </div>
 
