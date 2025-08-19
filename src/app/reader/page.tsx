@@ -78,22 +78,23 @@ export default function Reader() {
         )}
 
         {contentData && !loading && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
+          <div className="space-y-6">
+            {/* Sticky Audio Controls */}
+            <div className="sticky top-16 z-40 bg-gray-50 pb-4">
+              <TextToSpeechControls
+                paragraphs={contentData.paragraphs}
+                currentParagraph={currentParagraph}
+                onParagraphChange={setCurrentParagraph}
+              />
+            </div>
+
+            {/* Content Display */}
+            <div className="max-w-4xl mx-auto">
               <ContentDisplay
                 content={contentData}
                 currentParagraph={currentParagraph}
                 onParagraphClick={setCurrentParagraph}
               />
-            </div>
-            <div className="lg:col-span-1">
-              <div className="sticky top-24">
-                <TextToSpeechControls
-                  paragraphs={contentData.paragraphs}
-                  currentParagraph={currentParagraph}
-                  onParagraphChange={setCurrentParagraph}
-                />
-              </div>
             </div>
           </div>
         )}

@@ -81,88 +81,87 @@ export default function TextToSpeechControls({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 space-y-6">
-      <div className="text-center">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Audio Controls</h3>
-        <p className="text-sm text-gray-600">
-          Paragraph {currentParagraph + 1} of {paragraphs.length}
-        </p>
-      </div>
+    <div className="bg-white rounded-lg shadow-lg p-4">
+      <div className="flex items-center justify-between gap-6">
+        {/* Left side - Title and paragraph info */}
+        <div className="flex-shrink-0">
+          <h3 className="text-lg font-semibold text-gray-900">Audio Controls</h3>
+          <p className="text-sm text-gray-600">
+            Paragraph {currentParagraph + 1} of {paragraphs.length}
+          </p>
+        </div>
 
-      <div className="flex items-center justify-center space-x-4">
-        <button
-          onClick={handlePrevious}
-          disabled={currentParagraph === 0}
-          className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
-        >
-          <SkipBack className="h-5 w-5 text-gray-700" />
-        </button>
+        {/* Center - Playback controls */}
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={handlePrevious}
+            disabled={currentParagraph === 0}
+            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <SkipBack className="h-4 w-4 text-gray-700" />
+          </button>
 
-        <button
-          onClick={handlePlayPause}
-          className="p-4 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
-        >
-          {speechState.isPlaying && !speechState.isPaused ? (
-            <Pause className="h-6 w-6" />
-          ) : (
-            <Play className="h-6 w-6" />
+          <button
+            onClick={handlePlayPause}
+            className="p-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+          >
+            {speechState.isPlaying && !speechState.isPaused ? (
+              <Pause className="h-5 w-5" />
+            ) : (
+              <Play className="h-5 w-5" />
+            )}
+          </button>
+
+          <button
+            onClick={stop}
+            disabled={!speechState.isPlaying}
+            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <Square className="h-4 w-4 text-gray-700" />
+          </button>
+
+          <button
+            onClick={handleNext}
+            disabled={currentParagraph >= paragraphs.length - 1}
+            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <SkipForward className="h-4 w-4 text-gray-700" />
+          </button>
+        </div>
+
+        {/* Right side - Speed control and status */}
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium text-gray-700 whitespace-nowrap">Speed</label>
+            <span className="text-sm text-gray-600 min-w-[3rem]">{speechState.rate}x</span>
+            <input
+              type="range"
+              min="0.5"
+              max="2"
+              step="0.1"
+              value={speechState.rate}
+              onChange={(e) => setRate(parseFloat(e.target.value))}
+              className="w-24 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+            />
+          </div>
+
+          {speechState.isPlaying && (
+            <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-3 py-1">
+              <Volume2 className="h-4 w-4 text-green-600" />
+              <span className="text-sm text-green-800 whitespace-nowrap">
+                {speechState.isPaused ? 'Paused' : 'Playing'}
+              </span>
+            </div>
           )}
-        </button>
-
-        <button
-          onClick={stop}
-          disabled={!speechState.isPlaying}
-          className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
-        >
-          <Square className="h-5 w-5 text-gray-700" />
-        </button>
-
-        <button
-          onClick={handleNext}
-          disabled={currentParagraph >= paragraphs.length - 1}
-          className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
-        >
-          <SkipForward className="h-5 w-5 text-gray-700" />
-        </button>
-      </div>
-
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-gray-700">Speed</label>
-          <span className="text-sm text-gray-600">{speechState.rate}x</span>
-        </div>
-        <input
-          type="range"
-          min="0.5"
-          max="2"
-          step="0.1"
-          value={speechState.rate}
-          onChange={(e) => setRate(parseFloat(e.target.value))}
-          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-        />
-        <div className="flex justify-between text-xs text-gray-500">
-          <span>0.5x</span>
-          <span>1x</span>
-          <span>2x</span>
         </div>
       </div>
 
-      <div className="text-center">
+      {/* Bottom info */}
+      <div className="mt-3 pt-3 border-t border-gray-200 text-center">
         <p className="text-xs text-gray-500">
           Press spacebar to play/pause
         </p>
       </div>
-
-      {speechState.isPlaying && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-          <div className="flex items-center justify-center">
-            <Volume2 className="h-4 w-4 text-green-600 mr-2" />
-            <span className="text-sm text-green-800">
-              {speechState.isPaused ? 'Paused' : 'Playing'}
-            </span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
