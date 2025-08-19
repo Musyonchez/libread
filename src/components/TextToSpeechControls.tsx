@@ -28,10 +28,13 @@ export default function TextToSpeechControls({
 
   const handlePlayPause = useCallback(() => {
     if (!speechState.isPlaying) {
+      // Not playing, so start
       speak(paragraphs, currentParagraph, onParagraphChange);
     } else if (speechState.isPaused) {
+      // Paused, so resume
       resume();
     } else {
+      // Playing, so pause
       pause();
     }
   }, [speechState.isPlaying, speechState.isPaused, speak, paragraphs, currentParagraph, onParagraphChange, resume, pause]);
