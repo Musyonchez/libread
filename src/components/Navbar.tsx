@@ -21,35 +21,35 @@ export default function Navbar() {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
               <Link
-                href="/"
+                href="/text"
                 className="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors"
               >
-                Home
+                Text
               </Link>
               <Link
-                href="/reader"
+                href="/document"
                 className="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors"
               >
-                Reader
+                Document
               </Link>
               <Link
-                href="/about"
+                href="/web"
                 className="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors"
               >
-                About
+                Web
               </Link>
               <Link
-                href="/contact"
+                href="/novel"
                 className="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors"
               >
-                Contact
+                Novel
               </Link>
             </div>
           </div>
 
           <div className="hidden md:block">
             <Link
-              href="/reader"
+              href="/web"
               className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
             >
               Get Started
@@ -71,31 +71,31 @@ export default function Navbar() {
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200">
             <Link
-              href="/"
+              href="/text"
               className="text-gray-500 hover:text-gray-900 block px-3 py-2 text-base font-medium"
             >
-              Home
+              Text
             </Link>
             <Link
-              href="/reader"
+              href="/document"
               className="text-gray-500 hover:text-gray-900 block px-3 py-2 text-base font-medium"
             >
-              Reader
+              Document
             </Link>
             <Link
-              href="/about"
+              href="/web"
               className="text-gray-500 hover:text-gray-900 block px-3 py-2 text-base font-medium"
             >
-              About
+              Web
             </Link>
             <Link
-              href="/contact"
+              href="/novel"
               className="text-gray-500 hover:text-gray-900 block px-3 py-2 text-base font-medium"
             >
-              Contact
+              Novel
             </Link>
             <Link
-              href="/reader"
+              href="/web"
               className="bg-blue-600 text-white block px-3 py-2 rounded-lg text-base font-medium hover:bg-blue-700 transition-colors mx-3 mt-4"
             >
               Get Started

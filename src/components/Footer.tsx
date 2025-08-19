@@ -12,7 +12,7 @@ export default function Footer() {
               <span className="text-xl font-bold">LibRead</span>
             </div>
             <p className="text-gray-400 mb-4 max-w-md">
-              Transform any web content into an immersive audio experience with our
+              Transform text, documents, web content, and novels into immersive audio experiences with our
               advanced text-to-speech technology.
             </p>
             <div className="flex space-x-4">
@@ -30,27 +30,27 @@ export default function Footer() {
 
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">
-              Product
+              Readers
             </h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/reader" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/text" className="text-gray-400 hover:text-white transition-colors">
+                  Text Reader
+                </Link>
+              </li>
+              <li>
+                <Link href="/document" className="text-gray-400 hover:text-white transition-colors">
+                  Document Reader
+                </Link>
+              </li>
+              <li>
+                <Link href="/web" className="text-gray-400 hover:text-white transition-colors">
                   Web Reader
                 </Link>
               </li>
               <li>
-                <Link href="/features" className="text-gray-400 hover:text-white transition-colors">
-                  Features
-                </Link>
-              </li>
-              <li>
-                <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors">
-                  Pricing
-                </Link>
-              </li>
-              <li>
-                <Link href="/api" className="text-gray-400 hover:text-white transition-colors">
-                  API
+                <Link href="/novel" className="text-gray-400 hover:text-white transition-colors">
+                  Novel Reader
                 </Link>
               </li>
             </ul>

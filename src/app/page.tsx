@@ -8,16 +8,16 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
           <div className="text-center">
             <h1 className="text-4xl sm:text-6xl font-bold text-gray-900 mb-6">
-              Transform Web Content into
+              Transform Any Content into
               <span className="text-blue-600 block mt-2">Audio Experiences</span>
             </h1>
             <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Convert any web article, blog post, or story into immersive audio with our 
+              Convert text, documents, web articles, or novels into immersive audio with our 
               advanced text-to-speech technology. Listen while you work, commute, or relax.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Link
-                href="/reader"
+                href="/web"
                 className="bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
               >
                 <Play className="h-5 w-5" />
@@ -96,7 +96,7 @@ export default function Home() {
           <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
             <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                Perfect for Every Use Case
+                Multiple Reading Modes
               </h2>
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
@@ -104,8 +104,8 @@ export default function Home() {
                     <Globe className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">News & Articles</h3>
-                    <p className="text-gray-600">Stay informed while multitasking</p>
+                    <h3 className="font-semibold text-gray-900 mb-2">Web Reader</h3>
+                    <p className="text-gray-600">Convert any web article or blog post to audio</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -113,8 +113,8 @@ export default function Home() {
                     <BookOpen className="h-5 w-5 text-green-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">Web Novels & Stories</h3>
-                    <p className="text-gray-600">Enjoy your favorite stories hands-free</p>
+                    <h3 className="font-semibold text-gray-900 mb-2">Document Reader</h3>
+                    <p className="text-gray-600">Upload PDFs, Word docs, and text files</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -122,8 +122,8 @@ export default function Home() {
                     <Headphones className="h-5 w-5 text-purple-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">Educational Content</h3>
-                    <p className="text-gray-600">Learn while commuting or exercising</p>
+                    <h3 className="font-semibold text-gray-900 mb-2">Text & Novel Readers</h3>
+                    <p className="text-gray-600">Paste text directly or read novels with progress tracking</p>
                   </div>
                 </div>
               </div>
@@ -132,13 +132,13 @@ export default function Home() {
               <div className="bg-white rounded-lg shadow-xl p-8">
                 <div className="text-center">
                   <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                    Try it now with any URL
+                    Choose Your Reading Mode
                   </h3>
-                  <div className="bg-gray-100 rounded-lg p-4 mb-6 text-sm text-gray-600 font-mono">
-                    https://www.example.com/article
+                  <div className="bg-gray-100 rounded-lg p-4 mb-6 text-sm text-gray-600">
+                    Text • Document • Web • Novel
                   </div>
                   <Link
-                    href="/reader"
+                    href="/web"
                     className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
                   >
                     <Play className="h-4 w-4" />
@@ -160,7 +160,7 @@ export default function Home() {
             Join thousands who are already enjoying hands-free content consumption
           </p>
           <Link
-            href="/reader"
+            href="/web"
             className="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors inline-flex items-center gap-2"
           >
             <Play className="h-5 w-5" />
