@@ -34,13 +34,64 @@ export function useSpeechSynthesis() {
     paragraphsRef.current = paragraphs;
     onParagraphChangeRef.current = onParagraphChange || null;
 
-    const speakParagraph = (index: number) => {
+    const chunkText = (text: string, maxLength: number = 200): string[] => {
+      if (text.length <= maxLength) return [text];
+      
+      const chunks: string[] = [];
+      const sentences = text.split(/[.!?]+/);
+      let currentChunk = '';
+      
+      for (const sentence of sentences) {
+        const trimmedSentence = sentence.trim();
+        if (!trimmedSentence) continue;
+        
+        const potentialChunk = currentChunk + (currentChunk ? '. ' : '') + trimmedSentence;
+        
+        if (potentialChunk.length <= maxLength) {
+          currentChunk = potentialChunk;
+        } else {
+          if (currentChunk) {
+            chunks.push(currentChunk + '.');
+            currentChunk = trimmedSentence;
+          } else {
+            // If single sentence is too long, split by words
+            const words = trimmedSentence.split(' ');
+            let wordChunk = '';
+            for (const word of words) {
+              if ((wordChunk + ' ' + word).length <= maxLength) {
+                wordChunk += (wordChunk ? ' ' : '') + word;
+              } else {
+                if (wordChunk) chunks.push(wordChunk);
+                wordChunk = word;
+              }
+            }
+            if (wordChunk) currentChunk = wordChunk;
+          }
+        }
+      }
+      
+      if (currentChunk) {
+        chunks.push(currentChunk + (currentChunk.match(/[.!?]$/) ? '' : '.'));
+      }
+      
+      return chunks.filter(chunk => chunk.trim().length > 0);
+    };
+
+    const speakParagraph = (index: number, chunkIndex: number = 0) => {
       if (index >= paragraphs.length) {
         setSpeechState(prev => ({ ...prev, isPlaying: false, currentParagraph: 0 }));
         return;
       }
 
-      const utterance = new SpeechSynthesisUtterance(paragraphs[index]);
+      const chunks = chunkText(paragraphs[index]);
+      
+      if (chunkIndex >= chunks.length) {
+        // Move to next paragraph
+        speakParagraph(index + 1, 0);
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(chunks[chunkIndex]);
       utteranceRef.current = utterance;
       
       utterance.rate = speechState.rate;
@@ -49,22 +100,25 @@ export function useSpeechSynthesis() {
 
       utterance.onstart = () => {
         setSpeechState(prev => ({ ...prev, isPlaying: true, isPaused: false, currentParagraph: index }));
-        if (onParagraphChangeRef.current) {
+        if (onParagraphChangeRef.current && chunkIndex === 0) {
           onParagraphChangeRef.current(index);
         }
       };
 
       utterance.onend = () => {
-        if (index < paragraphs.length - 1) {
-          speakParagraph(index + 1);
-        } else {
-          setSpeechState(prev => ({ ...prev, isPlaying: false, currentParagraph: 0 }));
-        }
+        // Move to next chunk or next paragraph
+        speakParagraph(index, chunkIndex + 1);
       };
 
       utterance.onerror = (event) => {
         console.error('Speech synthesis error:', event);
-        setSpeechState(prev => ({ ...prev, isPlaying: false }));
+        if (event.error === 'synthesis-failed' && chunks[chunkIndex].length > 100) {
+          // Try with shorter chunks by retrying current chunk
+          speakParagraph(index, chunkIndex);
+          return;
+        }
+        // Skip this chunk and continue with next
+        speakParagraph(index, chunkIndex + 1);
       };
 
       speechSynthesis.speak(utterance);

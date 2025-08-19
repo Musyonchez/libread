@@ -59,17 +59,29 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    $contentContainer.find('p, div').each((_, element) => {
+    // First try to get paragraphs specifically
+    $contentContainer.find('p').each((_, element) => {
       const text = $(element).text().trim();
-      if (text.length > 50 && !text.match(/^(Copyright|©|Terms|Privacy|Subscribe|Share|Like)/i)) {
+      if (text.length > 20 && !text.match(/^(Copyright|©|Terms|Privacy|Subscribe|Share|Like|Follow|Tweet|Facebook)/i)) {
         paragraphs.push(text);
       }
     });
 
+    // If no paragraphs found, try div elements
+    if (paragraphs.length === 0) {
+      $contentContainer.find('div').each((_, element) => {
+        const text = $(element).text().trim();
+        if (text.length > 50 && !text.match(/^(Copyright|©|Terms|Privacy|Subscribe|Share|Like)/i)) {
+          paragraphs.push(text);
+        }
+      });
+    }
+
+    // Fallback: get all p tags from the entire document
     if (paragraphs.length === 0) {
       $('p').each((_, element) => {
         const text = $(element).text().trim();
-        if (text.length > 50) {
+        if (text.length > 20) {
           paragraphs.push(text);
         }
       });

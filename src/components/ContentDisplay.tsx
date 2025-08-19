@@ -64,20 +64,25 @@ export default function ContentDisplay({
         </div>
       </div>
 
-      <div className="p-6 prose prose-lg max-w-none">
+      <div className="p-6 max-w-none">
         {content.paragraphs.map((paragraph, index) => (
-          <p
+          <div
             key={index}
             ref={index === currentParagraph ? currentParagraphRef : null}
             onClick={() => onParagraphClick(index)}
-            className={`mb-4 leading-relaxed cursor-pointer transition-all duration-200 p-3 rounded-lg ${
+            className={`mb-6 leading-relaxed cursor-pointer transition-all duration-200 p-4 rounded-lg text-lg ${
               index === currentParagraph
-                ? 'bg-blue-50 border-l-4 border-blue-500 text-blue-900'
-                : 'hover:bg-gray-50 text-gray-800'
+                ? 'bg-blue-50 border-l-4 border-blue-500 text-blue-900 shadow-sm'
+                : 'hover:bg-gray-50 text-gray-800 border-l-4 border-transparent hover:border-gray-200'
             }`}
           >
-            {paragraph}
-          </p>
+            <p className="whitespace-pre-wrap">{paragraph}</p>
+            {index === currentParagraph && (
+              <div className="mt-2 text-sm text-blue-600 font-medium">
+                ▶ Currently reading
+              </div>
+            )}
+          </div>
         ))}
       </div>
 
