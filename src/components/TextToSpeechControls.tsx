@@ -62,19 +62,19 @@ export default function TextToSpeechControls({
   }, [handlePlayPause]);
 
   const handlePrevious = () => {
-    const prevIndex = Math.max(0, currentParagraph - 1);
-    onParagraphChange(prevIndex);
-    if (speechState.isPlaying) {
-      jumpToParagraph(prevIndex, paragraphs);
-    }
+    const actualCurrent = speechState.currentParagraph;
+    if (actualCurrent <= 0) return; // Don't go back if already at first paragraph
+    const prevIndex = actualCurrent - 1;
+    onParagraphChange(prevIndex); // Update visual indicator immediately
+    setTimeout(() => jumpToParagraph(prevIndex, paragraphs), 50); // Start speech after state update
   };
 
   const handleNext = () => {
-    const nextIndex = Math.min(paragraphs.length - 1, currentParagraph + 1);
-    onParagraphChange(nextIndex);
-    if (speechState.isPlaying) {
-      jumpToParagraph(nextIndex, paragraphs);
-    }
+    const actualCurrent = speechState.currentParagraph;
+    if (actualCurrent >= paragraphs.length - 1) return; // Don't go forward if already at last paragraph
+    const nextIndex = actualCurrent + 1;
+    onParagraphChange(nextIndex); // Update visual indicator immediately
+    setTimeout(() => jumpToParagraph(nextIndex, paragraphs), 50); // Start speech after state update
   };
 
   if (!isSupported) {
@@ -101,7 +101,7 @@ export default function TextToSpeechControls({
         <div className="flex items-center justify-center space-x-3">
           <button
             onClick={handlePrevious}
-            disabled={currentParagraph === 0}
+            disabled={speechState.currentParagraph === 0}
             className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
           >
             <SkipBack className="h-4 w-4 text-gray-700" />
@@ -128,7 +128,7 @@ export default function TextToSpeechControls({
 
           <button
             onClick={handleNext}
-            disabled={currentParagraph >= paragraphs.length - 1}
+            disabled={speechState.currentParagraph >= paragraphs.length - 1}
             className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
           >
             <SkipForward className="h-4 w-4 text-gray-700" />
@@ -244,7 +244,7 @@ export default function TextToSpeechControls({
           <div className="flex items-center space-x-3">
             <button
               onClick={handlePrevious}
-              disabled={currentParagraph === 0}
+              disabled={speechState.currentParagraph === 0}
               className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
             >
               <SkipBack className="h-4 w-4 text-gray-700" />
@@ -271,7 +271,7 @@ export default function TextToSpeechControls({
 
             <button
               onClick={handleNext}
-              disabled={currentParagraph >= paragraphs.length - 1}
+              disabled={speechState.currentParagraph >= paragraphs.length - 1}
               className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
             >
               <SkipForward className="h-4 w-4 text-gray-700" />
@@ -362,7 +362,7 @@ export default function TextToSpeechControls({
         <div className="flex items-center space-x-3">
           <button
             onClick={handlePrevious}
-            disabled={currentParagraph === 0}
+            disabled={speechState.currentParagraph === 0}
             className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
           >
             <SkipBack className="h-4 w-4 text-gray-700" />
@@ -389,7 +389,7 @@ export default function TextToSpeechControls({
 
           <button
             onClick={handleNext}
-            disabled={currentParagraph >= paragraphs.length - 1}
+            disabled={speechState.currentParagraph >= paragraphs.length - 1}
             className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
           >
             <SkipForward className="h-4 w-4 text-gray-700" />
