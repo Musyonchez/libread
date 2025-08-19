@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import URLInput from '@/components/URLInput';
 import TextToSpeechControls from '@/components/TextToSpeechControls';
 import ContentDisplay from '@/components/ContentDisplay';
@@ -21,6 +21,7 @@ export default function Reader() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentParagraph, setCurrentParagraph] = useState(0);
+  const jumpToParagraphRef = useRef<((index: number) => void) | null>(null);
 
   const handleUrlSubmit = async (url: string) => {
     setLoading(true);
@@ -47,6 +48,13 @@ export default function Reader() {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleParagraphClick = (index: number) => {
+    setCurrentParagraph(index);
+    if (jumpToParagraphRef.current) {
+      jumpToParagraphRef.current(index);
     }
   };
 
@@ -85,6 +93,7 @@ export default function Reader() {
                 paragraphs={contentData.paragraphs}
                 currentParagraph={currentParagraph}
                 onParagraphChange={setCurrentParagraph}
+                onJumpToParagraphRef={jumpToParagraphRef}
               />
             </div>
 
@@ -93,7 +102,7 @@ export default function Reader() {
               <ContentDisplay
                 content={contentData}
                 currentParagraph={currentParagraph}
-                onParagraphClick={setCurrentParagraph}
+                onParagraphClick={handleParagraphClick}
               />
             </div>
           </div>

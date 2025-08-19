@@ -2,18 +2,20 @@
 
 import { useSpeechSynthesis } from '@/hooks/useSpeechSynthesis';
 import { Play, Pause, Square, SkipBack, SkipForward, Volume2 } from 'lucide-react';
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, MutableRefObject } from 'react';
 
 interface TextToSpeechControlsProps {
   paragraphs: string[];
   currentParagraph: number;
   onParagraphChange: (index: number) => void;
+  onJumpToParagraphRef: MutableRefObject<((index: number) => void) | null>;
 }
 
 export default function TextToSpeechControls({
   paragraphs,
   currentParagraph,
   onParagraphChange,
+  onJumpToParagraphRef,
 }: TextToSpeechControlsProps) {
   const {
     speechState,
@@ -25,6 +27,11 @@ export default function TextToSpeechControls({
     setRate,
     jumpToParagraph,
   } = useSpeechSynthesis();
+
+  // Set the jumpToParagraph function in the ref so parent can use it
+  useEffect(() => {
+    onJumpToParagraphRef.current = jumpToParagraph;
+  }, [jumpToParagraph, onJumpToParagraphRef]);
 
   const handlePlayPause = useCallback(() => {
     if (!speechState.isPlaying) {

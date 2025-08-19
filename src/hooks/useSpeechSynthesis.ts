@@ -167,13 +167,23 @@ export function useSpeechSynthesis() {
   }, []);
 
   const jumpToParagraph = useCallback((paragraphIndex: number) => {
-    if (speechState.isPlaying) {
-      stop();
+    // Always stop any current speech first
+    speechSynthesis.cancel();
+    isPausingRef.current = false;
+    
+    // If we were playing or paused, start from the new paragraph
+    if (speechState.isPlaying || speechState.isPaused) {
       setTimeout(() => {
         speak(paragraphsRef.current, paragraphIndex, onParagraphChangeRef.current || undefined);
       }, 100);
+    } else {
+      // If not playing, just update the current paragraph for when play is pressed
+      setSpeechState(prev => ({ ...prev, currentParagraph: paragraphIndex }));
+      if (onParagraphChangeRef.current) {
+        onParagraphChangeRef.current(paragraphIndex);
+      }
     }
-  }, [speechState.isPlaying, stop, speak]);
+  }, [speechState.isPlaying, speechState.isPaused, speak]);
 
   return {
     speechState,
