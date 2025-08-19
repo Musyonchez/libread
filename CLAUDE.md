@@ -2,6 +2,8 @@
 
 A comprehensive Next.js application that provides text-to-speech functionality across multiple input methods: web content, direct text, documents, and specialized novel reading. Built for an immersive audio reading experience with advanced controls and responsive design.
 
+**Current Status**: Web reader fully functional. Expanding to text, document, and novel readers with modern SaaS landing page design.
+
 ## Tech Stack
 - **Frontend**: Next.js 15 with App Router, React 19, TypeScript
 - **Styling**: Tailwind CSS 4
@@ -92,12 +94,13 @@ src/
 6. **Cross-Reader Features**: Shared settings, bookmarks, reading history
 
 # Development Workflow
-- **IMPORTANT**: Always run `npm run build` and `npm run lint` before committing
-- **Testing**: Test speech functionality across different browsers
-- Use feature branches for new functionality
-- Follow conventional commit message format
+- **IMPORTANT**: Always run `npm run build` and `npm run lint` before committing (MUST pass before committing)
+- **Testing**: Test speech functionality across different browsers and reader types
+- **Commit Regularly**: Commit after completing each feature or significant fix
+- Use conventional commit message format with 🤖 Generated footer
 - **NEVER** commit sensitive information or API keys
 - Test with the example URL: https://www.wuxiabox.com/novel/6987152_1.html
+- Follow the expansion plan in @docs/EXPANSION_PLAN.md
 
 # Speech Synthesis Notes
 - **Browser Support**: Chrome/Edge (best), Safari (good), Firefox (variable), Brave (blocked by default)
@@ -117,8 +120,14 @@ src/
 - @src/hooks/useSpeechSynthesis.ts - Core speech synthesis logic with advanced state management
 - @src/components/TextToSpeechControls.tsx - Responsive audio controls with mobile toggle
 - @src/components/BrowserCompatibility.tsx - Browser detection logic for 20+ browsers
+- @src/components/WebInput.tsx - Web URL input form (renamed from URLInput)
 - @src/components/ContentDisplay.tsx - Article display with clickable paragraphs
+- @src/app/web/page.tsx - Web reader page (renamed from /reader)
+- @src/app/page.tsx - Modern SaaS landing page with four-reader showcase
+- @src/components/Navbar.tsx - Enhanced navigation with four reader types
+- @src/components/Footer.tsx - Updated footer with reader links
 - @docs/CLAUDE_MD_BEST_PRACTICES.md - Documentation best practices guide
+- @docs/EXPANSION_PLAN.md - Detailed multi-reader implementation strategy
 - @tailwind.config.js - Tailwind CSS configuration
 - @tsconfig.json - TypeScript configuration
 

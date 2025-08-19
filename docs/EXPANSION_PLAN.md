@@ -3,9 +3,12 @@
 ## Overview
 This document outlines the expansion of LibRead from a single URL-based text-to-speech reader into a comprehensive multi-modal reading platform with four distinct reader types.
 
-## Current State
-- **Single Reader**: URL-based web content reader
+## Current State (Updated)
+- **Web Reader**: Fully functional URL-based web content reader at `/web` (renamed from `/reader`)
+- **Modern Landing Page**: SaaS-style homepage showcasing all four planned readers
+- **Enhanced Navigation**: Navbar and footer updated for multi-reader platform
 - **Core Features**: Web scraping, speech synthesis, responsive design, browser compatibility
+- **Recent Improvements**: Navigation button state fixes, URL input text visibility, mobile-friendly controls
 - **Tech Stack**: Next.js 15, React 19, TypeScript, Tailwind CSS 4
 
 ## Planned Expansion
@@ -186,35 +189,41 @@ src/
 
 ## Implementation Strategy
 
-### Phase 1: Foundation (Week 1)
-1. Update navigation structure
-2. Rename current reader to web reader
-3. Create shared component directory
-4. Update CLAUDE.md with new structure
+### ✅ Phase 1: Foundation (COMPLETED)
+1. ✅ Update navigation structure (navbar, footer, landing page)
+2. ✅ Rename current reader to web reader (`/reader` → `/web`)
+3. ✅ Create modern SaaS landing page design
+4. ✅ Update CLAUDE.md and documentation with new structure
+5. ✅ Fix navigation button state synchronization issues
+6. ✅ Improve URL input text visibility and mobile responsiveness
 
-### Phase 2: Text Reader (Week 1)
-1. Create text reader page and components
-2. Implement text input functionality
-3. Integrate with existing speech synthesis
-4. Add text management features
+### 📋 Phase 2: Text Reader (NEXT)
+1. Create text reader page and components (`/text`)
+2. Implement large textarea with word/character count
+3. Integrate with existing speech synthesis hooks
+4. Add text save/load functionality
+5. Create text-specific UI optimizations
 
-### Phase 3: Document Reader (Week 2)
-1. Implement document upload API
-2. Add document parsing libraries
+### 📋 Phase 3: Document Reader
+1. Implement document upload API (`/api/parse-document`)
+2. Add document parsing libraries (pdf-parse, mammoth)
 3. Create document preview components
-4. Handle multiple file formats
+4. Handle multiple file formats with validation
+5. Add drag-and-drop upload interface
 
-### Phase 4: Novel Reader (Week 2)
-1. Copy and enhance web reader
-2. Add novel-specific features
-3. Implement progress tracking
-4. Optimize for long-form content
+### 📋 Phase 4: Novel Reader
+1. Copy and enhance web reader functionality
+2. Add novel-specific features (chapter detection, progress tracking)
+3. Implement reading progress storage
+4. Optimize UI for long-form content navigation
+5. Add bookmarking and notes functionality
 
-### Phase 5: Integration & Polish (Week 3)
+### 📋 Phase 5: Integration & Polish
 1. Unify design across all readers
-2. Enhance shared components
-3. Add cross-reader functionality
-4. Performance optimization
+2. Enhance shared components with cross-reader features
+3. Add user preferences and settings persistence
+4. Performance optimization and testing
+5. Final responsive design polish
 
 ## Technical Considerations
 
