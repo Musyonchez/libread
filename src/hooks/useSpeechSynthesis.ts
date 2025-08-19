@@ -25,11 +25,25 @@ export function useSpeechSynthesis() {
   useEffect(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       setIsSupported(true);
+      
+      // Load voices
+      const loadVoices = () => {
+        const voices = speechSynthesis.getVoices();
+        if (voices.length > 0) {
+          console.log('Available voices:', voices.length);
+        }
+      };
+      
+      loadVoices();
+      speechSynthesis.onvoiceschanged = loadVoices;
     }
   }, []);
 
   const speak = useCallback((paragraphs: string[], startFromParagraph: number = 0, onParagraphChange?: (index: number) => void) => {
     if (!isSupported || !paragraphs.length) return;
+
+    // Cancel any existing speech
+    speechSynthesis.cancel();
 
     paragraphsRef.current = paragraphs;
     onParagraphChangeRef.current = onParagraphChange || null;
@@ -77,6 +91,8 @@ export function useSpeechSynthesis() {
       return chunks.filter(chunk => chunk.trim().length > 0);
     };
 
+    const retryCount = new Map<string, number>();
+
     const speakParagraph = (index: number, chunkIndex: number = 0) => {
       if (index >= paragraphs.length) {
         setSpeechState(prev => ({ ...prev, isPlaying: false, currentParagraph: 0 }));
@@ -91,7 +107,29 @@ export function useSpeechSynthesis() {
         return;
       }
 
-      const utterance = new SpeechSynthesisUtterance(chunks[chunkIndex]);
+      const text = chunks[chunkIndex];
+      const chunkKey = `${index}-${chunkIndex}`;
+
+      // Skip if this chunk has failed too many times
+      const currentRetries = retryCount.get(chunkKey) || 0;
+      if (currentRetries >= 3) {
+        console.warn(`Skipping chunk after 3 failed attempts: ${text.substring(0, 50)}...`);
+        speakParagraph(index, chunkIndex + 1);
+        return;
+      }
+
+      // Clean the text - remove special characters that might cause issues
+      const cleanText = text
+        .replace(/[^\w\s.,!?;:()\-'"]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      if (!cleanText || cleanText.length < 3) {
+        speakParagraph(index, chunkIndex + 1);
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(cleanText);
       utteranceRef.current = utterance;
       
       utterance.rate = speechState.rate;
@@ -106,22 +144,60 @@ export function useSpeechSynthesis() {
       };
 
       utterance.onend = () => {
+        // Reset retry count on success
+        retryCount.delete(chunkKey);
         // Move to next chunk or next paragraph
         speakParagraph(index, chunkIndex + 1);
       };
 
       utterance.onerror = (event) => {
-        console.error('Speech synthesis error:', event);
-        if (event.error === 'synthesis-failed' && chunks[chunkIndex].length > 100) {
-          // Try with shorter chunks by retrying current chunk
-          speakParagraph(index, chunkIndex);
-          return;
+        console.error(`Speech synthesis error for chunk ${chunkKey}:`, event.error);
+        
+        // Increment retry count
+        retryCount.set(chunkKey, currentRetries + 1);
+        
+        if (event.error === 'synthesis-failed') {
+          // Wait a bit before retrying or skipping
+          setTimeout(() => {
+            if (currentRetries < 2 && cleanText.length > 50) {
+              // Try with an even shorter chunk
+              const shorterChunks = chunkText(cleanText, 100);
+              if (shorterChunks.length > 1) {
+                // Split this chunk and try the first part
+                const firstPart = shorterChunks[0];
+                const utteranceRetry = new SpeechSynthesisUtterance(firstPart);
+                utteranceRetry.rate = speechState.rate;
+                utteranceRetry.volume = 1;
+                utteranceRetry.pitch = 1;
+                
+                utteranceRetry.onend = () => {
+                  retryCount.delete(chunkKey);
+                  speakParagraph(index, chunkIndex + 1);
+                };
+                
+                utteranceRetry.onerror = () => {
+                  retryCount.set(chunkKey, 3); // Max retries
+                  speakParagraph(index, chunkIndex + 1);
+                };
+                
+                speechSynthesis.speak(utteranceRetry);
+                return;
+              }
+            }
+            
+            // Skip this chunk and continue
+            speakParagraph(index, chunkIndex + 1);
+          }, 100);
+        } else {
+          // For other errors, skip immediately
+          speakParagraph(index, chunkIndex + 1);
         }
-        // Skip this chunk and continue with next
-        speakParagraph(index, chunkIndex + 1);
       };
 
-      speechSynthesis.speak(utterance);
+      // Small delay to prevent overwhelming the speech synthesis
+      setTimeout(() => {
+        speechSynthesis.speak(utterance);
+      }, 50);
     };
 
     speakParagraph(startFromParagraph);
@@ -144,6 +220,7 @@ export function useSpeechSynthesis() {
   const stop = useCallback(() => {
     if (isSupported) {
       speechSynthesis.cancel();
+      utteranceRef.current = null;
       setSpeechState(prev => ({ ...prev, isPlaying: false, isPaused: false, currentParagraph: 0 }));
     }
   }, [isSupported]);
