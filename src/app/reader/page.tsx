@@ -21,7 +21,7 @@ export default function Reader() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentParagraph, setCurrentParagraph] = useState(0);
-  const jumpToParagraphRef = useRef<((index: number) => void) | null>(null);
+  const jumpToParagraphRef = useRef<((index: number, paragraphs?: string[]) => void) | null>(null);
 
   const handleUrlSubmit = async (url: string) => {
     setLoading(true);
@@ -53,8 +53,8 @@ export default function Reader() {
 
   const handleParagraphClick = (index: number) => {
     setCurrentParagraph(index);
-    if (jumpToParagraphRef.current) {
-      jumpToParagraphRef.current(index);
+    if (jumpToParagraphRef.current && contentData) {
+      jumpToParagraphRef.current(index, contentData.paragraphs);
     }
   };
 

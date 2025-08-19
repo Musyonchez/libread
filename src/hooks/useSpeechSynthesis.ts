@@ -182,7 +182,7 @@ export function useSpeechSynthesis() {
     }
   }, []);
 
-  const jumpToParagraph = useCallback((paragraphIndex: number) => {
+  const jumpToParagraph = useCallback((paragraphIndex: number, paragraphs?: string[]) => {
     // Set jumping flag to prevent auto-progression from canceled speech
     isJumpingRef.current = true;
     
@@ -190,21 +190,15 @@ export function useSpeechSynthesis() {
     speechSynthesis.cancel();
     isPausingRef.current = false;
     
-    // If we were playing or paused, start from the new paragraph
-    if (speechState.isPlaying || speechState.isPaused) {
-      setTimeout(() => {
-        isJumpingRef.current = false; // Clear flag before speaking
-        speak(paragraphsRef.current, paragraphIndex, onParagraphChangeRef.current || undefined);
-      }, 100);
-    } else {
-      // If not playing, just update the current paragraph for when play is pressed
-      isJumpingRef.current = false; // Clear flag
-      setSpeechState(prev => ({ ...prev, currentParagraph: paragraphIndex }));
-      if (onParagraphChangeRef.current) {
-        onParagraphChangeRef.current(paragraphIndex);
-      }
-    }
-  }, [speechState.isPlaying, speechState.isPaused, speak]);
+    // Use provided paragraphs or fall back to ref
+    const paragraphsToUse = paragraphs || paragraphsRef.current;
+    
+    // Always start playing from the clicked paragraph
+    setTimeout(() => {
+      isJumpingRef.current = false; // Clear flag before speaking
+      speak(paragraphsToUse, paragraphIndex, onParagraphChangeRef.current || undefined);
+    }, 100);
+  }, [speak]);
 
   return {
     speechState,

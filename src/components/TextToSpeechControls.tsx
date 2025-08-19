@@ -8,7 +8,7 @@ interface TextToSpeechControlsProps {
   paragraphs: string[];
   currentParagraph: number;
   onParagraphChange: (index: number) => void;
-  onJumpToParagraphRef: MutableRefObject<((index: number) => void) | null>;
+  onJumpToParagraphRef: MutableRefObject<((index: number, paragraphs?: string[]) => void) | null>;
 }
 
 export default function TextToSpeechControls({
@@ -62,7 +62,7 @@ export default function TextToSpeechControls({
     const prevIndex = Math.max(0, currentParagraph - 1);
     onParagraphChange(prevIndex);
     if (speechState.isPlaying) {
-      jumpToParagraph(prevIndex);
+      jumpToParagraph(prevIndex, paragraphs);
     }
   };
 
@@ -70,7 +70,7 @@ export default function TextToSpeechControls({
     const nextIndex = Math.min(paragraphs.length - 1, currentParagraph + 1);
     onParagraphChange(nextIndex);
     if (speechState.isPlaying) {
-      jumpToParagraph(nextIndex);
+      jumpToParagraph(nextIndex, paragraphs);
     }
   };
 
