@@ -7,6 +7,7 @@ export interface SpeechState {
   isPaused: boolean;
   rate: number;
   currentParagraph: number;
+  hasEverStarted: boolean;
 }
 
 export function useSpeechSynthesis() {
@@ -15,6 +16,7 @@ export function useSpeechSynthesis() {
     isPaused: false,
     rate: 1,
     currentParagraph: 0,
+    hasEverStarted: false,
   });
 
   const [isSupported, setIsSupported] = useState(false);
@@ -104,7 +106,7 @@ export function useSpeechSynthesis() {
         utterance.pitch = 1;
 
         utterance.onstart = () => {
-          setSpeechState(prev => ({ ...prev, isPlaying: true, isPaused: false, currentParagraph: index }));
+          setSpeechState(prev => ({ ...prev, isPlaying: true, isPaused: false, currentParagraph: index, hasEverStarted: true }));
           if (onParagraphChangeRef.current) {
             onParagraphChangeRef.current(index);
           }

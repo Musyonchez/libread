@@ -155,11 +155,34 @@ export default function TextToSpeechControls({
             />
           </div>
 
-          {speechState.isPlaying && (
-            <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-3 py-1">
-              <Volume2 className="h-4 w-4 text-green-600" />
-              <span className="text-sm text-green-800 whitespace-nowrap">
-                {speechState.isPaused ? 'Paused' : 'Playing'}
+          {/* Status indicator - traffic light colors */}
+          {speechState.hasEverStarted && (
+            <div className={`flex items-center gap-2 rounded-lg px-3 py-1 ${
+              speechState.isPlaying && !speechState.isPaused
+                ? 'bg-green-50 border border-green-200' // Green for playing
+                : speechState.isPlaying && speechState.isPaused
+                ? 'bg-amber-50 border border-amber-200' // Amber for paused
+                : 'bg-red-50 border border-red-200' // Red for stopped
+            }`}>
+              <Volume2 className={`h-4 w-4 ${
+                speechState.isPlaying && !speechState.isPaused
+                  ? 'text-green-600' // Green for playing
+                  : speechState.isPlaying && speechState.isPaused
+                  ? 'text-amber-600' // Amber for paused
+                  : 'text-red-600' // Red for stopped
+              }`} />
+              <span className={`text-sm whitespace-nowrap ${
+                speechState.isPlaying && !speechState.isPaused
+                  ? 'text-green-800' // Green for playing
+                  : speechState.isPlaying && speechState.isPaused
+                  ? 'text-amber-800' // Amber for paused
+                  : 'text-red-800' // Red for stopped
+              }`}>
+                {speechState.isPlaying && !speechState.isPaused
+                  ? 'Playing'
+                  : speechState.isPlaying && speechState.isPaused
+                  ? 'Paused'
+                  : 'Stopped'}
               </span>
             </div>
           )}
