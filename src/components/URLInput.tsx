@@ -36,7 +36,7 @@ export default function URLInput({ onSubmit, disabled }: URLInputProps) {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="Enter URL (e.g., https://example.com/article)"
-            className="block w-full pl-10 pr-4 py-4 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="block w-full pl-10 pr-4 py-4 text-lg text-black border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             required
             disabled={disabled}
           />
