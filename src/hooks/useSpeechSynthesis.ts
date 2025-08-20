@@ -147,13 +147,15 @@ export function useSpeechSynthesis() {
     }
   }, [isSupported, speechState.currentParagraph]);
 
-  const resume = useCallback(() => {
+  const resume = useCallback((onParagraphChange?: (index: number) => void) => {
     if (isSupported && speechState.isPaused) {
       // Clear pausing flag to allow normal progression
       isPausingRef.current = false;
       setSpeechState(prev => ({ ...prev, isPaused: false }));
       // Resume from where we paused
-      speak(paragraphsRef.current, pausedAtParagraphRef.current, onParagraphChangeRef.current || undefined);
+      // Use provided callback or fall back to ref
+      const callbackToUse = onParagraphChange || onParagraphChangeRef.current || undefined;
+      speak(paragraphsRef.current, pausedAtParagraphRef.current, callbackToUse);
     }
   }, [isSupported, speechState.isPaused, speak]);
 
@@ -180,7 +182,7 @@ export function useSpeechSynthesis() {
     }
   }, [isSupported]);
 
-  const setRate = useCallback((rate: number) => {
+  const setRate = useCallback((rate: number, onParagraphChange?: (index: number) => void) => {
     setSpeechState(prev => ({ ...prev, rate }));
     
     // If currently playing, restart the current paragraph with new speed
@@ -194,12 +196,14 @@ export function useSpeechSynthesis() {
       // Restart current paragraph with new speed after a brief delay
       setTimeout(() => {
         isChangingRateRef.current = false;
-        speak(paragraphsRef.current, currentParagraph, onParagraphChangeRef.current || undefined, rate);
+        // Use provided callback or fall back to ref
+        const callbackToUse = onParagraphChange || onParagraphChangeRef.current || undefined;
+        speak(paragraphsRef.current, currentParagraph, callbackToUse, rate);
       }, 100);
     }
   }, [speechState.isPlaying, speechState.isPaused, speechState.currentParagraph, speak]);
 
-  const jumpToParagraph = useCallback((paragraphIndex: number, paragraphs?: string[]) => {
+  const jumpToParagraph = useCallback((paragraphIndex: number, paragraphs?: string[], onParagraphChange?: (index: number) => void) => {
     // Set jumping flag to prevent auto-progression from canceled speech
     isJumpingRef.current = true;
     
@@ -213,7 +217,9 @@ export function useSpeechSynthesis() {
     // Always start playing from the clicked paragraph
     setTimeout(() => {
       isJumpingRef.current = false; // Clear flag before speaking
-      speak(paragraphsToUse, paragraphIndex, onParagraphChangeRef.current || undefined);
+      // Use provided callback or fall back to ref
+      const callbackToUse = onParagraphChange || onParagraphChangeRef.current || undefined;
+      speak(paragraphsToUse, paragraphIndex, callbackToUse);
     }, 100);
   }, [speak]);
 

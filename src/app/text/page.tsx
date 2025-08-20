@@ -10,7 +10,7 @@ export default function TextReader() {
   const [text, setText] = useState('');
   const [paragraphs, setParagraphs] = useState<string[]>([]);
   const [currentParagraph, setCurrentParagraph] = useState(0);
-  const jumpToParagraphRef = useRef<((index: number, paragraphs?: string[]) => void) | null>(null);
+  const jumpToParagraphRef = useRef<((index: number, paragraphs?: string[], onParagraphChange?: (index: number) => void) => void) | null>(null);
 
   const handleTextChange = (newText: string) => {
     setText(newText);
@@ -28,7 +28,7 @@ export default function TextReader() {
   const handleParagraphClick = (index: number) => {
     setCurrentParagraph(index);
     if (jumpToParagraphRef.current) {
-      jumpToParagraphRef.current(index, paragraphs);
+      jumpToParagraphRef.current(index, paragraphs, setCurrentParagraph);
     }
   };
 

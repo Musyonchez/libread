@@ -8,7 +8,7 @@ interface TextToSpeechControlsProps {
   paragraphs: string[];
   currentParagraph: number;
   onParagraphChange: (index: number) => void;
-  onJumpToParagraphRef: MutableRefObject<((index: number, paragraphs?: string[]) => void) | null>;
+  onJumpToParagraphRef: MutableRefObject<((index: number, paragraphs?: string[], onParagraphChange?: (index: number) => void) => void) | null>;
 }
 
 export default function TextToSpeechControls({
@@ -42,7 +42,7 @@ export default function TextToSpeechControls({
       speak(paragraphs, currentParagraph, onParagraphChange);
     } else if (speechState.isPaused) {
       // Paused, so resume
-      resume();
+      resume(onParagraphChange);
     } else {
       // Playing, so pause
       pause();
@@ -51,9 +51,19 @@ export default function TextToSpeechControls({
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
+      // Only handle spacebar if not typing in an input field
       if (event.code === 'Space' && !event.ctrlKey && !event.altKey && !event.metaKey) {
-        event.preventDefault();
-        handlePlayPause();
+        const activeElement = document.activeElement;
+        const isTyping = activeElement && (
+          activeElement.tagName === 'INPUT' ||
+          activeElement.tagName === 'TEXTAREA' ||
+          activeElement.getAttribute('contenteditable') === 'true'
+        );
+        
+        if (!isTyping) {
+          event.preventDefault();
+          handlePlayPause();
+        }
       }
     };
 
@@ -62,19 +72,17 @@ export default function TextToSpeechControls({
   }, [handlePlayPause]);
 
   const handlePrevious = () => {
-    const actualCurrent = speechState.currentParagraph;
-    if (actualCurrent <= 0) return; // Don't go back if already at first paragraph
-    const prevIndex = actualCurrent - 1;
+    if (currentParagraph <= 0) return; // Don't go back if already at first paragraph
+    const prevIndex = currentParagraph - 1;
     onParagraphChange(prevIndex); // Update visual indicator immediately
-    setTimeout(() => jumpToParagraph(prevIndex, paragraphs), 50); // Start speech after state update
+    setTimeout(() => jumpToParagraph(prevIndex, paragraphs, onParagraphChange), 20); // Start speech after state update
   };
 
   const handleNext = () => {
-    const actualCurrent = speechState.currentParagraph;
-    if (actualCurrent >= paragraphs.length - 1) return; // Don't go forward if already at last paragraph
-    const nextIndex = actualCurrent + 1;
+    if (currentParagraph >= paragraphs.length - 1) return; // Don't go forward if already at last paragraph
+    const nextIndex = currentParagraph + 1;
     onParagraphChange(nextIndex); // Update visual indicator immediately
-    setTimeout(() => jumpToParagraph(nextIndex, paragraphs), 50); // Start speech after state update
+    setTimeout(() => jumpToParagraph(nextIndex, paragraphs, onParagraphChange), 20); // Start speech after state update
   };
 
   if (!isSupported) {
@@ -167,7 +175,7 @@ export default function TextToSpeechControls({
                 {[0.5, 1, 1.5, 2].map((presetRate) => (
                   <button
                     key={presetRate}
-                    onClick={() => setRate(presetRate)}
+                    onClick={() => setRate(presetRate, onParagraphChange)}
                     className={`px-2 py-1 text-xs rounded transition-colors ${
                       Math.abs(speechState.rate - presetRate) < 0.05
                         ? 'bg-blue-100 text-blue-700 border border-blue-300'
@@ -187,7 +195,7 @@ export default function TextToSpeechControls({
                   max="2"
                   step="0.1"
                   value={speechState.rate}
-                  onChange={(e) => setRate(parseFloat(e.target.value))}
+                  onChange={(e) => setRate(parseFloat(e.target.value), onParagraphChange)}
                   className="w-28 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
                 />
               </div>
