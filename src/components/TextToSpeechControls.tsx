@@ -51,9 +51,19 @@ export default function TextToSpeechControls({
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
+      // Only handle spacebar if not typing in an input field
       if (event.code === 'Space' && !event.ctrlKey && !event.altKey && !event.metaKey) {
-        event.preventDefault();
-        handlePlayPause();
+        const activeElement = document.activeElement;
+        const isTyping = activeElement && (
+          activeElement.tagName === 'INPUT' ||
+          activeElement.tagName === 'TEXTAREA' ||
+          activeElement.getAttribute('contenteditable') === 'true'
+        );
+        
+        if (!isTyping) {
+          event.preventDefault();
+          handlePlayPause();
+        }
       }
     };
 
