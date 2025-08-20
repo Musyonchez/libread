@@ -8,7 +8,7 @@ interface TextToSpeechControlsProps {
   paragraphs: string[];
   currentParagraph: number;
   onParagraphChange: (index: number) => void;
-  onJumpToParagraphRef: MutableRefObject<((index: number, paragraphs?: string[]) => void) | null>;
+  onJumpToParagraphRef: MutableRefObject<((index: number, paragraphs?: string[], onParagraphChange?: (index: number) => void) => void) | null>;
 }
 
 export default function TextToSpeechControls({

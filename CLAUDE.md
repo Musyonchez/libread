@@ -2,7 +2,7 @@
 
 A comprehensive Next.js application that provides text-to-speech functionality across multiple input methods: web content, direct text, documents, and specialized novel reading. Built for an immersive audio reading experience with advanced controls and responsive design.
 
-**Current Status**: Web reader fully functional. Expanding to text, document, and novel readers with modern SaaS landing page design.
+**Current Status**: Web reader and Text reader fully functional. Currently debugging speech synthesis callback/state synchronization issues. Expanding to document and novel readers with modern SaaS landing page design.
 
 ## Tech Stack
 - **Frontend**: Next.js 15 with App Router, React 19, TypeScript
@@ -26,7 +26,7 @@ src/
 │   │   ├── fetch-content/     # Web scraping API for URL reader
 │   │   └── parse-document/    # PLANNED: Document parsing API
 │   ├── web/                  # Web reader (renamed from /reader)
-│   ├── text/                 # PLANNED: Direct text input reader
+│   ├── text/                 # ✅ COMPLETED: Direct text input reader
 │   ├── document/             # PLANNED: Document upload reader  
 │   ├── novel/                # PLANNED: Specialized novel reader
 │   ├── layout.tsx            # Root layout with enhanced navigation
@@ -40,7 +40,9 @@ src/
 │   ├── web/                  # PLANNED: Web reader specific
 │   │   ├── WebInput.tsx             # Web URL input form
 │   │   └── ContentDisplay.tsx       # Web content display
-│   ├── text/                 # PLANNED: Text reader components
+│   ├── text/                 # ✅ COMPLETED: Text reader components
+│   │   ├── TextInput.tsx           # Text input with word count and save/load
+│   │   └── TextDisplay.tsx         # Text content display with clickable paragraphs
 │   ├── document/             # PLANNED: Document reader components
 │   └── novel/                # PLANNED: Novel reader components
 └── hooks/
@@ -85,13 +87,13 @@ src/
 6. **Browser Compatibility**: Detects 20+ browsers with specific guidance
 7. **Real-time Speed Changes**: Speed adjustments apply immediately during playback
 
-## Planned Multi-Reader Platform
-1. **Text Reader**: Direct text input with paste functionality and word count
-2. **Document Reader**: Upload PDFs, DOCX, TXT files with parsing and preview
-3. **Web Reader**: Enhanced current functionality (renamed from /reader)
-4. **Novel Reader**: Specialized for novels with chapter navigation and progress tracking
-5. **Unified Experience**: Consistent speech controls across all readers
-6. **Cross-Reader Features**: Shared settings, bookmarks, reading history
+## Multi-Reader Platform Progress
+1. **✅ Text Reader**: Direct text input with paste functionality, word count, save/load to localStorage
+2. **📋 Document Reader**: Upload PDFs, DOCX, TXT files with parsing and preview
+3. **✅ Web Reader**: Enhanced current functionality (renamed from /reader)
+4. **📋 Novel Reader**: Specialized for novels with chapter navigation and progress tracking
+5. **✅ Unified Experience**: Consistent speech controls across all readers
+6. **📋 Cross-Reader Features**: Shared settings, bookmarks, reading history
 
 # Development Workflow
 - **IMPORTANT**: Always run `npm run build` and `npm run lint` before committing (MUST pass before committing)
@@ -115,17 +117,31 @@ src/
 - **Paragraph Jumping**: Always starts playback from clicked paragraph regardless of current state
 
 # Key Files
+
+## Core Platform
 - @package.json - Dependencies and npm scripts
-- @src/app/api/fetch-content/route.ts - Web scraping API endpoint
-- @src/hooks/useSpeechSynthesis.ts - Core speech synthesis logic with advanced state management
-- @src/components/TextToSpeechControls.tsx - Responsive audio controls with mobile toggle
+- @src/hooks/useSpeechSynthesis.ts - Core speech synthesis logic with advanced state management (⚠️ under debugging)
+- @src/components/TextToSpeechControls.tsx - Responsive audio controls with mobile toggle (⚠️ recently fixed)
 - @src/components/BrowserCompatibility.tsx - Browser detection logic for 20+ browsers
-- @src/components/WebInput.tsx - Web URL input form (renamed from URLInput)
-- @src/components/ContentDisplay.tsx - Article display with clickable paragraphs
+
+## Text Reader (✅ Complete)
+- @src/app/text/page.tsx - Text reader page with modular architecture
+- @src/components/TextInput.tsx - Text input with word count and save/load functionality
+- @src/components/TextDisplay.tsx - Text content display with clickable paragraphs
+
+## Web Reader (✅ Complete)  
 - @src/app/web/page.tsx - Web reader page (renamed from /reader)
+- @src/components/WebInput.tsx - Web URL input form
+- @src/components/ContentDisplay.tsx - Web article display with clickable paragraphs
+- @src/app/api/fetch-content/route.ts - Web scraping API endpoint
+
+## Navigation & Layout
 - @src/app/page.tsx - Modern SaaS landing page with four-reader showcase
 - @src/components/Navbar.tsx - Enhanced navigation with four reader types
 - @src/components/Footer.tsx - Updated footer with reader links
+
+## Documentation & Config
+- @docs/DEBUG_SESSION_PROGRESS.md - Current debugging session status and next steps
 - @docs/CLAUDE_MD_BEST_PRACTICES.md - Documentation best practices guide
 - @docs/EXPANSION_PLAN.md - Detailed multi-reader implementation strategy
 - @tailwind.config.js - Tailwind CSS configuration
@@ -173,17 +189,40 @@ See @docs/EXPANSION_PLAN.md for detailed implementation strategy and file struct
 - Package-lock.json (unless updating dependencies)
 - docs/ directory (documentation and planning files)
 
+# Current Debugging Status
+
+## ✅ FIXED Issues
+- **Paragraph Indicator Sync**: Fixed visual indicator getting stuck when using Previous/Next navigation after jumping to paragraphs
+  - Root cause: `jumpToParagraph` function not receiving `onParagraphChange` callback
+  - Solution: Added callback parameter and proper callback passing in TextToSpeechControls
+  - Files: `useSpeechSynthesis.ts`, `TextToSpeechControls.tsx`
+  - Commit: `029e240` on `debug-text` branch
+
+## 🔍 UNDER INVESTIGATION  
+- **Paragraph Click Callback**: Direct paragraph clicking may have same sync issue as Previous/Next (needs testing)
+- **Speed Change Sync**: Speed changes during playback might not maintain visual indicator sync
+- **Race Conditions**: Rapid navigation clicking during speech synthesis
+
+## 📋 PENDING INVESTIGATION
+- Edge case testing: rapid clicking, state changes during speech
+- Resume/pause state consistency verification
+- Cross-reader callback pattern review
+
+See @docs/DEBUG_SESSION_PROGRESS.md for detailed debugging status and next steps.
+
 # Common Issues
 - **No Voices Available**: Usually Brave browser privacy settings or Linux missing espeak
 - **Synthesis Failed**: Long paragraphs need chunking, special characters cause issues  
 - **CORS Issues**: Web scraping limited by same-origin policy, handle gracefully
 - **Speed Changes Not Applying**: Fixed with overrideRate parameter to prevent race conditions
-- **Paragraph Jumping Issues**: Fixed with multiple ref flags to prevent auto-progression conflicts
 - **Mobile Interface Too Cluttered**: Use toggle to collapse/expand controls as needed
 
 # Recent Improvements
+- **Text Reader Implementation**: Complete text reader with modular components, save/load functionality
+- **Paragraph Indicator Sync Fix**: Resolved visual indicator sync issues with speech auto-progression  
 - **Enhanced Audio Controls**: Added preset speed buttons, traffic light status, improved responsive design
 - **Mobile Optimization**: Collapsible interface saves screen space while maintaining functionality  
 - **Race Condition Fixes**: Robust state management prevents speech synthesis conflicts
 - **Better UX**: Paragraph clicking always starts playback, stop button resets to first paragraph
 - **Responsive Design**: Three-tier layout optimized for mobile, tablet, and desktop
+- **Modular Architecture**: Separated concerns with TextInput and TextDisplay components
