@@ -62,19 +62,17 @@ export default function TextToSpeechControls({
   }, [handlePlayPause]);
 
   const handlePrevious = () => {
-    const actualCurrent = speechState.currentParagraph;
-    if (actualCurrent <= 0) return; // Don't go back if already at first paragraph
-    const prevIndex = actualCurrent - 1;
+    if (currentParagraph <= 0) return; // Don't go back if already at first paragraph
+    const prevIndex = currentParagraph - 1;
     onParagraphChange(prevIndex); // Update visual indicator immediately
-    setTimeout(() => jumpToParagraph(prevIndex, paragraphs, onParagraphChange), 50); // Start speech after state update
+    setTimeout(() => jumpToParagraph(prevIndex, paragraphs, onParagraphChange), 20); // Start speech after state update
   };
 
   const handleNext = () => {
-    const actualCurrent = speechState.currentParagraph;
-    if (actualCurrent >= paragraphs.length - 1) return; // Don't go forward if already at last paragraph
-    const nextIndex = actualCurrent + 1;
+    if (currentParagraph >= paragraphs.length - 1) return; // Don't go forward if already at last paragraph
+    const nextIndex = currentParagraph + 1;
     onParagraphChange(nextIndex); // Update visual indicator immediately
-    setTimeout(() => jumpToParagraph(nextIndex, paragraphs, onParagraphChange), 50); // Start speech after state update
+    setTimeout(() => jumpToParagraph(nextIndex, paragraphs, onParagraphChange), 20); // Start speech after state update
   };
 
   if (!isSupported) {
