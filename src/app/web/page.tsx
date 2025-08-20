@@ -68,9 +68,9 @@ export default function WebReader() {
           </p>
         </div>
 
-        <WebInput onSubmit={handleUrlSubmit} disabled={loading} />
-
         <BrowserCompatibility />
+
+        <WebInput onSubmit={handleUrlSubmit} disabled={loading} />
 
         {loading && (
           <div className="flex items-center justify-center py-12">

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Play, Volume2, BookOpen, FileText, Globe, Brain } from 'lucide-react';
+import { Play, BookOpen, FileText, Globe, Brain } from 'lucide-react';
 
 export default function Home() {
   return (
