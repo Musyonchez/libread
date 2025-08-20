@@ -2,7 +2,7 @@
 
 A comprehensive Next.js application that provides text-to-speech functionality across multiple input methods: web content, direct text, documents, and specialized novel reading. Built for an immersive audio reading experience with advanced controls and responsive design.
 
-**Current Status**: Web reader and Text reader fully functional. Currently debugging speech synthesis callback/state synchronization issues. Expanding to document and novel readers with modern SaaS landing page design.
+**Current Status**: ✅ Web Reader and Text Reader fully functional with robust speech synthesis. All callback synchronization issues resolved. Ready for production use. Document and Novel readers planned for future expansion.
 
 ## Tech Stack
 - **Frontend**: Next.js 15 with App Router, React 19, TypeScript
@@ -96,56 +96,103 @@ src/
 6. **📋 Cross-Reader Features**: Shared settings, bookmarks, reading history
 
 # Development Workflow
-- **IMPORTANT**: Always run `npm run build` and `npm run lint` before committing (MUST pass before committing)
-- **Testing**: Test speech functionality across different browsers and reader types
-- **Commit Regularly**: Commit after completing each feature or significant fix
-- Use conventional commit message format with 🤖 Generated footer
-- **NEVER** commit sensitive information or API keys
-- Test with the example URL: https://www.wuxiabox.com/novel/6987152_1.html
-- Follow the expansion plan in @docs/EXPANSION_PLAN.md
 
-# Speech Synthesis Notes
-- **Browser Support**: Chrome/Edge (best), Safari (good), Firefox (variable), Brave (blocked by default)
-- **Voice Loading**: Voices may load asynchronously, handle gracefully
-- **Error Handling**: Skip failed paragraphs, continue with next
-- **Performance**: Chunk long text into ~400 character segments
-- **User Guidance**: Show browser-specific compatibility messages
-- **State Management**: 
-  - `hasEverStarted` flag prevents confusing "Stopped" status on fresh load
-  - Multiple ref flags prevent race conditions (isPausingRef, isJumpingRef, isStoppingRef, isChangingRateRef)
-- **Speed Control**: Real-time speed changes restart current paragraph with new rate
-- **Paragraph Jumping**: Always starts playback from clicked paragraph regardless of current state
+## Build & Quality Checks
+**IMPORTANT**: Before any commit, you MUST run:
+```bash
+npm run build  # Must pass - no TypeScript errors
+npm run lint   # Must pass - no ESLint warnings  
+```
+
+## Testing Requirements
+- **Speech Functionality**: Test across Chrome, Firefox, Safari
+- **Responsive Design**: Test mobile, tablet, desktop layouts
+- **Reader Types**: Test both `/text` and `/web` readers
+- **Edge Cases**: Test rapid clicking, speed changes, pause/resume
+- **Example URL**: https://www.wuxiabox.com/novel/6987152_1.html
+
+## Commit Standards
+- Use conventional commit format with descriptive messages
+- **ALWAYS** include the footer:
+  ```
+  🤖 Generated with [Claude Code](https://claude.ai/code)
+  Co-Authored-By: Claude <noreply@anthropic.com>
+  ```
+- **NEVER** commit sensitive information, API keys, or credentials
+- Commit after completing each logical feature or bug fix
+
+## Code Review Checklist
+- [ ] TypeScript strict mode compliance
+- [ ] Speech synthesis callback patterns followed
+- [ ] Responsive design works on all breakpoints  
+- [ ] Browser compatibility maintained
+- [ ] Error handling implemented
+
+# Critical Architecture Patterns
+
+## Speech Synthesis Callback Pattern
+**YOU MUST** follow this pattern for all speech functions:
+```typescript
+// Always accept optional callback parameter with fallback
+const someFunction = (param: any, onParagraphChange?: (index: number) => void) => {
+  const callbackToUse = onParagraphChange || onParagraphChangeRef.current || undefined;
+  speak(content, startIndex, callbackToUse);
+};
+```
+
+## State Management Rules
+**IMPORTANT**: Use visual state for navigation calculations:
+```typescript
+// ✅ CORRECT - Use currentParagraph (visual state)
+const nextIndex = currentParagraph + 1;
+
+// ❌ WRONG - Don't use speechState.currentParagraph (only updates when speech starts)  
+const nextIndex = speechState.currentParagraph + 1;
+```
+
+## Race Condition Prevention
+**YOU MUST** use these ref flags to prevent speech conflicts:
+- `isPausingRef` - Set when pausing to prevent auto-progression
+- `isJumpingRef` - Set when jumping to prevent auto-progression  
+- `isStoppingRef` - Set when stopping to prevent auto-progression
+- `isChangingRateRef` - Set when changing speed to prevent auto-progression
+
+## Component Composition Guidelines
+- Keep components small and focused (single responsibility)
+- Display components only handle UI, delegate logic to parent handlers
+- Speech controls accept callbacks from parent components
+- Use TypeScript interfaces for all props and event handlers
 
 # Key Files
 
-## Core Platform
+## Core Speech System ⚠️ CRITICAL 
+- @src/hooks/useSpeechSynthesis.ts - **Core speech logic - follow callback patterns strictly**
+- @src/components/TextToSpeechControls.tsx - **Audio controls - all setRate/resume calls must pass callbacks**
+- @src/components/BrowserCompatibility.tsx - Browser detection for 20+ browsers
+
+## Production-Ready Readers ✅
+**Text Reader** (`/text`):
+- @src/app/text/page.tsx - Page with handleParagraphClick callback fix
+- @src/components/TextInput.tsx - Text input with save/load functionality  
+- @src/components/TextDisplay.tsx - Clickable paragraphs with proper delegation
+
+**Web Reader** (`/web`):
+- @src/app/web/page.tsx - Page with handleParagraphClick callback fix
+- @src/components/WebInput.tsx - URL input form
+- @src/components/ContentDisplay.tsx - Clickable paragraphs with proper delegation
+- @src/app/api/fetch-content/route.ts - Web scraping API with Cheerio
+
+## Platform Foundation
+- @src/app/page.tsx - Modern SaaS landing page
+- @src/components/Navbar.tsx - Navigation for four reader types
+- @src/components/Footer.tsx - Footer with reader links
 - @package.json - Dependencies and npm scripts
-- @src/hooks/useSpeechSynthesis.ts - Core speech synthesis logic with advanced state management (⚠️ under debugging)
-- @src/components/TextToSpeechControls.tsx - Responsive audio controls with mobile toggle (⚠️ recently fixed)
-- @src/components/BrowserCompatibility.tsx - Browser detection logic for 20+ browsers
 
-## Text Reader (✅ Complete)
-- @src/app/text/page.tsx - Text reader page with modular architecture
-- @src/components/TextInput.tsx - Text input with word count and save/load functionality
-- @src/components/TextDisplay.tsx - Text content display with clickable paragraphs
-
-## Web Reader (✅ Complete)  
-- @src/app/web/page.tsx - Web reader page (renamed from /reader)
-- @src/components/WebInput.tsx - Web URL input form
-- @src/components/ContentDisplay.tsx - Web article display with clickable paragraphs
-- @src/app/api/fetch-content/route.ts - Web scraping API endpoint
-
-## Navigation & Layout
-- @src/app/page.tsx - Modern SaaS landing page with four-reader showcase
-- @src/components/Navbar.tsx - Enhanced navigation with four reader types
-- @src/components/Footer.tsx - Updated footer with reader links
-
-## Documentation & Config
-- @docs/DEBUG_SESSION_PROGRESS.md - Current debugging session status and next steps
-- @docs/CLAUDE_MD_BEST_PRACTICES.md - Documentation best practices guide
-- @docs/EXPANSION_PLAN.md - Detailed multi-reader implementation strategy
-- @tailwind.config.js - Tailwind CSS configuration
-- @tsconfig.json - TypeScript configuration
+## Configuration & Docs
+- @tailwind.config.js - Tailwind CSS 4 configuration  
+- @tsconfig.json - TypeScript strict mode configuration
+- @docs/EXPANSION_PLAN.md - Future Document/Novel reader implementation plan
+- @docs/CLAUDE_MD_BEST_PRACTICES.md - Documentation standards and guidelines
 
 # API Endpoints (Current & Planned)
 
@@ -189,40 +236,64 @@ See @docs/EXPANSION_PLAN.md for detailed implementation strategy and file struct
 - Package-lock.json (unless updating dependencies)
 - docs/ directory (documentation and planning files)
 
-# Current Debugging Status
+# Debugging Status - COMPLETED ✅
 
-## ✅ FIXED Issues
-- **Paragraph Indicator Sync**: Fixed visual indicator getting stuck when using Previous/Next navigation after jumping to paragraphs
-  - Root cause: `jumpToParagraph` function not receiving `onParagraphChange` callback
-  - Solution: Added callback parameter and proper callback passing in TextToSpeechControls
-  - Files: `useSpeechSynthesis.ts`, `TextToSpeechControls.tsx`
-  - Commit: `029e240` on `debug-text` branch
+## ✅ ALL ISSUES RESOLVED
+**Major Callback Synchronization Fixes:**
+- **Paragraph Click Sync**: Fixed missing callbacks in paragraph click handlers for both readers
+- **Speed Change Sync**: Fixed setRate function to accept and use callback parameter properly  
+- **Resume Sync**: Fixed resume function callback synchronization
+- **Navigation Race Conditions**: Fixed rapid clicking using visual state instead of speech state
+- **TypeScript Consistency**: Updated all function signatures to match callback parameters
 
-## 🔍 UNDER INVESTIGATION  
-- **Paragraph Click Callback**: Direct paragraph clicking may have same sync issue as Previous/Next (needs testing)
-- **Speed Change Sync**: Speed changes during playback might not maintain visual indicator sync
-- **Race Conditions**: Rapid navigation clicking during speech synthesis
+## ✅ TESTING COMPLETED
+**All test scenarios passed:**
+- Paragraph click indicator sync works correctly
+- Speed changes maintain visual sync during playback
+- Pause/resume maintains sync and position  
+- Rapid navigation advances properly through content
+- Mixed operations handle gracefully without conflicts
+- Browser compatibility detection functions properly
 
-## 📋 PENDING INVESTIGATION
-- Edge case testing: rapid clicking, state changes during speech
-- Resume/pause state consistency verification
-- Cross-reader callback pattern review
+**Performance Improvements:**
+- Reduced navigation delay from 50ms to 20ms for better responsiveness
+- Comprehensive race condition prevention with flag system
+- Bulletproof state synchronization across all speech functions
 
-See @docs/DEBUG_SESSION_PROGRESS.md for detailed debugging status and next steps.
+The speech synthesis system is now production-ready with robust error handling and state management.
 
-# Common Issues
+# Troubleshooting
+
+## Speech Synthesis Issues
 - **No Voices Available**: Usually Brave browser privacy settings or Linux missing espeak
 - **Synthesis Failed**: Long paragraphs need chunking, special characters cause issues  
 - **CORS Issues**: Web scraping limited by same-origin policy, handle gracefully
-- **Speed Changes Not Applying**: Fixed with overrideRate parameter to prevent race conditions
-- **Mobile Interface Too Cluttered**: Use toggle to collapse/expand controls as needed
 
-# Recent Improvements
-- **Text Reader Implementation**: Complete text reader with modular components, save/load functionality
-- **Paragraph Indicator Sync Fix**: Resolved visual indicator sync issues with speech auto-progression  
-- **Enhanced Audio Controls**: Added preset speed buttons, traffic light status, improved responsive design
-- **Mobile Optimization**: Collapsible interface saves screen space while maintaining functionality  
-- **Race Condition Fixes**: Robust state management prevents speech synthesis conflicts
-- **Better UX**: Paragraph clicking always starts playback, stop button resets to first paragraph
-- **Responsive Design**: Three-tier layout optimized for mobile, tablet, and desktop
-- **Modular Architecture**: Separated concerns with TextInput and TextDisplay components
+## UI/UX Issues  
+- **Mobile Interface Too Cluttered**: Use toggle to collapse/expand controls as needed
+- **Buttons Feel Unresponsive**: 20ms delay is intentional to prevent race conditions
+
+## Fixed Issues (No Longer Problems)
+- ~~Speed Changes Not Applying~~ - ✅ Fixed with callback parameter system
+- ~~Paragraph Indicator Sync~~ - ✅ Fixed with comprehensive callback synchronization
+- ~~Rapid Navigation Breaking~~ - ✅ Fixed by using visual state for calculations
+
+# Recent Major Improvements
+
+## Core Platform Enhancements
+- **✅ Complete Text Reader**: Modular architecture with TextInput/TextDisplay components, localStorage save/load functionality
+- **✅ Comprehensive Callback Synchronization**: Fixed all paragraph indicator sync issues across speech functions
+- **✅ Navigation Race Condition Fixes**: Robust state management prevents conflicts, uses visual state for calculations
+- **✅ Performance Optimization**: Reduced delays, improved responsiveness while maintaining reliability
+
+## UI/UX Improvements  
+- **Enhanced Audio Controls**: Preset speed buttons (0.5x, 1x, 1.5x, 2x), traffic light status indicators
+- **Mobile Optimization**: Collapsible interface with toggle, three-tier responsive design (mobile/tablet/desktop)
+- **Better Navigation**: Previous/Next buttons, clickable paragraphs, stop resets to first paragraph
+- **Browser Compatibility**: Comprehensive detection for 20+ browsers with specific guidance
+
+## Technical Architecture
+- **Modular Component Design**: Separated concerns with reusable, focused components
+- **TypeScript Integration**: Strict typing with updated interfaces for all callback parameters  
+- **Error Handling**: Graceful speech synthesis failures, CORS handling for web scraping
+- **State Management**: Bulletproof synchronization between visual indicators and speech progression
