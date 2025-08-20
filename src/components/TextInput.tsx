@@ -78,6 +78,13 @@ You can also save your text to local storage and load it later, making it easy t
     setShowLoadModal(false);
   };
 
+  const handleDeleteText = (e: React.MouseEvent, textId: number) => {
+    e.stopPropagation(); // Prevent triggering the select action
+    const updatedTexts = savedTexts.filter(text => text.id !== textId);
+    setSavedTexts(updatedTexts);
+    localStorage.setItem('libread-saved-texts', JSON.stringify(updatedTexts));
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
       <div className="flex justify-between items-center mb-4">
@@ -175,9 +182,18 @@ You can also save your text to local storage and load it later, making it easy t
                     <div
                       key={savedText.id}
                       onClick={() => handleSelectText(savedText)}
-                      className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-colors"
+                      className="relative p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-colors group"
                     >
-                      <div className="flex justify-between items-start mb-2">
+                      {/* Delete button */}
+                      <button
+                        onClick={(e) => handleDeleteText(e, savedText.id)}
+                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 p-1 rounded-full bg-red-100 hover:bg-red-200 text-red-600 transition-all duration-200"
+                        title="Delete this saved text"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                      
+                      <div className="flex justify-between items-start mb-2 pr-8">
                         <h4 className="font-medium text-gray-900 line-clamp-2">{savedText.title}</h4>
                         <span className="text-xs text-gray-500 ml-2 whitespace-nowrap">{savedText.wordCount} words</span>
                       </div>
