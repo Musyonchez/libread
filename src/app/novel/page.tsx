@@ -36,7 +36,7 @@ export default function NovelReader() {
   const jumpToParagraphRef = useRef<((index: number, paragraphs?: string[], onParagraphChange?: (index: number) => void) => void) | null>(null);
 
 
-  const detectChapters = (content: string, paragraphs: string[]): Chapter[] => {
+  const detectChapters = (content: string, paragraphs: string[], url: string): Chapter[] => {
     const chapters: Chapter[] = [];
     let currentChapter: Chapter | null = null;
     let chapterIndex = 0;
@@ -102,7 +102,18 @@ export default function NovelReader() {
       return chapters;
     }
     
-    // If no chapters or only one chapter found, create artificial chapters based on content length
+    // For wuxiabox URLs, don't create artificial chapters - treat as single chapter
+    const isWuxiabox = url.includes('wuxiabox.com');
+    if (isWuxiabox) {
+      return [{
+        title: 'Current Chapter',
+        content,
+        paragraphs,
+        index: 0,
+      }];
+    }
+    
+    // For non-wuxiabox URLs, create artificial chapters based on content length
     const artificialChapters: Chapter[] = [];
     const chunkSize = Math.max(10, Math.floor(paragraphs.length / 3)); // Split into ~3 parts, minimum 10 paragraphs each
     
@@ -145,7 +156,7 @@ export default function NovelReader() {
       }
 
       // Detect chapters in the content
-      const chapters = detectChapters(result.data.content, result.data.paragraphs);
+      const chapters = detectChapters(result.data.content, result.data.paragraphs, url);
       
       const novelData: NovelData = {
         ...result.data,
@@ -200,10 +211,6 @@ export default function NovelReader() {
     return novelData.chapters.length - 1;
   };
 
-  const getProgressPercentage = (): number => {
-    if (!novelData) return 0;
-    return Math.round((currentParagraph / novelData.paragraphs.length) * 100);
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -246,29 +253,6 @@ export default function NovelReader() {
               />
             )}
 
-            {/* Progress Display */}
-            <div className="bg-white rounded-lg shadow-lg p-4">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700">Reading Progress</span>
-                <span className="text-sm text-gray-500">
-                  {getProgressPercentage()}% complete
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${getProgressPercentage()}%` }}
-                ></div>
-              </div>
-              <div className="flex justify-between items-center mt-2 text-xs text-gray-500">
-                <span>Paragraph {currentParagraph + 1} of {novelData.paragraphs.length}</span>
-                {novelData.chapters && (
-                  <span>
-                    Chapter {getCurrentChapterIndex() + 1} of {novelData.chapters.length}
-                  </span>
-                )}
-              </div>
-            </div>
 
             {/* Sticky Audio Controls */}
             <div className="sticky top-16 z-40 bg-gray-50 pb-4">
