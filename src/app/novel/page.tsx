@@ -1,11 +1,10 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import NovelInput from '@/components/NovelInput';
 import NovelContentDisplay from '@/components/NovelContentDisplay';
 import ChapterNavigation from '@/components/ChapterNavigation';
 import BottomChapterNavigation from '@/components/BottomChapterNavigation';
-import ReadingProgress from '@/components/ReadingProgress';
 import TextToSpeechControls from '@/components/TextToSpeechControls';
 import BrowserCompatibility from '@/components/BrowserCompatibility';
 import { Loader2 } from 'lucide-react';
@@ -28,51 +27,14 @@ interface NovelData {
   currentChapter?: number;
 }
 
-interface ReadingProgressData {
-  url: string;
-  title: string;
-  currentParagraph: number;
-  currentChapter?: number;
-  lastRead: string;
-  totalParagraphs: number;
-}
 
 export default function NovelReader() {
   const [novelData, setNovelData] = useState<NovelData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentParagraph, setCurrentParagraph] = useState(0);
-  const [readingProgress, setReadingProgress] = useState<ReadingProgressData | null>(null);
   const jumpToParagraphRef = useRef<((index: number, paragraphs?: string[], onParagraphChange?: (index: number) => void) => void) | null>(null);
 
-  // Load reading progress from localStorage
-  useEffect(() => {
-    const savedProgress = localStorage.getItem('libread-reading-progress');
-    if (savedProgress) {
-      try {
-        const progress = JSON.parse(savedProgress);
-        setReadingProgress(progress);
-      } catch {
-        // Ignore invalid data
-      }
-    }
-  }, []);
-
-  // Save reading progress whenever current paragraph changes
-  useEffect(() => {
-    if (novelData && currentParagraph >= 0) {
-      const progress: ReadingProgressData = {
-        url: novelData.url,
-        title: novelData.title,
-        currentParagraph,
-        currentChapter: novelData.currentChapter || 0,
-        lastRead: new Date().toISOString(),
-        totalParagraphs: novelData.paragraphs.length,
-      };
-      localStorage.setItem('libread-reading-progress', JSON.stringify(progress));
-      setReadingProgress(progress);
-    }
-  }, [novelData, currentParagraph]);
 
   const detectChapters = (content: string, paragraphs: string[]): Chapter[] => {
     const chapters: Chapter[] = [];
@@ -192,13 +154,7 @@ export default function NovelReader() {
       };
 
       setNovelData(novelData);
-      
-      // Check if we have saved progress for this URL
-      if (readingProgress && readingProgress.url === url) {
-        setCurrentParagraph(readingProgress.currentParagraph);
-      } else {
-        setCurrentParagraph(0);
-      }
+      setCurrentParagraph(0);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -230,11 +186,6 @@ export default function NovelReader() {
     }
   };
 
-  const handleResumeReading = () => {
-    if (readingProgress && readingProgress.url) {
-      handleUrlSubmit(readingProgress.url);
-    }
-  };
 
   const getCurrentChapterIndex = (): number => {
     if (!novelData?.chapters) return 0;
@@ -266,13 +217,6 @@ export default function NovelReader() {
 
         <BrowserCompatibility />
 
-        {/* Resume Reading Card */}
-        {readingProgress && !novelData && !loading && (
-          <ReadingProgress
-            progress={readingProgress}
-            onResume={handleResumeReading}
-          />
-        )}
 
         <NovelInput onSubmit={handleUrlSubmit} disabled={loading} />
 

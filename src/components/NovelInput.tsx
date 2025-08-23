@@ -96,9 +96,9 @@ export default function NovelInput({ onSubmit, disabled }: NovelInputProps) {
         </p>
         <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-400">
           <span>📚 Chapter detection</span>
-          <span>📖 Reading progress</span>
-          <span>🔖 Auto bookmarking</span>
+          <span>🌐 Server fetching</span>
           <span>⚡ Fast navigation</span>
+          <span>🎧 Audio controls</span>
         </div>
       </div>
     </div>
