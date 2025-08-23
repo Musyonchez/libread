@@ -28,14 +28,51 @@ export default function ChapterNavigation({
   const [isExpanded, setIsExpanded] = useState(false);
   const [chapterInput, setChapterInput] = useState('');
 
+  // Detect if this is a wuxiabox URL and extract chapter number
+  const getWuxiaboxChapterInfo = (url: string) => {
+    if (!url || !url.includes('wuxiabox.com')) return null;
+    
+    const match = url.match(/\/novel\/(\d+)_(\d+)\.html$/);
+    if (match) {
+      return {
+        novelId: match[1],
+        chapterNum: parseInt(match[2]),
+        baseUrl: url.replace(/_\d+\.html$/, ''),
+      };
+    }
+    return null;
+  };
+
+  const generateWuxiaboxUrl = (novelId: string, chapterNum: number) => {
+    return `https://www.wuxiabox.com/novel/${novelId}_${chapterNum}.html`;
+  };
+
   const handlePrevious = () => {
-    if (currentChapter > 0) {
+    // Check if this is a wuxiabox URL
+    const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
+    
+    if (wuxiaboxInfo && onUrlChange) {
+      // For wuxiabox, generate previous chapter URL
+      const newChapterNum = Math.max(1, wuxiaboxInfo.chapterNum - 1);
+      if (newChapterNum !== wuxiaboxInfo.chapterNum) {
+        const newUrl = generateWuxiaboxUrl(wuxiaboxInfo.novelId, newChapterNum);
+        onUrlChange(newUrl);
+      }
+    } else if (currentChapter > 0) {
       onChapterChange(currentChapter - 1);
     }
   };
 
   const handleNext = () => {
-    if (currentChapter < chapters.length - 1) {
+    // Check if this is a wuxiabox URL
+    const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
+    
+    if (wuxiaboxInfo && onUrlChange) {
+      // For wuxiabox, generate next chapter URL
+      const newChapterNum = wuxiaboxInfo.chapterNum + 1;
+      const newUrl = generateWuxiaboxUrl(wuxiaboxInfo.novelId, newChapterNum);
+      onUrlChange(newUrl);
+    } else if (currentChapter < chapters.length - 1) {
       onChapterChange(currentChapter + 1);
     }
   };
@@ -48,10 +85,20 @@ export default function ChapterNavigation({
   const handleChapterInputSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const chapterNum = parseInt(chapterInput);
-    if (chapterNum >= 1 && chapterNum <= chapters.length) {
+    
+    // Check if this is a wuxiabox URL
+    const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
+    
+    if (wuxiaboxInfo && onUrlChange) {
+      // For wuxiabox, generate new URL and fetch it
+      const newUrl = generateWuxiaboxUrl(wuxiaboxInfo.novelId, chapterNum);
+      onUrlChange(newUrl);
+    } else if (chapterNum >= 1 && chapterNum <= chapters.length) {
+      // For regular chapter navigation within current content
       onChapterChange(chapterNum - 1); // Convert to 0-based index
-      setChapterInput('');
     }
+    
+    setChapterInput('');
   };
 
   const handleInputChange = (value: string) => {
@@ -60,8 +107,39 @@ export default function ChapterNavigation({
     setChapterInput(numericValue);
   };
 
+  // Get appropriate placeholder and limits for input
+  const getInputPlaceholder = () => {
+    const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
+    if (wuxiaboxInfo) {
+      return `1-999+`;  // For wuxiabox, allow wide range
+    }
+    return `1-${chapters.length}`;
+  };
+
+  const isValidChapterInput = (input: string) => {
+    const num = parseInt(input);
+    if (isNaN(num) || num < 1) return false;
+    
+    const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
+    if (wuxiaboxInfo) {
+      return num >= 1 && num <= 999;  // Allow up to 999 for wuxiabox
+    }
+    return num >= 1 && num <= chapters.length;
+  };
+
+  const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
+  const isWuxiabox = !!wuxiaboxInfo;
+
   return (
-    <div className="bg-white rounded-lg shadow-lg p-4 mb-6">
+    <div className={`bg-white rounded-lg shadow-lg p-6 mb-6 ${isWuxiabox ? 'border-l-4 border-orange-500' : ''}`}>
+      {isWuxiabox && (
+        <div className="mb-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+          <div className="flex items-center gap-2 text-orange-800 text-sm">
+            <span className="font-medium">🥊 Wuxiabox Navigation</span>
+            <span className="text-orange-600">• Next/Prev loads new chapters</span>
+          </div>
+        </div>
+      )}
       {/* Mobile: Compact layout */}
       <div className="sm:hidden">
         <div className="flex items-center justify-between mb-2">
@@ -79,29 +157,39 @@ export default function ChapterNavigation({
 
         <div className="space-y-3">
           {/* Navigation buttons */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <button
               onClick={handlePrevious}
-              disabled={currentChapter === 0}
-              className="flex items-center gap-1 px-3 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              disabled={!isWuxiabox ? currentChapter === 0 : (wuxiaboxInfo?.chapterNum === 1)}
+              className="flex items-center gap-1 px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-[100px]"
             >
               <ChevronLeft className="h-4 w-4" />
               Prev
             </button>
 
-            <div className="flex-1 mx-3 text-center">
+            <div className="flex-1 text-center px-2">
               <div className="text-sm font-medium text-gray-900 truncate">
-                {chapters[currentChapter]?.title || `Chapter ${currentChapter + 1}`}
+                {(() => {
+                  if (isWuxiabox && wuxiaboxInfo) {
+                    return `Chapter ${wuxiaboxInfo.chapterNum}`;
+                  }
+                  return chapters[currentChapter]?.title || `Chapter ${currentChapter + 1}`;
+                })()}
               </div>
               <div className="text-xs text-gray-500">
-                {currentChapter + 1} of {chapters.length}
+                {(() => {
+                  if (isWuxiabox && wuxiaboxInfo) {
+                    return `Wuxiabox Ch.${wuxiaboxInfo.chapterNum}`;
+                  }
+                  return `${currentChapter + 1} of ${chapters.length}`;
+                })()}
               </div>
             </div>
 
             <button
               onClick={handleNext}
-              disabled={currentChapter === chapters.length - 1}
-              className="flex items-center gap-1 px-3 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              disabled={!isWuxiabox && currentChapter === chapters.length - 1}
+              className="flex items-center gap-1 px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-[100px]"
             >
               Next
               <ChevronRight className="h-4 w-4" />
@@ -109,19 +197,20 @@ export default function ChapterNavigation({
           </div>
 
           {/* Go to chapter input */}
-          <form onSubmit={handleChapterInputSubmit} className="flex items-center gap-2">
+          <form onSubmit={handleChapterInputSubmit} className="flex items-center gap-3">
             <Hash className="h-4 w-4 text-gray-500" />
+            <span className="text-sm text-gray-600 whitespace-nowrap">Jump to:</span>
             <input
               type="text"
               value={chapterInput}
               onChange={(e) => handleInputChange(e.target.value)}
-              placeholder={`1-${chapters.length}`}
-              className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder={getInputPlaceholder()}
+              className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-[80px]"
             />
             <button
               type="submit"
-              disabled={!chapterInput || parseInt(chapterInput) < 1 || parseInt(chapterInput) > chapters.length}
-              className="px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              disabled={!chapterInput || !isValidChapterInput(chapterInput)}
+              className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-[60px]"
             >
               Go
             </button>
@@ -164,45 +253,59 @@ export default function ChapterNavigation({
             </span>
           </div>
 
-          <div className="flex items-center gap-4">
-            <button
-              onClick={handlePrevious}
-              disabled={currentChapter === 0}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Previous
-            </button>
+          <div className="flex items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={handlePrevious}
+                disabled={!isWuxiabox ? currentChapter === 0 : (wuxiaboxInfo?.chapterNum === 1)}
+                className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-[120px]"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Previous
+              </button>
 
-            <div className="text-sm text-gray-600">
-              {currentChapter + 1} of {chapters.length}
+              <div className="text-center px-4">
+                <div className="text-sm font-medium text-gray-900">
+                  {(() => {
+                    if (isWuxiabox && wuxiaboxInfo) {
+                      return `Chapter ${wuxiaboxInfo.chapterNum}`;
+                    }
+                    return `${currentChapter + 1} of ${chapters.length}`;
+                  })()}
+                </div>
+                {isWuxiabox && wuxiaboxInfo && (
+                  <div className="text-xs text-orange-600">
+                    Novel {wuxiaboxInfo.novelId}
+                  </div>
+                )}
+              </div>
+
+              <button
+                onClick={handleNext}
+                disabled={!isWuxiabox && currentChapter === chapters.length - 1}
+                className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-[120px]"
+              >
+                Next
+                <ChevronRight className="h-4 w-4" />
+              </button>
             </div>
 
-            <button
-              onClick={handleNext}
-              disabled={currentChapter === chapters.length - 1}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              Next
-              <ChevronRight className="h-4 w-4" />
-            </button>
-
             {/* Go to chapter input - Desktop */}
-            <div className="border-l border-gray-300 pl-4">
-              <form onSubmit={handleChapterInputSubmit} className="flex items-center gap-2">
+            <div className="border-l border-gray-300 pl-6">
+              <form onSubmit={handleChapterInputSubmit} className="flex items-center gap-3">
                 <Hash className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-600">Go to:</span>
+                <span className="text-sm text-gray-600 whitespace-nowrap">Jump to:</span>
                 <input
                   type="text"
                   value={chapterInput}
                   onChange={(e) => handleInputChange(e.target.value)}
-                  placeholder={`1-${chapters.length}`}
-                  className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder={getInputPlaceholder()}
+                  className="w-24 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <button
                   type="submit"
-                  disabled={!chapterInput || parseInt(chapterInput) < 1 || parseInt(chapterInput) > chapters.length}
-                  className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  disabled={!chapterInput || !isValidChapterInput(chapterInput)}
+                  className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-[60px]"
                 >
                   Go
                 </button>

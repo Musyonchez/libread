@@ -80,12 +80,21 @@ export default function BottomChapterNavigation({
     if (wuxiaboxInfo && onUrlChange) {
       // For wuxiabox, calculate new chapter number and generate URL
       const currentChapterNum = wuxiaboxInfo.chapterNum;
-      const newChapterNum = chapterIndex > currentChapter 
-        ? currentChapterNum + 1  // Next chapter
-        : Math.max(1, currentChapterNum - 1);  // Previous chapter, don't go below 1
+      let newChapterNum: number;
       
-      const newUrl = generateWuxiaboxUrl(wuxiaboxInfo.novelId, newChapterNum);
-      onUrlChange(newUrl);
+      if (chapterIndex > currentChapter) {
+        // Next chapter
+        newChapterNum = currentChapterNum + 1;
+      } else {
+        // Previous chapter, don't go below 1
+        newChapterNum = Math.max(1, currentChapterNum - 1);
+      }
+      
+      // Only proceed if we're not already at the boundary
+      if (newChapterNum !== currentChapterNum) {
+        const newUrl = generateWuxiaboxUrl(wuxiaboxInfo.novelId, newChapterNum);
+        onUrlChange(newUrl);
+      }
     } else {
       // Regular chapter navigation within current content
       onChapterChange(chapterIndex);
@@ -156,7 +165,7 @@ export default function BottomChapterNavigation({
         <div className="flex items-center justify-between">
           <button
             onClick={() => handleChapterChangeWithScroll(currentChapter - 1)}
-            disabled={currentChapter === 0}
+            disabled={!isWuxiabox ? currentChapter === 0 : (wuxiaboxInfo?.chapterNum === 1)}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -165,7 +174,7 @@ export default function BottomChapterNavigation({
 
           <button
             onClick={() => handleChapterChangeWithScroll(currentChapter + 1)}
-            disabled={currentChapter === chapters.length - 1}
+            disabled={!isWuxiabox && currentChapter === chapters.length - 1}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             Next Chapter
@@ -208,7 +217,7 @@ export default function BottomChapterNavigation({
           <div className="flex items-center gap-6">
             <button
               onClick={() => handleChapterChangeWithScroll(currentChapter - 1)}
-              disabled={currentChapter === 0}
+              disabled={!isWuxiabox ? currentChapter === 0 : (wuxiaboxInfo?.chapterNum === 1)}
               className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
             >
               <ChevronLeft className="h-5 w-5" />
@@ -238,7 +247,7 @@ export default function BottomChapterNavigation({
 
             <button
               onClick={() => handleChapterChangeWithScroll(currentChapter + 1)}
-              disabled={currentChapter === chapters.length - 1}
+              disabled={!isWuxiabox && currentChapter === chapters.length - 1}
               className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
             >
               Next Chapter
