@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronLeft, ChevronRight, BookOpen, Menu, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, BookOpen, Menu, X, Hash } from 'lucide-react';
 import { useState } from 'react';
 
 interface Chapter {
@@ -13,15 +13,20 @@ interface Chapter {
 interface ChapterNavigationProps {
   chapters: Chapter[];
   currentChapter: number;
+  currentUrl?: string;
   onChapterChange: (chapterIndex: number) => void;
+  onUrlChange?: (url: string) => void;
 }
 
 export default function ChapterNavigation({
   chapters,
   currentChapter,
+  currentUrl,
   onChapterChange,
+  onUrlChange,
 }: ChapterNavigationProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [chapterInput, setChapterInput] = useState('');
 
   const handlePrevious = () => {
     if (currentChapter > 0) {
@@ -38,6 +43,21 @@ export default function ChapterNavigation({
   const handleChapterSelect = (chapterIndex: number) => {
     onChapterChange(chapterIndex);
     setIsExpanded(false);
+  };
+
+  const handleChapterInputSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const chapterNum = parseInt(chapterInput);
+    if (chapterNum >= 1 && chapterNum <= chapters.length) {
+      onChapterChange(chapterNum - 1); // Convert to 0-based index
+      setChapterInput('');
+    }
+  };
+
+  const handleInputChange = (value: string) => {
+    // Only allow numbers
+    const numericValue = value.replace(/[^0-9]/g, '');
+    setChapterInput(numericValue);
   };
 
   return (
@@ -57,33 +77,55 @@ export default function ChapterNavigation({
           </button>
         </div>
 
-        <div className="flex items-center justify-between">
-          <button
-            onClick={handlePrevious}
-            disabled={currentChapter === 0}
-            className="flex items-center gap-1 px-3 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            Prev
-          </button>
+        <div className="space-y-3">
+          {/* Navigation buttons */}
+          <div className="flex items-center justify-between">
+            <button
+              onClick={handlePrevious}
+              disabled={currentChapter === 0}
+              className="flex items-center gap-1 px-3 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Prev
+            </button>
 
-          <div className="flex-1 mx-3 text-center">
-            <div className="text-sm font-medium text-gray-900 truncate">
-              {chapters[currentChapter]?.title || `Chapter ${currentChapter + 1}`}
+            <div className="flex-1 mx-3 text-center">
+              <div className="text-sm font-medium text-gray-900 truncate">
+                {chapters[currentChapter]?.title || `Chapter ${currentChapter + 1}`}
+              </div>
+              <div className="text-xs text-gray-500">
+                {currentChapter + 1} of {chapters.length}
+              </div>
             </div>
-            <div className="text-xs text-gray-500">
-              {currentChapter + 1} of {chapters.length}
-            </div>
+
+            <button
+              onClick={handleNext}
+              disabled={currentChapter === chapters.length - 1}
+              className="flex items-center gap-1 px-3 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Next
+              <ChevronRight className="h-4 w-4" />
+            </button>
           </div>
 
-          <button
-            onClick={handleNext}
-            disabled={currentChapter === chapters.length - 1}
-            className="flex items-center gap-1 px-3 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            Next
-            <ChevronRight className="h-4 w-4" />
-          </button>
+          {/* Go to chapter input */}
+          <form onSubmit={handleChapterInputSubmit} className="flex items-center gap-2">
+            <Hash className="h-4 w-4 text-gray-500" />
+            <input
+              type="text"
+              value={chapterInput}
+              onChange={(e) => handleInputChange(e.target.value)}
+              placeholder={`1-${chapters.length}`}
+              className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <button
+              type="submit"
+              disabled={!chapterInput || parseInt(chapterInput) < 1 || parseInt(chapterInput) > chapters.length}
+              className="px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Go
+            </button>
+          </form>
         </div>
 
         {/* Expandable chapter list */}
@@ -122,7 +164,7 @@ export default function ChapterNavigation({
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <button
               onClick={handlePrevious}
               disabled={currentChapter === 0}
@@ -144,6 +186,28 @@ export default function ChapterNavigation({
               Next
               <ChevronRight className="h-4 w-4" />
             </button>
+
+            {/* Go to chapter input - Desktop */}
+            <div className="border-l border-gray-300 pl-4">
+              <form onSubmit={handleChapterInputSubmit} className="flex items-center gap-2">
+                <Hash className="h-4 w-4 text-gray-500" />
+                <span className="text-sm text-gray-600">Go to:</span>
+                <input
+                  type="text"
+                  value={chapterInput}
+                  onChange={(e) => handleInputChange(e.target.value)}
+                  placeholder={`1-${chapters.length}`}
+                  className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                <button
+                  type="submit"
+                  disabled={!chapterInput || parseInt(chapterInput) < 1 || parseInt(chapterInput) > chapters.length}
+                  className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Go
+                </button>
+              </form>
+            </div>
           </div>
         </div>
 

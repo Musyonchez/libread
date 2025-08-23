@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import NovelInput from '@/components/NovelInput';
 import NovelContentDisplay from '@/components/NovelContentDisplay';
 import ChapterNavigation from '@/components/ChapterNavigation';
+import BottomChapterNavigation from '@/components/BottomChapterNavigation';
 import ReadingProgress from '@/components/ReadingProgress';
 import TextToSpeechControls from '@/components/TextToSpeechControls';
 import BrowserCompatibility from '@/components/BrowserCompatibility';
@@ -83,15 +84,19 @@ export default function NovelReader() {
       /^Chapter\s+\d+/i,
       /^Ch\.\s*\d+/i,
       /^第\d+章/,
-      /^\d+\./,
+      /^\d+\.\s*[A-Za-z]/,  // "1. Chapter Title" format
       /^Part\s+\d+/i,
       /^Volume\s+\d+/i,
+      /^\d+\s*-\s*[A-Za-z]/,  // "1 - Chapter Title" format
+      /^[IVXLCDM]+\.\s*[A-Za-z]/i,  // Roman numerals "I. Title"
+      /^\s*\d+\s*$/,  // Just numbers on their own line
+      /chapter/i,     // Any line containing "chapter"
     ];
 
     paragraphs.forEach((paragraph) => {
       const isChapterTitle = chapterPatterns.some(pattern => pattern.test(paragraph.trim()));
       
-      if (isChapterTitle && paragraph.trim().length < 100) {
+      if (isChapterTitle && paragraph.trim().length < 200) {
         // Save previous chapter if exists
         if (currentChapter) {
           chapters.push(currentChapter);
@@ -130,7 +135,27 @@ export default function NovelReader() {
       chapters.push(currentChapter);
     }
 
-    return chapters.length > 0 ? chapters : [{
+    // If we found chapters, return them
+    if (chapters.length > 1) {
+      return chapters;
+    }
+    
+    // If no chapters or only one chapter found, create artificial chapters based on content length
+    const artificialChapters: Chapter[] = [];
+    const chunkSize = Math.max(10, Math.floor(paragraphs.length / 3)); // Split into ~3 parts, minimum 10 paragraphs each
+    
+    for (let i = 0; i < paragraphs.length; i += chunkSize) {
+      const chapterParagraphs = paragraphs.slice(i, i + chunkSize);
+      const chapterNumber = Math.floor(i / chunkSize) + 1;
+      artificialChapters.push({
+        title: `Section ${chapterNumber}`,
+        content: chapterParagraphs.join('\n\n'),
+        paragraphs: chapterParagraphs,
+        index: artificialChapters.length,
+      });
+    }
+    
+    return artificialChapters.length > 1 ? artificialChapters : [{
       title: 'Full Content',
       content,
       paragraphs,
@@ -267,11 +292,13 @@ export default function NovelReader() {
         {novelData && !loading && (
           <div className="space-y-6">
             {/* Chapter Navigation */}
-            {novelData.chapters && novelData.chapters.length > 1 && (
+            {novelData.chapters && (
               <ChapterNavigation
                 chapters={novelData.chapters}
                 currentChapter={getCurrentChapterIndex()}
+                currentUrl={novelData.url}
                 onChapterChange={handleChapterChange}
+                onUrlChange={handleUrlSubmit}
               />
             )}
 
@@ -318,6 +345,19 @@ export default function NovelReader() {
                 currentChapter={getCurrentChapterIndex()}
               />
             </div>
+
+            {/* Bottom Chapter Navigation */}
+            {novelData.chapters && (
+              <div className="max-w-4xl mx-auto">
+                <BottomChapterNavigation
+                  chapters={novelData.chapters}
+                  currentChapter={getCurrentChapterIndex()}
+                  currentUrl={novelData.url}
+                  onChapterChange={handleChapterChange}
+                  onUrlChange={handleUrlSubmit}
+                />
+              </div>
+            )}
           </div>
         )}
       </div>
