@@ -1,0 +1,198 @@
+'use client';
+
+import { Clock, Eye, ExternalLink, BookOpen } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+
+interface Chapter {
+  title: string;
+  content: string;
+  paragraphs: string[];
+  index: number;
+}
+
+interface NovelData {
+  title: string;
+  url: string;
+  content: string;
+  paragraphs: string[];
+  wordCount: number;
+  estimatedReadTime: number;
+  chapters?: Chapter[];
+  currentChapter?: number;
+}
+
+interface NovelContentDisplayProps {
+  novel: NovelData;
+  currentParagraph: number;
+  onParagraphClick: (index: number) => void;
+  currentChapter: number;
+}
+
+export default function NovelContentDisplay({
+  novel,
+  currentParagraph,
+  onParagraphClick,
+  currentChapter,
+}: NovelContentDisplayProps) {
+  const currentParagraphRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (currentParagraphRef.current) {
+      currentParagraphRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [currentParagraph]);
+
+  const getChapterStartIndex = (chapterIndex: number): number => {
+    if (!novel.chapters) return 0;
+    
+    let startIndex = 0;
+    for (let i = 0; i < chapterIndex; i++) {
+      startIndex += novel.chapters[i].paragraphs.length;
+    }
+    return startIndex;
+  };
+
+  const getParagraphChapter = (paragraphIndex: number): number => {
+    if (!novel.chapters) return 0;
+    
+    let cumulative = 0;
+    for (let i = 0; i < novel.chapters.length; i++) {
+      cumulative += novel.chapters[i].paragraphs.length;
+      if (paragraphIndex < cumulative) {
+        return i;
+      }
+    }
+    return novel.chapters.length - 1;
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+      {/* Novel Header */}
+      <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div className="flex items-start gap-4 mb-4">
+          <div className="bg-blue-100 p-3 rounded-full">
+            <BookOpen className="h-6 w-6 text-blue-600" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2 break-words">{novel.title}</h1>
+            {novel.chapters && novel.chapters.length > 1 && (
+              <p className="text-blue-700 font-medium">
+                Currently in: {novel.chapters[currentChapter]?.title || `Chapter ${currentChapter + 1}`}
+              </p>
+            )}
+          </div>
+        </div>
+        
+        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+          <div className="flex items-center gap-1">
+            <ExternalLink className="h-4 w-4" />
+            <a
+              href={novel.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-blue-600 truncate max-w-md"
+            >
+              {novel.url}
+            </a>
+          </div>
+          
+          <div className="flex items-center gap-1">
+            <Eye className="h-4 w-4" />
+            <span>{novel.wordCount} words</span>
+          </div>
+          
+          <div className="flex items-center gap-1">
+            <Clock className="h-4 w-4" />
+            <span>{novel.estimatedReadTime} min read</span>
+          </div>
+
+          {novel.chapters && (
+            <div className="flex items-center gap-1">
+              <BookOpen className="h-4 w-4" />
+              <span>{novel.chapters.length} chapters</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-6 max-w-none">
+        {novel.paragraphs.map((paragraph, index) => {
+          const paragraphChapter = getParagraphChapter(index);
+          const isNewChapter = novel.chapters && 
+            novel.chapters.length > 1 && 
+            index === getChapterStartIndex(paragraphChapter) &&
+            paragraphChapter > 0;
+
+          return (
+            <div key={index}>
+              {/* Chapter divider */}
+              {isNewChapter && (
+                <div className="my-8 py-4 border-t border-gray-200">
+                  <div className="text-center">
+                    <h2 className="text-xl font-bold text-gray-800 bg-gray-50 px-4 py-2 rounded-lg inline-block">
+                      {novel.chapters![paragraphChapter].title}
+                    </h2>
+                  </div>
+                </div>
+              )}
+
+              {/* Paragraph */}
+              <div
+                ref={index === currentParagraph ? currentParagraphRef : null}
+                onClick={() => onParagraphClick(index)}
+                className={`mb-6 leading-relaxed cursor-pointer transition-all duration-200 p-4 rounded-lg text-lg ${
+                  index === currentParagraph
+                    ? 'bg-blue-50 border-l-4 border-blue-500 text-blue-900 shadow-sm'
+                    : paragraphChapter === currentChapter
+                    ? 'hover:bg-gray-50 text-gray-800 border-l-4 border-transparent hover:border-gray-200'
+                    : 'hover:bg-gray-50 text-gray-600 border-l-4 border-transparent hover:border-gray-200 opacity-75'
+                }`}
+              >
+                <p className="whitespace-pre-wrap">{paragraph}</p>
+                {index === currentParagraph && (
+                  <div className="mt-2 flex items-center justify-between">
+                    <div className="text-sm text-blue-600 font-medium">
+                      ▶ Currently reading
+                    </div>
+                    {novel.chapters && (
+                      <div className="text-xs text-blue-500">
+                        {novel.chapters[paragraphChapter]?.title}
+                      </div>
+                    )}
+                  </div>
+                )}
+                {/* Chapter indicator for non-current paragraphs */}
+                {index !== currentParagraph && novel.chapters && novel.chapters.length > 1 && (
+                  <div className="mt-2 text-xs text-gray-400">
+                    {novel.chapters[paragraphChapter]?.title}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Footer */}
+      <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 text-sm text-gray-600">
+          <div>
+            Paragraph {currentParagraph + 1} of {novel.paragraphs.length}
+            {novel.chapters && (
+              <span className="ml-2">
+                • Chapter {getParagraphChapter(currentParagraph) + 1} of {novel.chapters.length}
+              </span>
+            )}
+          </div>
+          <div className="text-xs text-gray-500">
+            Click any paragraph to start reading from there
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

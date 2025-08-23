@@ -1,0 +1,203 @@
+'use client';
+
+import { ChevronLeft, ChevronRight, BookOpen, Menu, X } from 'lucide-react';
+import { useState } from 'react';
+
+interface Chapter {
+  title: string;
+  content: string;
+  paragraphs: string[];
+  index: number;
+}
+
+interface ChapterNavigationProps {
+  chapters: Chapter[];
+  currentChapter: number;
+  onChapterChange: (chapterIndex: number) => void;
+}
+
+export default function ChapterNavigation({
+  chapters,
+  currentChapter,
+  onChapterChange,
+}: ChapterNavigationProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const handlePrevious = () => {
+    if (currentChapter > 0) {
+      onChapterChange(currentChapter - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentChapter < chapters.length - 1) {
+      onChapterChange(currentChapter + 1);
+    }
+  };
+
+  const handleChapterSelect = (chapterIndex: number) => {
+    onChapterChange(chapterIndex);
+    setIsExpanded(false);
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow-lg p-4 mb-6">
+      {/* Mobile: Compact layout */}
+      <div className="sm:hidden">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <BookOpen className="h-5 w-5 text-blue-600" />
+            <span className="font-medium text-gray-900">Chapters</span>
+          </div>
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            {isExpanded ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <button
+            onClick={handlePrevious}
+            disabled={currentChapter === 0}
+            className="flex items-center gap-1 px-3 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Prev
+          </button>
+
+          <div className="flex-1 mx-3 text-center">
+            <div className="text-sm font-medium text-gray-900 truncate">
+              {chapters[currentChapter]?.title || `Chapter ${currentChapter + 1}`}
+            </div>
+            <div className="text-xs text-gray-500">
+              {currentChapter + 1} of {chapters.length}
+            </div>
+          </div>
+
+          <button
+            onClick={handleNext}
+            disabled={currentChapter === chapters.length - 1}
+            className="flex items-center gap-1 px-3 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            Next
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Expandable chapter list */}
+        {isExpanded && (
+          <div className="mt-4 border-t border-gray-200 pt-4">
+            <div className="max-h-64 overflow-y-auto space-y-2">
+              {chapters.map((chapter, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleChapterSelect(index)}
+                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                    index === currentChapter
+                      ? 'bg-blue-100 text-blue-900 font-medium'
+                      : 'hover:bg-gray-100 text-gray-700'
+                  }`}
+                >
+                  <div className="truncate">{chapter.title}</div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    {chapter.paragraphs.length} paragraphs
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Desktop: Full layout */}
+      <div className="hidden sm:block">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <BookOpen className="h-5 w-5 text-blue-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Chapters</h3>
+            <span className="text-sm text-gray-500">
+              ({chapters.length} total)
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handlePrevious}
+              disabled={currentChapter === 0}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Previous
+            </button>
+
+            <div className="text-sm text-gray-600">
+              {currentChapter + 1} of {chapters.length}
+            </div>
+
+            <button
+              onClick={handleNext}
+              disabled={currentChapter === chapters.length - 1}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Next
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Current chapter info */}
+        <div className="bg-gray-50 rounded-lg p-4">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <h4 className="font-medium text-gray-900 mb-1">
+                {chapters[currentChapter]?.title || `Chapter ${currentChapter + 1}`}
+              </h4>
+              <p className="text-sm text-gray-600">
+                {chapters[currentChapter]?.paragraphs.length} paragraphs
+              </p>
+            </div>
+            
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="flex items-center gap-2 px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            >
+              {isExpanded ? 'Hide All' : 'Show All'}
+              {isExpanded ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </button>
+          </div>
+        </div>
+
+        {/* All chapters dropdown */}
+        {isExpanded && (
+          <div className="mt-4 border-t border-gray-200 pt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-80 overflow-y-auto">
+              {chapters.map((chapter, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleChapterSelect(index)}
+                  className={`text-left p-3 rounded-lg text-sm transition-all duration-200 border ${
+                    index === currentChapter
+                      ? 'bg-blue-100 border-blue-300 text-blue-900 shadow-sm'
+                      : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700'
+                  }`}
+                >
+                  <div className="font-medium truncate">{chapter.title}</div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    {chapter.paragraphs.length} paragraphs
+                  </div>
+                  {index === currentChapter && (
+                    <div className="text-xs text-blue-600 mt-1 font-medium">
+                      Currently reading
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
