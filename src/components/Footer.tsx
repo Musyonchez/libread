@@ -5,15 +5,15 @@ export default function Footer() {
   return (
     <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
               <BookOpen className="h-8 w-8 text-blue-400" />
               <span className="text-xl font-bold">LibRead</span>
             </div>
             <p className="text-gray-400 mb-4 max-w-md">
-              Transform text, documents, web content, and novels into immersive audio experiences with our
-              advanced text-to-speech technology.
+              Complete text-to-speech platform with specialized readers for text, documents, web content, and novels. 
+              Advanced speech controls, chapter navigation, and cross-platform compatibility.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
@@ -30,7 +30,7 @@ export default function Footer() {
 
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">
-              Readers
+              All Readers
             </h3>
             <ul className="space-y-2">
               <li>
@@ -51,34 +51,6 @@ export default function Footer() {
               <li>
                 <Link href="/novel" className="text-gray-400 hover:text-white transition-colors">
                   Novel Reader
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">
-              Company
-            </h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/about" className="text-gray-400 hover:text-white transition-colors">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
-                  Privacy
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
-                  Terms
                 </Link>
               </li>
             </ul>
