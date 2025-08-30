@@ -7,7 +7,7 @@ import ChapterNavigation from '@/components/ChapterNavigation';
 import BottomChapterNavigation from '@/components/BottomChapterNavigation';
 import TextToSpeechControls from '@/components/TextToSpeechControls';
 import BrowserCompatibility from '@/components/BrowserCompatibility';
-import { Loader2 } from 'lucide-react';
+import { Loader2, AlertTriangle, X } from 'lucide-react';
 
 interface Chapter {
   title: string;
@@ -33,6 +33,7 @@ export default function NovelReader() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentParagraph, setCurrentParagraph] = useState(0);
+  const [unsupportedDomainToast, setUnsupportedDomainToast] = useState<string | null>(null);
   const jumpToParagraphRef = useRef<((index: number, paragraphs?: string[], onParagraphChange?: (index: number) => void) => void) | null>(null);
 
 
@@ -211,6 +212,12 @@ export default function NovelReader() {
     return novelData.chapters.length - 1;
   };
 
+  const handleUnsupportedDomain = (domain: string) => {
+    setUnsupportedDomainToast(domain);
+    // Auto-hide toast after 5 seconds
+    setTimeout(() => setUnsupportedDomainToast(null), 5000);
+  };
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -250,6 +257,7 @@ export default function NovelReader() {
                 currentUrl={novelData.url}
                 onChapterChange={handleChapterChange}
                 onUrlChange={handleUrlSubmit}
+                onUnsupportedDomain={handleUnsupportedDomain}
               />
             )}
 
@@ -286,6 +294,25 @@ export default function NovelReader() {
                 />
               </div>
             )}
+          </div>
+        )}
+
+        {/* Unsupported Domain Toast */}
+        {unsupportedDomainToast && (
+          <div className="fixed bottom-4 right-4 z-50 bg-red-100 border border-red-200 text-red-800 px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-in slide-in-from-right max-w-md">
+            <AlertTriangle className="h-5 w-5 flex-shrink-0" />
+            <div className="flex-1">
+              <p className="font-medium">Domain Not Supported</p>
+              <p className="text-sm text-red-600">
+                <strong>{unsupportedDomainToast}</strong> is not supported for chapter navigation.
+              </p>
+            </div>
+            <button
+              onClick={() => setUnsupportedDomainToast(null)}
+              className="text-red-600 hover:text-red-800 transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
         )}
       </div>

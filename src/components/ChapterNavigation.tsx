@@ -1,7 +1,8 @@
 'use client';
 
-import { ChevronLeft, ChevronRight, BookOpen, Menu, X, Hash } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
+import { getPatternInfo, isDomainSupported, NavigationPattern } from '@/config/domainGroups';
 
 interface Chapter {
   title: string;
@@ -16,6 +17,7 @@ interface ChapterNavigationProps {
   currentUrl?: string;
   onChapterChange: (chapterIndex: number) => void;
   onUrlChange?: (url: string) => void;
+  onUnsupportedDomain?: (domain: string) => void;
 }
 
 export default function ChapterNavigation({
@@ -24,54 +26,50 @@ export default function ChapterNavigation({
   currentUrl,
   onChapterChange,
   onUrlChange,
+  onUnsupportedDomain,
 }: ChapterNavigationProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [chapterInput, setChapterInput] = useState('');
 
-  // Detect if this is a wuxiabox URL and extract chapter number
-  const getWuxiaboxChapterInfo = (url: string) => {
-    if (!url || !url.includes('wuxiabox.com')) return null;
-    
-    const match = url.match(/\/novel\/(\d+)_(\d+)\.html$/);
-    if (match) {
-      return {
-        novelId: match[1],
-        chapterNum: parseInt(match[2]),
-        baseUrl: url.replace(/_\d+\.html$/, ''),
-      };
-    }
-    return null;
-  };
-
-  const generateWuxiaboxUrl = (novelId: string, chapterNum: number) => {
-    return `https://www.wuxiabox.com/novel/${novelId}_${chapterNum}.html`;
+  // Get navigation pattern info for current URL
+  const getNavigationInfo = (url: string) => {
+    if (!url) return null;
+    return getPatternInfo(url);
   };
 
   const handlePrevious = () => {
-    // Check if this is a wuxiabox URL
-    const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
+    const navInfo = currentUrl ? getNavigationInfo(currentUrl) : null;
     
-    if (wuxiaboxInfo && onUrlChange) {
-      // For wuxiabox, generate previous chapter URL
-      const newChapterNum = Math.max(1, wuxiaboxInfo.chapterNum - 1);
-      if (newChapterNum !== wuxiaboxInfo.chapterNum) {
-        const newUrl = generateWuxiaboxUrl(wuxiaboxInfo.novelId, newChapterNum);
+    if (navInfo && onUrlChange) {
+      // For supported domain patterns, generate previous chapter URL
+      const minChapter = navInfo.pattern.minChapter || 1;
+      const newChapterNum = Math.max(minChapter, navInfo.chapterInfo.chapterNum - 1);
+      if (newChapterNum !== navInfo.chapterInfo.chapterNum) {
+        const newUrl = navInfo.pattern.generateUrl(navInfo.chapterInfo.novelId, newChapterNum);
         onUrlChange(newUrl);
       }
+    } else if (currentUrl && !isDomainSupported(currentUrl) && onUnsupportedDomain) {
+      // Handle unsupported domain
+      const domain = new URL(currentUrl).hostname;
+      onUnsupportedDomain(domain);
     } else if (currentChapter > 0) {
       onChapterChange(currentChapter - 1);
     }
   };
 
   const handleNext = () => {
-    // Check if this is a wuxiabox URL
-    const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
+    const navInfo = currentUrl ? getNavigationInfo(currentUrl) : null;
     
-    if (wuxiaboxInfo && onUrlChange) {
-      // For wuxiabox, generate next chapter URL
-      const newChapterNum = wuxiaboxInfo.chapterNum + 1;
-      const newUrl = generateWuxiaboxUrl(wuxiaboxInfo.novelId, newChapterNum);
+    if (navInfo && onUrlChange) {
+      // For supported domain patterns, generate next chapter URL
+      const maxChapter = navInfo.pattern.maxChapter || 999;
+      const newChapterNum = Math.min(maxChapter, navInfo.chapterInfo.chapterNum + 1);
+      const newUrl = navInfo.pattern.generateUrl(navInfo.chapterInfo.novelId, newChapterNum);
       onUrlChange(newUrl);
+    } else if (currentUrl && !isDomainSupported(currentUrl) && onUnsupportedDomain) {
+      // Handle unsupported domain
+      const domain = new URL(currentUrl).hostname;
+      onUnsupportedDomain(domain);
     } else if (currentChapter < chapters.length - 1) {
       onChapterChange(currentChapter + 1);
     }
@@ -86,13 +84,16 @@ export default function ChapterNavigation({
     e.preventDefault();
     const chapterNum = parseInt(chapterInput);
     
-    // Check if this is a wuxiabox URL
-    const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
+    const navInfo = currentUrl ? getNavigationInfo(currentUrl) : null;
     
-    if (wuxiaboxInfo && onUrlChange) {
-      // For wuxiabox, generate new URL and fetch it
-      const newUrl = generateWuxiaboxUrl(wuxiaboxInfo.novelId, chapterNum);
+    if (navInfo && onUrlChange) {
+      // For supported domain patterns, generate new URL
+      const newUrl = navInfo.pattern.generateUrl(navInfo.chapterInfo.novelId, chapterNum);
       onUrlChange(newUrl);
+    } else if (currentUrl && !isDomainSupported(currentUrl) && onUnsupportedDomain) {
+      // Handle unsupported domain
+      const domain = new URL(currentUrl).hostname;
+      onUnsupportedDomain(domain);
     } else if (chapterNum >= 1 && chapterNum <= chapters.length) {
       // For regular chapter navigation within current content
       onChapterChange(chapterNum - 1); // Convert to 0-based index
@@ -109,9 +110,11 @@ export default function ChapterNavigation({
 
   // Get appropriate placeholder and limits for input
   const getInputPlaceholder = () => {
-    const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
-    if (wuxiaboxInfo) {
-      return `1-999+`;  // For wuxiabox, allow wide range
+    const navInfo = currentUrl ? getNavigationInfo(currentUrl) : null;
+    if (navInfo) {
+      const min = navInfo.pattern.minChapter || 1;
+      const max = navInfo.pattern.maxChapter || 999;
+      return `${min}-${max}+`;
     }
     return `1-${chapters.length}`;
   };
@@ -120,15 +123,17 @@ export default function ChapterNavigation({
     const num = parseInt(input);
     if (isNaN(num) || num < 1) return false;
     
-    const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
-    if (wuxiaboxInfo) {
-      return num >= 1 && num <= 999;  // Allow up to 999 for wuxiabox
+    const navInfo = currentUrl ? getNavigationInfo(currentUrl) : null;
+    if (navInfo) {
+      const min = navInfo.pattern.minChapter || 1;
+      const max = navInfo.pattern.maxChapter || 999;
+      return num >= min && num <= max;
     }
     return num >= 1 && num <= chapters.length;
   };
 
-  const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
-  const isWuxiabox = !!wuxiaboxInfo;
+  const navInfo = currentUrl ? getNavigationInfo(currentUrl) : null;
+  const isSupported = currentUrl ? isDomainSupported(currentUrl) : false;
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
@@ -139,7 +144,7 @@ export default function ChapterNavigation({
           <div className="flex items-center justify-center gap-2">
             <button
               onClick={handlePrevious}
-              disabled={!isWuxiabox ? currentChapter === 0 : (wuxiaboxInfo?.chapterNum === 1)}
+              disabled={!isSupported ? currentChapter === 0 : (navInfo && navInfo.chapterInfo.chapterNum <= (navInfo.pattern.minChapter || 1))}
               className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -147,12 +152,12 @@ export default function ChapterNavigation({
             </button>
 
             <div className="px-3 py-2 bg-gray-50 rounded-lg text-sm font-medium text-gray-900">
-              Chapter {wuxiaboxInfo ? wuxiaboxInfo.chapterNum : currentChapter + 1}
+              Chapter {navInfo ? navInfo.chapterInfo.chapterNum : currentChapter + 1}
             </div>
 
             <button
               onClick={handleNext}
-              disabled={!isWuxiabox && currentChapter === chapters.length - 1}
+              disabled={!isSupported && currentChapter === chapters.length - 1}
               className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
             >
               Next
@@ -192,7 +197,7 @@ export default function ChapterNavigation({
         <div className="flex items-center gap-4">
           <button
             onClick={handlePrevious}
-            disabled={!isWuxiabox ? currentChapter === 0 : (wuxiaboxInfo?.chapterNum === 1)}
+            disabled={!isSupported ? currentChapter === 0 : (navInfo && navInfo.chapterInfo.chapterNum <= (navInfo.pattern.minChapter || 1))}
             className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
           >
             <ChevronLeft className="h-5 w-5" />
@@ -200,12 +205,12 @@ export default function ChapterNavigation({
           </button>
 
           <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 rounded-lg font-medium text-gray-900">
-            Chapter {wuxiaboxInfo ? wuxiaboxInfo.chapterNum : currentChapter + 1}
+            Chapter {navInfo ? navInfo.chapterInfo.chapterNum : currentChapter + 1}
           </div>
 
           <button
             onClick={handleNext}
-            disabled={!isWuxiabox && currentChapter === chapters.length - 1}
+            disabled={!isSupported && currentChapter === chapters.length - 1}
             className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
           >
             Next

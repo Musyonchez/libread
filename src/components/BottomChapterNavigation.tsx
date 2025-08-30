@@ -2,6 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
+import { getPatternInfo, isDomainSupported } from '@/config/domainGroups';
 
 interface Chapter {
   title: string;
@@ -16,6 +17,7 @@ interface BottomChapterNavigationProps {
   currentUrl?: string;
   onChapterChange: (chapterIndex: number) => void;
   onUrlChange?: (url: string) => void;
+  onUnsupportedDomain?: (domain: string) => void;
 }
 
 export default function BottomChapterNavigation({
