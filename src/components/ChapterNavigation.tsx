@@ -147,7 +147,7 @@ export default function ChapterNavigation({
             </button>
 
             <div className="px-3 py-2 bg-gray-50 rounded-lg text-sm font-medium text-gray-900">
-              Ch. {currentChapter + 1}
+              Chapter {wuxiaboxInfo ? wuxiaboxInfo.chapterNum : currentChapter + 1}
             </div>
 
             <button
@@ -200,7 +200,7 @@ export default function ChapterNavigation({
           </button>
 
           <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 rounded-lg font-medium text-gray-900">
-            Chapter {currentChapter + 1}
+            Chapter {wuxiaboxInfo ? wuxiaboxInfo.chapterNum : currentChapter + 1}
           </div>
 
           <button
