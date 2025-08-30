@@ -81,7 +81,7 @@ export default function NovelContentDisplay({
           </div>
         </div>
         
-        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+        <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-600">
           <div className="flex items-center gap-1">
             <ExternalLink className="h-4 w-4" />
             <a
