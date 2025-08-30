@@ -32,7 +32,6 @@ export default function NovelContentDisplay({
   novel,
   currentParagraph,
   onParagraphClick,
-  currentChapter,
 }: NovelContentDisplayProps) {
   const currentParagraphRef = useRef<HTMLDivElement>(null);
 
@@ -45,15 +44,6 @@ export default function NovelContentDisplay({
     }
   }, [currentParagraph]);
 
-  const getChapterStartIndex = (chapterIndex: number): number => {
-    if (!novel.chapters) return 0;
-    
-    let startIndex = 0;
-    for (let i = 0; i < chapterIndex; i++) {
-      startIndex += novel.chapters[i].paragraphs.length;
-    }
-    return startIndex;
-  };
 
   const getParagraphChapter = (paragraphIndex: number): number => {
     if (!novel.chapters) return 0;
@@ -110,11 +100,6 @@ export default function NovelContentDisplay({
       {/* Content */}
       <div className="p-6 max-w-none">
         {novel.paragraphs.map((paragraph, index) => {
-          const paragraphChapter = getParagraphChapter(index);
-          const isNewChapter = novel.chapters && 
-            novel.chapters.length > 1 && 
-            index === getChapterStartIndex(paragraphChapter) &&
-            paragraphChapter > 0;
 
           return (
             <div key={index}>

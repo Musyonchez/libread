@@ -2,7 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
-import { getPatternInfo, isDomainSupported, NavigationPattern } from '@/config/domainGroups';
+import { getPatternInfo, isDomainSupported } from '@/config/domainGroups';
 
 interface Chapter {
   title: string;
@@ -28,7 +28,6 @@ export default function ChapterNavigation({
   onUrlChange,
   onUnsupportedDomain,
 }: ChapterNavigationProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
   const [chapterInput, setChapterInput] = useState('');
 
   // Get navigation pattern info for current URL
@@ -75,10 +74,6 @@ export default function ChapterNavigation({
     }
   };
 
-  const handleChapterSelect = (chapterIndex: number) => {
-    onChapterChange(chapterIndex);
-    setIsExpanded(false);
-  };
 
   const handleChapterInputSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,16 +103,6 @@ export default function ChapterNavigation({
     setChapterInput(numericValue);
   };
 
-  // Get appropriate placeholder and limits for input
-  const getInputPlaceholder = () => {
-    const navInfo = currentUrl ? getNavigationInfo(currentUrl) : null;
-    if (navInfo) {
-      const min = navInfo.pattern.minChapter || 1;
-      const max = navInfo.pattern.maxChapter || 999;
-      return `${min}-${max}+`;
-    }
-    return `1-${chapters.length}`;
-  };
 
   const isValidChapterInput = (input: string) => {
     const num = parseInt(input);
@@ -144,7 +129,7 @@ export default function ChapterNavigation({
           <div className="flex items-center justify-center gap-2">
             <button
               onClick={handlePrevious}
-              disabled={!isSupported ? currentChapter === 0 : (navInfo && navInfo.chapterInfo.chapterNum <= (navInfo.pattern.minChapter || 1))}
+              disabled={!isSupported ? currentChapter === 0 : !!(navInfo && navInfo.chapterInfo.chapterNum <= (navInfo.pattern.minChapter || 1))}
               className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -197,7 +182,7 @@ export default function ChapterNavigation({
         <div className="flex items-center gap-4">
           <button
             onClick={handlePrevious}
-            disabled={!isSupported ? currentChapter === 0 : (navInfo && navInfo.chapterInfo.chapterNum <= (navInfo.pattern.minChapter || 1))}
+            disabled={!isSupported ? currentChapter === 0 : !!(navInfo && navInfo.chapterInfo.chapterNum <= (navInfo.pattern.minChapter || 1))}
             className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
           >
             <ChevronLeft className="h-5 w-5" />

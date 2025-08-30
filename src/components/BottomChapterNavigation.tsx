@@ -2,7 +2,6 @@
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
-import { getPatternInfo, isDomainSupported } from '@/config/domainGroups';
 
 interface Chapter {
   title: string;
@@ -105,14 +104,6 @@ export default function BottomChapterNavigation({
   };
 
 
-  // Get appropriate placeholder and limits for input
-  const getInputPlaceholder = () => {
-    const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
-    if (wuxiaboxInfo) {
-      return `Chapter 1-999+`;  // For wuxiabox, allow wide range
-    }
-    return `1-${chapters.length}`;
-  };
 
   const isValidChapterInput = (input: string) => {
     const num = parseInt(input);
