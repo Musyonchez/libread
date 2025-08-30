@@ -78,11 +78,6 @@ export default function NovelContentDisplay({
           </div>
           <div className="flex-1 min-w-0">
             <h1 className="text-2xl font-bold text-gray-900 mb-2 break-words">{novel.title}</h1>
-            {novel.chapters && novel.chapters.length > 1 && (
-              <p className="text-blue-700 font-medium">
-                Currently in: {novel.chapters[currentChapter]?.title || `Chapter ${currentChapter + 1}`}
-              </p>
-            )}
           </div>
         </div>
         
@@ -109,12 +104,6 @@ export default function NovelContentDisplay({
             <span>{novel.estimatedReadTime} min read</span>
           </div>
 
-          {novel.chapters && (
-            <div className="flex items-center gap-1">
-              <BookOpen className="h-4 w-4" />
-              <span>{novel.chapters.length} chapters</span>
-            </div>
-          )}
         </div>
       </div>
 
