@@ -73,11 +73,11 @@ export default function NovelContentDisplay({
       {/* Novel Header */}
       <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
         <div className="flex items-start gap-4 mb-4">
-          <div className="bg-blue-100 p-3 rounded-full">
+          <div className="bg-blue-100 p-3 rounded-full hidden sm:block">
             <BookOpen className="h-6 w-6 text-blue-600" />
           </div>
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2 break-words">{novel.title}</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2 break-words text-center sm:text-left">{novel.title}</h1>
           </div>
         </div>
         
