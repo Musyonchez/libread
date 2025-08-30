@@ -118,17 +118,6 @@ export default function NovelContentDisplay({
 
           return (
             <div key={index}>
-              {/* Chapter divider */}
-              {isNewChapter && (
-                <div className="my-8 py-4 border-t border-gray-200">
-                  <div className="text-center">
-                    <h2 className="text-xl font-bold text-gray-800 bg-gray-50 px-4 py-2 rounded-lg inline-block">
-                      {novel.chapters![paragraphChapter].title}
-                    </h2>
-                  </div>
-                </div>
-              )}
-
               {/* Paragraph */}
               <div
                 ref={index === currentParagraph ? currentParagraphRef : null}
