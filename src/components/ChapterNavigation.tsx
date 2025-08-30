@@ -151,7 +151,7 @@ export default function ChapterNavigation({
               Prev
             </button>
 
-            <div className="px-3 py-2 bg-gray-50 rounded-lg text-sm font-medium text-gray-900">
+            <div className="px-3 py-2 bg-gray-50 rounded-lg text-sm font-medium text-gray-900 whitespace-nowrap">
               Chapter {navInfo ? navInfo.chapterInfo.chapterNum : currentChapter + 1}
             </div>
 
@@ -204,7 +204,7 @@ export default function ChapterNavigation({
             Previous
           </button>
 
-          <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 rounded-lg font-medium text-gray-900">
+          <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 rounded-lg font-medium text-gray-900 whitespace-nowrap">
             Chapter {navInfo ? navInfo.chapterInfo.chapterNum : currentChapter + 1}
           </div>
 

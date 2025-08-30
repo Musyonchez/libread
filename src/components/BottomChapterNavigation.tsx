@@ -144,7 +144,7 @@ export default function BottomChapterNavigation({
               Previous
             </button>
 
-            <div className="px-3 py-2 bg-gray-50 rounded-lg text-sm font-medium text-gray-900">
+            <div className="px-3 py-2 bg-gray-50 rounded-lg text-sm font-medium text-gray-900 whitespace-nowrap">
               Chapter {wuxiaboxInfo ? wuxiaboxInfo.chapterNum : currentChapter + 1}
             </div>
 
@@ -197,7 +197,7 @@ export default function BottomChapterNavigation({
             Previous
           </button>
 
-          <div className="px-4 py-3 bg-gray-50 rounded-lg font-medium text-gray-900">
+          <div className="px-4 py-3 bg-gray-50 rounded-lg font-medium text-gray-900 whitespace-nowrap">
             Chapter {wuxiaboxInfo ? wuxiaboxInfo.chapterNum : currentChapter + 1}
           </div>
 
