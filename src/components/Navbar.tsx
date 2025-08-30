@@ -47,13 +47,10 @@ export default function Navbar() {
               </Link>
               <Link
                 href="/novel"
-                className="flex items-center gap-2 text-gray-600 hover:text-orange-600 hover:bg-orange-50 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 relative"
+                className="flex items-center gap-2 text-gray-600 hover:text-orange-600 hover:bg-orange-50 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200"
               >
                 <Brain className="h-4 w-4" />
                 Novels
-                <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold">
-                  NEW
-                </span>
               </Link>
             </div>
           </div>
@@ -116,17 +113,12 @@ export default function Navbar() {
             </Link>
             <Link
               href="/novel"
-              className="flex items-center gap-3 text-gray-700 hover:text-orange-600 hover:bg-orange-50 block px-3 py-3 rounded-lg text-base font-medium transition-all duration-200 relative"
+              className="flex items-center gap-3 text-gray-700 hover:text-orange-600 hover:bg-orange-50 block px-3 py-3 rounded-lg text-base font-medium transition-all duration-200"
               onClick={() => setIsMenuOpen(false)}
             >
               <Brain className="h-5 w-5" />
               <div>
-                <div className="font-semibold flex items-center gap-2">
-                  Novel Reader
-                  <span className="bg-orange-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold">
-                    NEW
-                  </span>
-                </div>
+                <div className="font-semibold">Novel Reader</div>
                 <div className="text-xs text-gray-500">Chapter navigation & wuxiabox</div>
               </div>
             </Link>
