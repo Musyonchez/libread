@@ -164,24 +164,28 @@ export default function ChapterNavigation({
           </div>
 
           {/* Go to chapter input */}
-          <form onSubmit={handleChapterInputSubmit} className="flex items-center gap-3">
-            <Hash className="h-4 w-4 text-gray-500" />
-            <span className="text-sm text-gray-600 whitespace-nowrap">Jump to:</span>
-            <input
-              type="text"
-              value={chapterInput}
-              onChange={(e) => handleInputChange(e.target.value)}
-              placeholder={getInputPlaceholder()}
-              className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-[80px]"
-            />
-            <button
-              type="submit"
-              disabled={!chapterInput || !isValidChapterInput(chapterInput)}
-              className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-[60px]"
-            >
-              Go
-            </button>
-          </form>
+          <div className="mt-3">
+            <form onSubmit={handleChapterInputSubmit} className="flex items-center gap-0 bg-white border border-gray-200 rounded-full p-1 shadow-sm">
+              <div className="flex items-center px-3 py-2 text-gray-500">
+                <Hash className="h-4 w-4 mr-2" />
+                <span className="text-sm font-medium">Ch.</span>
+              </div>
+              <input
+                type="text"
+                value={chapterInput}
+                onChange={(e) => handleInputChange(e.target.value)}
+                placeholder="1"
+                className="flex-1 px-2 py-2 text-center font-semibold text-gray-900 bg-transparent border-0 focus:ring-0 focus:outline-none placeholder-gray-400 min-w-0"
+              />
+              <button
+                type="submit"
+                disabled={!chapterInput || !isValidChapterInput(chapterInput)}
+                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors disabled:cursor-not-allowed"
+              >
+                Go
+              </button>
+            </form>
+          </div>
         </div>
 
       </div>
@@ -215,21 +219,23 @@ export default function ChapterNavigation({
         </div>
         
         {/* Jump to chapter input - Desktop */}
-        <div className="mt-4 pt-4 border-t border-gray-200">
-          <form onSubmit={handleChapterInputSubmit} className="flex items-center justify-center gap-3">
-            <Hash className="h-4 w-4 text-gray-500" />
-            <span className="text-sm text-gray-600 whitespace-nowrap">Jump to:</span>
+        <div className="mt-4">
+          <form onSubmit={handleChapterInputSubmit} className="flex items-center gap-0 bg-white border border-gray-200 rounded-full p-1 shadow-sm hover:shadow-md transition-shadow max-w-xs mx-auto">
+            <div className="flex items-center px-4 py-2 text-gray-500">
+              <Hash className="h-4 w-4 mr-2" />
+              <span className="text-sm font-medium">Chapter</span>
+            </div>
             <input
               type="text"
               value={chapterInput}
               onChange={(e) => handleInputChange(e.target.value)}
-              placeholder={getInputPlaceholder()}
-              className="w-24 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="1"
+              className="flex-1 px-3 py-2 text-center font-semibold text-gray-900 bg-transparent border-0 focus:ring-0 focus:outline-none placeholder-gray-400"
             />
             <button
               type="submit"
               disabled={!chapterInput || !isValidChapterInput(chapterInput)}
-              className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors disabled:cursor-not-allowed"
             >
               Go
             </button>
