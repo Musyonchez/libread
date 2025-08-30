@@ -130,35 +130,12 @@ export default function BottomChapterNavigation({
   const isWuxiabox = !!wuxiaboxInfo;
 
   return (
-    <div className={`bg-white rounded-lg shadow-lg p-4 mt-8 border-t-4 ${isWuxiabox ? 'border-orange-500' : 'border-blue-500'}`}>
-      {isWuxiabox && (
-        <div className="mb-4 p-2 bg-orange-50 border border-orange-200 rounded-lg">
-          <div className="flex items-center gap-2 text-orange-800 text-sm">
-            <span className="font-medium">🥊 Wuxiabox Navigation</span>
-            <span className="text-orange-600">• Next/Prev loads new chapters from server</span>
-          </div>
-        </div>
-      )}
+    <div className="bg-white rounded-lg shadow-lg p-4 mt-8 border-t-4 border-blue-500">
       {/* Mobile Layout */}
       <div className="sm:hidden space-y-4">
         <div className="text-center">
           <div className="text-sm font-medium text-gray-900 mb-1">
-            {(() => {
-              const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
-              if (wuxiaboxInfo) {
-                return `Chapter ${wuxiaboxInfo.chapterNum}`;
-              }
-              return chapters[currentChapter]?.title || `Chapter ${currentChapter + 1}`;
-            })()}
-          </div>
-          <div className="text-xs text-gray-500">
-            {(() => {
-              const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
-              if (wuxiaboxInfo) {
-                return `Wuxiabox Chapter ${wuxiaboxInfo.chapterNum}`;
-              }
-              return `Chapter ${currentChapter + 1} of ${chapters.length}`;
-            })()}
+            Chapter {currentChapter + 1}
           </div>
         </div>
 
@@ -226,22 +203,7 @@ export default function BottomChapterNavigation({
 
             <div className="text-center">
               <div className="text-lg font-semibold text-gray-900 mb-1">
-                {(() => {
-                  const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
-                  if (wuxiaboxInfo) {
-                    return `Chapter ${wuxiaboxInfo.chapterNum}`;
-                  }
-                  return chapters[currentChapter]?.title || `Chapter ${currentChapter + 1}`;
-                })()}
-              </div>
-              <div className="text-sm text-gray-500">
-                {(() => {
-                  const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
-                  if (wuxiaboxInfo) {
-                    return `Wuxiabox Chapter ${wuxiaboxInfo.chapterNum} • Novel ${wuxiaboxInfo.novelId}`;
-                  }
-                  return `Chapter ${currentChapter + 1} of ${chapters.length}`;
-                })()}
+                Chapter {currentChapter + 1}
               </div>
             </div>
 
@@ -288,9 +250,6 @@ export default function BottomChapterNavigation({
         </div>
       </div>
 
-      <div className="mt-4 pt-4 border-t border-gray-200 text-center text-xs text-gray-500">
-        Use the controls above to navigate between chapters • {isWuxiabox ? 'Chapters fetch fresh content from server' : 'Navigate through loaded content'}
-      </div>
     </div>
   );
 }
