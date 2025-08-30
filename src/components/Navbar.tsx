@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BookOpen, Menu, X, FileText, Globe, Brain, CheckCircle } from 'lucide-react';
+import { BookOpen, Menu, X, FileText, Globe, Brain } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Navbar() {
@@ -15,10 +15,6 @@ export default function Navbar() {
             <Link href="/" className="flex items-center space-x-2 group">
               <BookOpen className="h-8 w-8 text-blue-600 group-hover:text-blue-700 transition-colors" />
               <span className="text-xl font-bold text-gray-900">LibRead</span>
-              <div className="hidden sm:flex items-center ml-2 bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-                <CheckCircle className="h-3 w-3 mr-1" />
-                4 Readers
-              </div>
             </Link>
           </div>
 
