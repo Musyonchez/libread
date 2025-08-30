@@ -160,25 +160,26 @@ export default function ChapterNavigation({
           <div className="flex-1"></div>
 
           {/* Go to chapter input */}
-          <div className="flex items-center gap-1">
-            <Hash className="h-3 w-3 text-gray-500" />
-            <form onSubmit={handleChapterInputSubmit} className="flex items-center gap-1">
-              <input
-                type="text"
-                value={chapterInput}
-                onChange={(e) => handleInputChange(e.target.value)}
-                placeholder="1"
-                className="w-10 px-2 py-1 text-center text-sm font-semibold text-gray-900 bg-white border border-gray-200 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400"
-              />
-              <button
-                type="submit"
-                disabled={!chapterInput || !isValidChapterInput(chapterInput)}
-                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white px-2 py-1 rounded text-xs font-medium transition-colors disabled:cursor-not-allowed"
-              >
-                Go
-              </button>
-            </form>
-          </div>
+          <form onSubmit={handleChapterInputSubmit} className="flex items-center gap-1">
+            <input
+              type="text"
+              value={chapterInput}
+              onChange={(e) => handleInputChange(e.target.value)}
+              placeholder="1"
+              className="w-10 px-2 text-center text-sm font-semibold text-gray-900 bg-white border border-gray-200 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 h-7"
+            />
+            <button
+              type="submit"
+              disabled={!chapterInput || !isValidChapterInput(chapterInput)}
+              className={`px-2 rounded text-xs font-medium transition-colors h-7 ${
+                chapterInput && isValidChapterInput(chapterInput)
+                  ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
+            >
+              Go
+            </button>
+          </form>
         </div>
       </div>
 
@@ -211,22 +212,23 @@ export default function ChapterNavigation({
 
           {/* Go to chapter input */}
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 text-gray-600">
-              <Hash className="h-4 w-4" />
-              <span className="text-sm font-medium">Go to chapter</span>
-            </div>
+            <span className="text-sm font-medium text-gray-600">Go to chapter</span>
             <form onSubmit={handleChapterInputSubmit} className="flex items-center gap-2">
               <input
                 type="text"
                 value={chapterInput}
                 onChange={(e) => handleInputChange(e.target.value)}
                 placeholder="1"
-                className="w-16 px-3 py-2 text-center font-semibold text-gray-900 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400"
+                className="w-16 px-3 py-2 text-center font-semibold text-gray-900 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 h-10"
               />
               <button
                 type="submit"
                 disabled={!chapterInput || !isValidChapterInput(chapterInput)}
-                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:cursor-not-allowed"
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors h-10 ${
+                  chapterInput && isValidChapterInput(chapterInput)
+                    ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
               >
                 Go
               </button>
