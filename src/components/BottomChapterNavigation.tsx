@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronLeft, ChevronRight, Hash, ArrowUp } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 
 interface Chapter {
@@ -16,6 +16,7 @@ interface BottomChapterNavigationProps {
   currentUrl?: string;
   onChapterChange: (chapterIndex: number) => void;
   onUrlChange?: (url: string) => void;
+  onUnsupportedDomain?: (domain: string) => void;
 }
 
 export default function BottomChapterNavigation({
@@ -102,18 +103,7 @@ export default function BottomChapterNavigation({
     }
   };
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
-  // Get appropriate placeholder and limits for input
-  const getInputPlaceholder = () => {
-    const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
-    if (wuxiaboxInfo) {
-      return `Chapter 1-999+`;  // For wuxiabox, allow wide range
-    }
-    return `1-${chapters.length}`;
-  };
 
   const isValidChapterInput = (input: string) => {
     const num = parseInt(input);
@@ -130,166 +120,113 @@ export default function BottomChapterNavigation({
   const isWuxiabox = !!wuxiaboxInfo;
 
   return (
-    <div className={`bg-white rounded-lg shadow-lg p-4 mt-8 border-t-4 ${isWuxiabox ? 'border-orange-500' : 'border-blue-500'}`}>
-      {isWuxiabox && (
-        <div className="mb-4 p-2 bg-orange-50 border border-orange-200 rounded-lg">
-          <div className="flex items-center gap-2 text-orange-800 text-sm">
-            <span className="font-medium">🥊 Wuxiabox Navigation</span>
-            <span className="text-orange-600">• Next/Prev loads new chapters from server</span>
-          </div>
-        </div>
-      )}
+    <div className="bg-white rounded-lg shadow-lg p-4 mt-8 border-t-4 border-blue-500">
       {/* Mobile Layout */}
-      <div className="sm:hidden space-y-4">
-        <div className="text-center">
-          <div className="text-sm font-medium text-gray-900 mb-1">
-            {(() => {
-              const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
-              if (wuxiaboxInfo) {
-                return `Chapter ${wuxiaboxInfo.chapterNum}`;
-              }
-              return chapters[currentChapter]?.title || `Chapter ${currentChapter + 1}`;
-            })()}
-          </div>
-          <div className="text-xs text-gray-500">
-            {(() => {
-              const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
-              if (wuxiaboxInfo) {
-                return `Wuxiabox Chapter ${wuxiaboxInfo.chapterNum}`;
-              }
-              return `Chapter ${currentChapter + 1} of ${chapters.length}`;
-            })()}
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <button
-            onClick={() => handleChapterChangeWithScroll(currentChapter - 1)}
-            disabled={!isWuxiabox ? currentChapter === 0 : (wuxiaboxInfo?.chapterNum === 1)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            Previous Chapter
-          </button>
-
-          <button
-            onClick={() => handleChapterChangeWithScroll(currentChapter + 1)}
-            disabled={!isWuxiabox && currentChapter === chapters.length - 1}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            Next Chapter
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        </div>
-
+      <div className="sm:hidden">
         <div className="space-y-3">
-          <form onSubmit={handleChapterInputSubmit} className="flex items-center gap-2">
-            <Hash className="h-4 w-4 text-gray-500" />
-            <input
-              type="text"
-              value={chapterInput}
-              onChange={(e) => handleInputChange(e.target.value)}
-              placeholder={`Jump to ${getInputPlaceholder()}`}
-              className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <button
-              type="submit"
-              disabled={!chapterInput || !isValidChapterInput(chapterInput)}
-              className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              Jump
-            </button>
-          </form>
-          
-          <button
-            onClick={scrollToTop}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-          >
-            <ArrowUp className="h-4 w-4" />
-            Back to Top
-          </button>
-        </div>
-      </div>
-
-      {/* Desktop Layout */}
-      <div className="hidden sm:block">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-6">
+          {/* Main navigation */}
+          <div className="flex items-center justify-center gap-2">
             <button
               onClick={() => handleChapterChangeWithScroll(currentChapter - 1)}
               disabled={!isWuxiabox ? currentChapter === 0 : (wuxiaboxInfo?.chapterNum === 1)}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+              className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium flex-1"
             >
-              <ChevronLeft className="h-5 w-5" />
-              Previous Chapter
+              <ChevronLeft className="h-4 w-4" />
+              Previous
             </button>
 
-            <div className="text-center">
-              <div className="text-lg font-semibold text-gray-900 mb-1">
-                {(() => {
-                  const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
-                  if (wuxiaboxInfo) {
-                    return `Chapter ${wuxiaboxInfo.chapterNum}`;
-                  }
-                  return chapters[currentChapter]?.title || `Chapter ${currentChapter + 1}`;
-                })()}
-              </div>
-              <div className="text-sm text-gray-500">
-                {(() => {
-                  const wuxiaboxInfo = currentUrl ? getWuxiaboxChapterInfo(currentUrl) : null;
-                  if (wuxiaboxInfo) {
-                    return `Wuxiabox Chapter ${wuxiaboxInfo.chapterNum} • Novel ${wuxiaboxInfo.novelId}`;
-                  }
-                  return `Chapter ${currentChapter + 1} of ${chapters.length}`;
-                })()}
-              </div>
+            <div className="px-3 py-2 bg-gray-50 rounded-lg text-sm font-medium text-gray-900 whitespace-nowrap">
+              Chapter {wuxiaboxInfo ? wuxiaboxInfo.chapterNum : currentChapter + 1}
             </div>
 
             <button
               onClick={() => handleChapterChangeWithScroll(currentChapter + 1)}
               disabled={!isWuxiabox && currentChapter === chapters.length - 1}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+              className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium flex-1"
             >
-              Next Chapter
-              <ChevronRight className="h-5 w-5" />
+              Next
+              <ChevronRight className="h-4 w-4" />
             </button>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="border-l border-gray-300 pl-6">
-              <form onSubmit={handleChapterInputSubmit} className="flex items-center gap-3">
-                <Hash className="h-5 w-5 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">Jump to:</span>
-                <input
-                  type="text"
-                  value={chapterInput}
-                  onChange={(e) => handleInputChange(e.target.value)}
-                  placeholder={getInputPlaceholder()}
-                  className="w-24 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                <button
-                  type="submit"
-                  disabled={!chapterInput || !isValidChapterInput(chapterInput)}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
-                >
-                  Jump
-                </button>
-              </form>
-            </div>
-
-            <button
-              onClick={scrollToTop}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-            >
-              <ArrowUp className="h-4 w-4" />
-              Back to Top
-            </button>
+          {/* Go to chapter input */}
+          <div className="flex items-center justify-center gap-2">
+            <span className="text-sm font-medium text-gray-600">Go to chapter</span>
+            <form onSubmit={handleChapterInputSubmit} className="flex items-center gap-1">
+              <input
+                type="text"
+                value={chapterInput}
+                onChange={(e) => handleInputChange(e.target.value)}
+                placeholder="1"
+                className="w-12 px-2 text-center text-sm font-semibold text-gray-900 bg-white border border-gray-200 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 h-7"
+              />
+              <button
+                type="submit"
+                disabled={!chapterInput || !isValidChapterInput(chapterInput)}
+                className={`px-3 rounded text-xs font-medium transition-colors h-7 ${
+                  chapterInput && isValidChapterInput(chapterInput)
+                    ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                Go
+              </button>
+            </form>
           </div>
         </div>
       </div>
 
-      <div className="mt-4 pt-4 border-t border-gray-200 text-center text-xs text-gray-500">
-        Use the controls above to navigate between chapters • {isWuxiabox ? 'Chapters fetch fresh content from server' : 'Navigate through loaded content'}
+      {/* Desktop Layout */}
+      <div className="hidden sm:block">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => handleChapterChangeWithScroll(currentChapter - 1)}
+            disabled={!isWuxiabox ? currentChapter === 0 : (wuxiaboxInfo?.chapterNum === 1)}
+            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium flex-1"
+          >
+            <ChevronLeft className="h-5 w-5" />
+            Previous
+          </button>
+
+          <div className="px-4 py-3 bg-gray-50 rounded-lg font-medium text-gray-900 whitespace-nowrap">
+            Chapter {wuxiaboxInfo ? wuxiaboxInfo.chapterNum : currentChapter + 1}
+          </div>
+
+          <button
+            onClick={() => handleChapterChangeWithScroll(currentChapter + 1)}
+            disabled={!isWuxiabox && currentChapter === chapters.length - 1}
+            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium flex-1"
+          >
+            Next
+            <ChevronRight className="h-5 w-5" />
+          </button>
+
+          <div className="flex-1"></div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-gray-600">Go to chapter</span>
+            <form onSubmit={handleChapterInputSubmit} className="flex items-center gap-2">
+              <input
+                type="text"
+                value={chapterInput}
+                onChange={(e) => handleInputChange(e.target.value)}
+                placeholder="1"
+                className="w-16 px-3 py-2 text-center font-semibold text-gray-900 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 h-10"
+              />
+              <button
+                type="submit"
+                disabled={!chapterInput || !isValidChapterInput(chapterInput)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors h-10 ${
+                  chapterInput && isValidChapterInput(chapterInput)
+                    ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                Go
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   );
