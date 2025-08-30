@@ -125,9 +125,7 @@ export default function NovelContentDisplay({
                 className={`mb-6 leading-relaxed cursor-pointer transition-all duration-200 p-4 rounded-lg text-lg ${
                   index === currentParagraph
                     ? 'bg-blue-50 border-l-4 border-blue-500 text-blue-900 shadow-sm'
-                    : paragraphChapter === currentChapter
-                    ? 'hover:bg-gray-50 text-gray-800 border-l-4 border-transparent hover:border-gray-200'
-                    : 'hover:bg-gray-50 text-gray-600 border-l-4 border-transparent hover:border-gray-200 opacity-75'
+                    : 'hover:bg-gray-50 text-gray-800 border-l-4 border-transparent hover:border-gray-200'
                 }`}
               >
                 <p className="whitespace-pre-wrap">{paragraph}</p>
