@@ -143,21 +143,8 @@ export default function NovelContentDisplay({
               >
                 <p className="whitespace-pre-wrap">{paragraph}</p>
                 {index === currentParagraph && (
-                  <div className="mt-2 flex items-center justify-between">
-                    <div className="text-sm text-blue-600 font-medium">
-                      ▶ Currently reading
-                    </div>
-                    {novel.chapters && (
-                      <div className="text-xs text-blue-500">
-                        {novel.chapters[paragraphChapter]?.title}
-                      </div>
-                    )}
-                  </div>
-                )}
-                {/* Chapter indicator for non-current paragraphs */}
-                {index !== currentParagraph && novel.chapters && novel.chapters.length > 1 && (
-                  <div className="mt-2 text-xs text-gray-400">
-                    {novel.chapters[paragraphChapter]?.title}
+                  <div className="mt-2 text-sm text-blue-600 font-medium">
+                    ▶ Currently reading
                   </div>
                 )}
               </div>
